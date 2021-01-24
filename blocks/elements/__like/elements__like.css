@@ -1,0 +1,13 @@
+.elements__like-btn {
+  position: absolute;
+  right: 20px;
+  bottom: 50%;
+
+  margin: 0;
+  padding: 0;
+
+  transform: translateY(50%);
+
+  border: none;
+  background: transparent;
+}
