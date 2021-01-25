@@ -1,0 +1,14 @@
+.popup__input-description {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  opacity: .2;
+  color: #000000;
+  border: none;
+  border-bottom: 1px solid #000000;
+  background-color: transparent;
+
+  font-size: 14px;
+  line-height: 17px;
+}
