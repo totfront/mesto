@@ -5,6 +5,7 @@ let inputName = document.querySelector('.popup__input-name')
 let inputDescription = document.querySelector('.popup__input-description')
 let profileName = document.querySelector('.profile__name')
 let profileDescription = document.querySelector('.profile__description')
+let saveBtn = document.querySelector('.popup__save-btn')
 
 // Заполняет форму
 let fillInputs = () => {
@@ -18,10 +19,17 @@ let hidePopup = () => {
   popup.classList.toggle('popup__opened')
 
   if (popup.classList.contains('popup__opened') == 0) {
-    console.log('Содержит')
     fillInputs()
   }
 }
 
+// Заполняет профиль и скрывает Popup
+let fillProfile = () => {
+  profileName.textContent = inputName.value
+  profileDescription.textContent = inputDescription.value
+  hidePopup()
+}
+
 popupCloseBtn.addEventListener('click', hidePopup)
 editBtn.addEventListener('click', hidePopup)
+saveBtn.addEventListener('click', fillProfile)
