@@ -64,14 +64,14 @@
     <footer class="footer">
         <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
     </footer>
-    <div class="popup popup__opened">
+    <div class="popup">
         <div class="popup__container">
             <h3 class="popup__title">Редактировать профиль</h3>
-            <form action="get">
-                <input class="popup__input-name" color="#000000" type="text">
+            <form class="popup__form">
+                <input class="popup__input-name" type="text">
                 <input class="popup__input-description" type="text">
+                <input class="popup__save-btn" type="button" value="Сохранить">
             </form>
-            <button class="popup__save-btn">Сохранить</button>
             <button class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
         </div>
     </div>

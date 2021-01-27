@@ -10,6 +10,10 @@
   background-color: transparent;
 }
 
+.profile__add-btn:hover {
+  opacity: .8;
+}
+
 .profile__add-btn::before {
   position: absolute;
   top: 50%;

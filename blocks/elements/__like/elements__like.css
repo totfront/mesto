@@ -6,8 +6,17 @@
   margin: 0;
   padding: 0;
 
+  cursor: pointer;
   transform: translateY(50%);
 
   border: none;
   background: transparent;
+}
+
+.elements__like-btn:hover {
+  opacity: .8;
+}
+
+.elements__like-btn:active {
+  background: red;
 }
