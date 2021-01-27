@@ -43,14 +43,8 @@ function formSubmitHandler(evt) {
   profileDescription.textContent = jobInput.value
 }
 
-// Наполняет сердца цветом (любовью)
-let fillLove = () => {
-  console.log(123)
-}
-
 // Прикрепляем обработчики:
 formElement.addEventListener('submit', formSubmitHandler)
 popupCloseBtn.addEventListener('click', togglePopup)
 editBtn.addEventListener('click', togglePopup)
 saveBtn.addEventListener('click', fillProfile)
-likeBtn.addEventListener('click', fillLove)
