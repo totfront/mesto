@@ -1,11 +1,9 @@
 .profile__info {
   position: relative;
-
   margin-right: auto;
   margin-left: 30px;
   padding-right: 45px;
 }
-
 @media (max-width: 670px) {
   .profile__info {
     margin-top: 26px;

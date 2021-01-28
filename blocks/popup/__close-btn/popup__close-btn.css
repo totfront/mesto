@@ -2,27 +2,21 @@
   position: absolute;
   top: -50px;
   right: -50px;
-
   width: 60px;
   height: 60px;
   margin: 0;
   padding: 0;
-
   cursor: pointer;
-
   border: none;
   background-color: transparent;
 }
-
 .popup__close-btn:focus {
   border: none;
   outline: none;
 }
-
 .popup__close-btn:hover {
-  opacity: .8;
+  opacity: 0.8;
 }
-
 @media (max-width: 650px) {
   .popup__close-btn {
     top: -65px;

@@ -9,32 +9,27 @@ let saveBtn = document.querySelector('.popup__save-btn')
 let formElement = document.querySelector('.popup__form')
 let likeBtn = document.querySelector('.elements__like-btn')
 let pageEl = document.querySelector('.page')
-
 // Заполняет форму
 let fillInputs = () => {
   nameInput.setAttribute('value', profileName.innerHTML)
   nameInput.value.textContent = profileName.innerHTML
   jobInput.setAttribute('value', profileDescription.innerHTML)
 }
-
 // Прячет Popup
 let togglePopup = () => {
   popup.classList.toggle('popup__opened')
-  pageEl.style.overflow = 'hidden'
+  // pageEl.style.overflow = 'hidden'
   fillInputs()
-
   if (popup.classList.contains('popup__opened') == 0) {
     pageEl.style.overflow = 'auto'
   }
 }
-
 // Заполняет профиль и скрывает Popup
 let fillProfile = () => {
   profileName.textContent = nameInput.value
   profileDescription.textContent = jobInput.value
   togglePopup()
 }
-
 // Обработчик «отправки» формы (пока не работает)
 function formSubmitHandler(evt) {
   evt.preventDefault()
@@ -42,7 +37,6 @@ function formSubmitHandler(evt) {
   profileName.textContent = nameInput.value
   profileDescription.textContent = jobInput.value
 }
-
 // Прикрепляем обработчики:
 formElement.addEventListener('submit', formSubmitHandler)
 popupCloseBtn.addEventListener('click', togglePopup)
