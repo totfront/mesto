@@ -18,7 +18,6 @@ let fillInputs = () => {
 // Прячет Popup
 let togglePopup = () => {
   popup.classList.toggle('popup__opened')
-  // pageEl.style.overflow = 'hidden'
   fillInputs()
   if (popup.classList.contains('popup__opened') == 0) {
     pageEl.style.overflow = 'auto'
