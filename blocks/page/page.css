@@ -3,7 +3,7 @@
   margin: 0 auto;
   padding: 45px 0 60px 0;
   background-color: black;
-  font-family: 'Inter';
+  font-family: 'Inter', ‘Arial’, sans-serif;
 }
 @media (max-width: 500px) {
   .page {

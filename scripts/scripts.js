@@ -1,32 +1,30 @@
 let popupCloseBtn = document.querySelector('.popup__close-btn')
 let popup = document.querySelector('.popup')
 let editBtn = document.querySelector('.profile__edit-btn')
-let nameInput = document.querySelector('.popup__input-name')
-let jobInput = document.querySelector('.popup__input-description')
+let nameInput = document.querySelector('.popup__input_name')
+let jobInput = document.querySelector('.popup__input_description')
 let profileName = document.querySelector('.profile__name')
 let profileDescription = document.querySelector('.profile__description')
 let saveBtn = document.querySelector('.popup__save-btn')
 let formElement = document.querySelector('.popup__form')
-let likeBtn = document.querySelector('.elements__like-btn')
-let pageEl = document.querySelector('.page')
 // Заполняет форму
 let fillInputs = () => {
   nameInput.setAttribute('value', profileName.innerHTML)
-  nameInput.value.textContent = profileName.innerHTML
+  nameInput.value = profileName.innerHTML
   jobInput.setAttribute('value', profileDescription.innerHTML)
 }
 // Прячет Popup
 let togglePopup = () => {
   popup.classList.toggle('popup_opened')
+  
+  console.log(popup.classList.contains('popup_opened'));
   fillInputs()
-  if (popup.classList.contains('popup_opened') == 0) {
-    pageEl.style.overflow = 'auto'
-  }
 }
 // Заполняет профиль и скрывает Popup
 let fillProfile = () => {
   profileName.textContent = nameInput.value
   profileDescription.textContent = jobInput.value
+  console.log(123);
   togglePopup()
 }
 // Обработчик «отправки» формы (пока не работает)

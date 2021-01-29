@@ -1,18 +1,19 @@
-.elements {
+.cards {
   display: grid;
+
   gap: 17px;
   grid-template-columns: repeat(3, 1fr);
 }
-@media (max-width: 750px) {
-  .elements {
+@media (max-width: 950px) {
+  .cards {
     padding: 0 20px;
+
     gap: auto;
     grid-template-columns: repeat(2, 1fr);
   }
 }
 @media (max-width: 500px) {
-  .elements {
-    gap: auto;
+  .cards {
     grid-template-columns: repeat(1, 1fr);
   }
 }
