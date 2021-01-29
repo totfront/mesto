@@ -5,29 +5,10 @@
   cursor: pointer;
   border: 1px solid white;
   background-color: transparent;
+  background: center no-repeat url(../../../images/profile/profile__add-btn.svg);
 }
 .profile__add-btn:hover {
   opacity: 0.8;
-}
-.profile__add-btn::before {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 22px;
-  height: 2px;
-  content: '';
-  transform: translate(-50%, -50%);
-  background-color: white;
-}
-.profile__add-btn::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 2px;
-  height: 22px;
-  content: '';
-  transform: translate(-50%, -50%);
-  background-color: white;
 }
 @media (max-width: 670px) {
   .profile__add-btn {
