@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   margin-top: 40px;
   margin-bottom: 47px;
 }
@@ -11,11 +10,9 @@
     padding: 0 20px;
   }
 }
-
 @media (max-width: 750px) {
   .profile {
     flex-flow: column;
-
     margin-top: 42px;
   }
 }
