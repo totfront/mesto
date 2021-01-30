@@ -5,6 +5,7 @@
   cursor: pointer;
   border: none;
   background: transparent;
+  outline: none;
 }
 .card__like-btn:hover {
   opacity: 0.5;
