@@ -6,8 +6,6 @@
 @media (max-width: 950px) {
   .cards {
     padding: 0 20px;
-
-    gap: auto;
     grid-template-columns: repeat(2, 1fr);
   }
 }
