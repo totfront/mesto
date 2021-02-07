@@ -6,6 +6,12 @@ let jobInput = document.querySelector('.popup__input_data_job')
 let profileName = document.querySelector('.profile__name')
 let profileDescription = document.querySelector('.profile__description')
 let form = document.querySelector('.popup__form')
+
+const popupTitles = {
+  profileEditor: 'Редактировать профиль',
+  cardRenderer: 'Новое место'
+}
+
 // Показывает popup
 let showPopup = () => {
   popup.classList.add('popup_opened')
