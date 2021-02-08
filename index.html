@@ -77,6 +77,17 @@
                     </button>
                 </div>
             </article>
+            <template id='template'>
+                <article class="card">
+                    <img class="card__pic" src="" alt="">
+                    <div class="card__inner">
+                        <h3 class="card__heading"></h3>
+                        <button type="button" class="card__like-btn">
+                            <img src="./images/cards/card__like.svg" alt="Лайк">
+                        </button>
+                    </div>
+                </article>
+            </template>
         </section>
     </main>
     <footer class="footer">
@@ -87,7 +98,7 @@
             <h2 class="popup__title">Редактировать профиль</h2>
             <form name="popupForm" class="popup__form">
                 <input name="name" class="popup__input popup__input_data_name" type="text">
-                <input name="job" class="popup__input popup__input_data_job" type="text">
+                <input name="description" class="popup__input popup__input_data_description" type="text">
                 <button name="submitBtn" class="popup__save-btn" type="submit">Сохранить</button>
             </form>
             <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
