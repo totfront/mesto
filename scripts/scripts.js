@@ -10,6 +10,8 @@ const addBtn = document.querySelector('.profile__add-btn')
 const popupTitle = document.querySelector('.popup__title')
 const cardTemplate = document.querySelector('#template').content
 const cardsContainer = document.querySelector('.cards')
+const template = 1
+let likeBtnPic
 const popupTitles = {
   profileEditor: 'Редактировать профиль',
   cardRenderer: 'Новое место'
@@ -40,12 +42,20 @@ const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ]
-// Добавляет карточки
+// Добавляет карточки и оживляет кнопку "лайк"
 const cardsRenderer = item => {
   const newCard = cardTemplate.querySelector('.card').cloneNode(true)
   newCard.querySelector('.card__pic').style.backgroundImage = `url("${item.link}")`
   newCard.querySelector('.card__heading').textContent = item.name
   cardsContainer.prepend(newCard)
+  // Добавляем карточкам ID
+  newCard.id = `card_${cardsContainer.childElementCount - template}`
+  // Находим лайк и добавляем ему событие
+  likeBtnPic = document.querySelector('.card__like-pic')
+  likeBtnPic.id = cardsContainer.childElementCount - template
+  likeBtnPic.addEventListener('click', () => {
+    fillLikePic(newCard)
+  })
 }
 // Показывает попап
 const showPopup = () => {
@@ -98,11 +108,19 @@ function formSubmitHandler(evt) {
   evt.preventDefault()
   hidePopup()
 }
-// Добавляем обработчики:
-editBtn.addEventListener('click', showProfileEditor)
-addBtn.addEventListener('click', showCardRendered)
-form.addEventListener('submit', formSubmitHandler)
+// Наполняет цветом лайк
+const fillLikePic = newCard => {
+  const likePic = newCard.querySelector('.card__like-pic')
+  const cardId = newCard.id[5]
+  if (cardId == likePic.id) {
+    likePic.src = './images/cards/card__like-active.svg'
+  }
+}
 // Рендерим стартовые 6 карточек
 initialCards.forEach(item => {
   cardsRenderer(item)
 })
+// Добавляем обработчики:
+editBtn.addEventListener('click', showProfileEditor)
+addBtn.addEventListener('click', showCardRendered)
+form.addEventListener('submit', formSubmitHandler)

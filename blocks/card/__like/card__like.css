@@ -1,12 +1,16 @@
 .card__like-btn {
   position: relative;
   bottom: 0;
+
+  margin-left: auto;
   padding: 0;
+
   cursor: pointer;
+
   border: none;
-  background: transparent;
   outline: none;
+  background: transparent;
 }
 .card__like-btn:hover {
-  opacity: 0.5;
+  opacity: .5;
 }
