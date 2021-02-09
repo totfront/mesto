@@ -2,4 +2,8 @@
   width: 100%;
   min-height: 282px;
   margin-bottom: auto;
+
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: cover;
 }

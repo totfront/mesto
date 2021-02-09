@@ -40,68 +40,69 @@ const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ]
-
-// Добавляет 6 карточек при загрузке страницы
+// Добавляет карточки
 const cardsRenderer = item => {
   const newCard = cardTemplate.querySelector('.card').cloneNode(true)
-  newCard.querySelector('.card__pic').src = initialCards[item].link
-  newCard.querySelector('.card__pic').alt = initialCards[item].name
-  newCard.querySelector('.card__heading').textContent = initialCards[item].name
-  cardsContainer.appendChild(newCard)
-  console.log(cardsContainer)
-  return console.log(newCard)
+  newCard.querySelector('.card__pic').style.backgroundImage = `url("${item.link}")`
+  newCard.querySelector('.card__heading').textContent = item.name
+  cardsContainer.prepend(newCard)
 }
-
-for (let i = 0; i < initialCards.length; i++) {
-  cardsRenderer(i)
-}
-
 // Показывает попап
 const showPopup = () => {
   popup.classList.add('popup_opened')
 }
-
 // Показывает попап редактор профиля
 const showProfileEditor = () => {
   showPopup()
+  // Добавляем обработчики событий для попапа редактора профиля
   popupCloseBtn.addEventListener('click', profileFiller)
   // Заполняет поля формы данными со страницы
   nameInput.setAttribute('value', profileName.textContent)
   descriptionInput.setAttribute('value', profileDescription.textContent)
-  console.log('Редактор профиля')
 }
-
 // Показывает попап с добавлением карточек
 const showCardRendered = () => {
   showPopup()
-  console.log('Добавление карточек')
+  // Добавляем обработчики событий для попапа добавления карточек
   popupTitle.textContent = popupTitles.cardRenderer
   popupCloseBtn.addEventListener('click', hidePopup)
+  nameInput.value = ''
+  descriptionInput.value = ''
   nameInput.setAttribute('placeholder', 'Название карточек')
   descriptionInput.setAttribute('placeholder', 'Ссылка на изображение')
 }
-
 // Закрывает попап
 const hidePopup = () => {
   popup.classList.remove('popup_opened')
-  console.log(123)
 }
-
-// Переписывает данные на странице введенными в форму и закрывает попап
+// Переписывает данные профиля введенными в форму и закрывает попап
 const profileFiller = () => {
   hidePopup()
   profileName.textContent = nameInput.value
   profileDescription.textContent = descriptionInput.value
+  // Убираем обработчики событий, чтобы они не работали в попапе добавления карточек
+  popupCloseBtn.removeEventListener('click', profileFiller)
 }
-
-// Обработчик «отправки» формы (пока не работает)
+// Обработчик «отправки» формы
 function formSubmitHandler(evt) {
+  if (popupTitle.textContent == 'Новое место') {
+    const newCard = {
+      name: `${nameInput.value}`,
+      link: `${descriptionInput.value}`
+    }
+    cardsRenderer(newCard)
+  } else {
+    profileName.textContent = nameInput.value
+    profileDescription.textContent = descriptionInput.value
+  }
   evt.preventDefault()
-  profileName.textContent = nameInput.value
-  profileDescription.textContent = descriptionInput.value
   hidePopup()
 }
 // Добавляем обработчики:
-form.addEventListener('submit', formSubmitHandler)
 editBtn.addEventListener('click', showProfileEditor)
 addBtn.addEventListener('click', showCardRendered)
+form.addEventListener('submit', formSubmitHandler)
+// Рендерим стартовые 6 карточек
+initialCards.forEach(item => {
+  cardsRenderer(item)
+})
