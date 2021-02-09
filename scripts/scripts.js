@@ -11,6 +11,7 @@ const popupTitle = document.querySelector('.popup__title')
 const cardTemplate = document.querySelector('#template').content
 const cardsContainer = document.querySelector('.cards')
 const template = 1
+let deleteBtn
 let likeBtnPic
 const popupTitles = {
   profileEditor: 'Редактировать профиль',
@@ -42,7 +43,7 @@ const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ]
-// Добавляет карточки и оживляет кнопку "лайк"
+// Добавляет карточки и оживляет кнопки "лайк" и "удалить карточку"
 const cardsRenderer = item => {
   const newCard = cardTemplate.querySelector('.card').cloneNode(true)
   newCard.querySelector('.card__pic').style.backgroundImage = `url("${item.link}")`
@@ -50,9 +51,14 @@ const cardsRenderer = item => {
   cardsContainer.prepend(newCard)
   // Добавляем карточкам ID
   newCard.id = `card_${cardsContainer.childElementCount - template}`
-  // Находим лайк и добавляем ему событие
+  // Находим кнопки и добавляем им события
+  deleteBtn = document.querySelector('.card__trash-btn')
   likeBtnPic = document.querySelector('.card__like-pic')
   likeBtnPic.id = cardsContainer.childElementCount - template
+  deleteBtn.id = `trash_${cardsContainer.childElementCount - template}`
+  deleteBtn.addEventListener('click', () => {
+    deleteCard(newCard)
+  })
   likeBtnPic.addEventListener('click', () => {
     fillLikePic(newCard)
   })
@@ -116,11 +122,20 @@ const fillLikePic = newCard => {
     likePic.src = './images/cards/card__like-active.svg'
   }
 }
-// Рендерим стартовые 6 карточек
+// Удаляет карточку
+const deleteCard = newCard => {
+  const currentDeleteBtnId = newCard.querySelector('.card__trash-btn').id[6]
+  const cardId = newCard.id[5]
+  if (cardId == currentDeleteBtnId) {
+    newCard.remove()
+  }
+}
+// Рендерит стартовые 6 карточек
 initialCards.forEach(item => {
   cardsRenderer(item)
 })
-// Добавляем обработчики:
+
+// Добавляет обработчики:
 editBtn.addEventListener('click', showProfileEditor)
 addBtn.addEventListener('click', showCardRendered)
 form.addEventListener('submit', formSubmitHandler)
