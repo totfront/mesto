@@ -9,9 +9,9 @@
   cursor: pointer;
 
   border: none;
-  background: center/100% no-repeat url("/images/cards/card__btn-trash.svg");
+  background: center/100% no-repeat url('./images/cards/card__btn-trash.svg');
 }
 
 .card__trash-btn:hover {
-  opacity: .5;
+  opacity: 0.5;
 }
