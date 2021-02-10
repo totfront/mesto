@@ -45,7 +45,7 @@ const initialCards = [
   }
 ]
 // Добавляет карточки и оживляет кнопки "лайк" и "удалить карточку"
-const cardsRenderer = item => {
+const renderCard = item => {
   const newCard = cardTemplate.querySelector('.card').cloneNode(true)
   newCard.querySelector('.card__pic').style.backgroundImage = `url("${item.link}")`
   newCard.querySelector('.card__heading').textContent = item.name
@@ -83,13 +83,13 @@ const showPopup = () => {
 const showProfileEditor = () => {
   showPopup()
   // Добавляем обработчики событий для попапа редактора профиля
-  popupCloseBtn.addEventListener('click', profileFiller)
+  popupCloseBtn.addEventListener('click', fillProfile)
   // Заполняет поля формы данными со страницы
   nameInput.setAttribute('value', profileName.textContent)
   descriptionInput.setAttribute('value', profileDescription.textContent)
 }
 // Показывает попап с добавлением карточек
-const showCardRendered = () => {
+const showCardRenderer = () => {
   showPopup()
   // Добавляем обработчики событий для попапа добавления карточек
   popupTitle.textContent = popupTitles.cardRenderer
@@ -104,12 +104,12 @@ const hidePopup = () => {
   popup.classList.remove('popup_opened')
 }
 // Переписывает данные профиля введенными в форму и закрывает попап
-const profileFiller = () => {
+const fillProfile = () => {
   hidePopup()
   profileName.textContent = nameInput.value
   profileDescription.textContent = descriptionInput.value
   // Убираем обработчики событий, чтобы они не работали в попапе добавления карточек
-  popupCloseBtn.removeEventListener('click', profileFiller)
+  popupCloseBtn.removeEventListener('click', fillProfile)
 }
 // Обработчик «отправки» формы
 function formSubmitHandler(evt) {
@@ -118,7 +118,7 @@ function formSubmitHandler(evt) {
       name: `${nameInput.value}`,
       link: `${descriptionInput.value}`
     }
-    cardsRenderer(newCard)
+    renderCard(newCard)
   } else {
     profileName.textContent = nameInput.value
     profileDescription.textContent = descriptionInput.value
@@ -146,12 +146,12 @@ const deleteCard = newCard => {
 }
 // Рендерит стартовые 6 карточек
 initialCards.forEach(item => {
-  cardsRenderer(item)
+  renderCard(item)
 })
 
 // Добавляет обработчики:
 editBtn.addEventListener('click', showProfileEditor)
-addBtn.addEventListener('click', showCardRendered)
+addBtn.addEventListener('click', showCardRenderer)
 form.addEventListener('submit', formSubmitHandler)
 overviewCloseBtn.addEventListener('click', () => {
   overview.classList.remove('overview_opened')
