@@ -10,9 +10,10 @@ const addBtn = document.querySelector('.profile__add-btn')
 const popupTitle = document.querySelector('.popup__title')
 const cardTemplate = document.querySelector('#template').content
 const cardsContainer = document.querySelector('.cards')
-const template = 1
-let deleteBtn
-let likeBtnPic
+const overview = document.querySelector('.overview')
+const overviewPic = document.querySelector('.overview__pic')
+const overviewCloseBtn = document.querySelector('.overview__close-btn')
+const overviewCaption = document.querySelector('.overview__caption')
 const popupTitles = {
   profileEditor: 'Редактировать профиль',
   cardRenderer: 'Новое место'
@@ -50,10 +51,21 @@ const cardsRenderer = item => {
   newCard.querySelector('.card__heading').textContent = item.name
   cardsContainer.prepend(newCard)
   // Добавляем карточкам ID
+  const template = 1
+  // Количество дочерних элементов минус шаблон
   newCard.id = `card_${cardsContainer.childElementCount - template}`
-  // Находим кнопки и добавляем им события
-  deleteBtn = document.querySelector('.card__trash-btn')
-  likeBtnPic = document.querySelector('.card__like-pic')
+  // Находим кнопки
+  const deleteBtn = document.querySelector('.card__trash-btn')
+  const likeBtnPic = document.querySelector('.card__like-pic')
+  let cardPic = newCard.querySelector('.card__pic')
+  // Добавляем карточку
+  //  Добавляем кнопкам события
+  cardPic.addEventListener('click', () => {
+    overview.classList.add('overview_opened')
+    // Обрезает у значения свойства фона всё лишнее и добавляет фоновую картинку в overview
+    overviewPic.src = cardPic.style.backgroundImage.slice(5).slice(0, -2)
+    overviewCaption.textContent = newCard.querySelector('.card__heading').textContent
+  })
   likeBtnPic.id = cardsContainer.childElementCount - template
   deleteBtn.id = `trash_${cardsContainer.childElementCount - template}`
   deleteBtn.addEventListener('click', () => {
@@ -124,8 +136,10 @@ const fillLikePic = newCard => {
 }
 // Удаляет карточку
 const deleteCard = newCard => {
-  const currentDeleteBtnId = newCard.querySelector('.card__trash-btn').id[6]
-  const cardId = newCard.id[5]
+  const lastIdLetterDeleteBtn = 6
+  const currentDeleteBtnId = newCard.querySelector('.card__trash-btn').id[lastIdLetterDeleteBtn]
+  const lastIdLetterOfCard = 5
+  const cardId = newCard.id[lastIdLetterOfCard]
   if (cardId == currentDeleteBtnId) {
     newCard.remove()
   }
@@ -139,3 +153,6 @@ initialCards.forEach(item => {
 editBtn.addEventListener('click', showProfileEditor)
 addBtn.addEventListener('click', showCardRendered)
 form.addEventListener('submit', formSubmitHandler)
+overviewCloseBtn.addEventListener('click', () => {
+  overview.classList.remove('overview_opened')
+})

@@ -1,8 +1,8 @@
 .card__pic {
   width: 100%;
-  min-height: 282px;
+  height: 282px;
   margin-bottom: auto;
-
+  cursor: pointer;
   background-repeat: no-repeat;
   background-position: top;
   background-size: cover;

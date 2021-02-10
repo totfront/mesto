@@ -37,5 +37,10 @@
 @import url(../blocks/popup/_opened/popup_opened.css);
 /* overview */
 @import url(../blocks/overview/overview.css);
+@import url(../blocks/overview/__container/overview__container.css);
+@import url(../blocks/overview/__close-btn/overview__close-btn.css);
+@import url(../blocks/overview/__caption/overview__caption.css);
+@import url(../blocks/overview/_opened/overview_opened.css);
+@import url(../blocks/overview/__pic/overview__pic.css);
 /* animation */
 @import url(../animations/appearance.css);
