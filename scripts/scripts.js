@@ -12,12 +12,10 @@ const cardTemplate = document.querySelector('#template').content
 const cardsContainer = document.querySelector('.cards')
 const overview = document.querySelector('.overview')
 const overviewPic = document.querySelector('.overview__pic')
-const overviewCloseBtn = document.querySelector('.overview__close-btn')
+const overviewCloseBtn = document.querySelector('.overview').querySelector('.popup__close-btn')
 const overviewCaption = document.querySelector('.overview__caption')
-const popupTitles = {
-  profileEditor: 'Редактировать профиль',
-  cardRenderer: 'Новое место'
-}
+
+const popupAdd = document.querySelector('#popup__add-card')
 const initialCards = [
   {
     name: 'Архыз',
@@ -76,12 +74,38 @@ const renderCard = item => {
   })
 }
 // Показывает попап
-const showPopup = () => {
-  popup.classList.add('popup_opened')
+const showPopup = button => {
+  if (button == addBtn) {
+    popupAdd.classList.add('popup_opened')
+    popupAdd.querySelector('.popup__close-btn').addEventListener('click', () => {
+      hidePopup(button)
+    })
+    popupAdd.querySelector('.popup__form').addEventListener('submit', () => {
+      hidePopup(button)
+    })
+  } else {
+    popup.classList.add('popup_opened')
+  }
+}
+// Закрывает попап
+const hidePopup = button => {
+  popupAdd.querySelector('.popup__form').removeEventListener('submit', () => {
+    hidePopup(button)
+  })
+  if (button == addBtn) {
+    popupAdd.classList.remove('popup_opened')
+  } else {
+    popup.classList.remove('popup_opened')
+  }
 }
 // Показывает попап редактор профиля
 const showProfileEditor = () => {
   showPopup()
+  form.addEventListener('submit', evt => {
+    const btn = document.querySelector('#popup__edit-profile')
+    formSubmitHandler(evt, btn)
+    evt.preventDefault()
+  })
   // Добавляем обработчики событий для попапа редактора профиля
   popupCloseBtn.addEventListener('click', fillProfile)
   // Заполняет поля формы данными со страницы
@@ -89,19 +113,10 @@ const showProfileEditor = () => {
   descriptionInput.setAttribute('value', profileDescription.textContent)
 }
 // Показывает попап с добавлением карточек
-const showCardRenderer = () => {
-  showPopup()
+const showCardRenderer = addBtn => {
+  showPopup(addBtn)
   // Добавляем обработчики событий для попапа добавления карточек
-  popupTitle.textContent = popupTitles.cardRenderer
   popupCloseBtn.addEventListener('click', hidePopup)
-  nameInput.value = ''
-  descriptionInput.value = ''
-  nameInput.setAttribute('placeholder', 'Название карточек')
-  descriptionInput.setAttribute('placeholder', 'Ссылка на изображение')
-}
-// Закрывает попап
-const hidePopup = () => {
-  popup.classList.remove('popup_opened')
 }
 // Переписывает данные профиля введенными в форму и закрывает попап
 const fillProfile = () => {
@@ -112,18 +127,19 @@ const fillProfile = () => {
   popupCloseBtn.removeEventListener('click', fillProfile)
 }
 // Обработчик «отправки» формы
-function formSubmitHandler(evt) {
-  if (popupTitle.textContent == 'Новое место') {
-    const newCard = {
-      name: `${nameInput.value}`,
-      link: `${descriptionInput.value}`
-    }
+function formSubmitHandler(evt, btn) {
+  evt.preventDefault()
+  if (btn.querySelector('.popup__title').textContent == 'Новое место') {
+    let newCard = {}
+    newCard.name = popupAdd.querySelector('.popup__input_data_name').value
+    newCard.link = popupAdd.querySelector('.popup__input_data_description').value
     renderCard(newCard)
+    popupAdd.querySelector('.popup__input_data_name').value = ''
+    popupAdd.querySelector('.popup__input_data_description').value = ''
   } else {
     profileName.textContent = nameInput.value
     profileDescription.textContent = descriptionInput.value
   }
-  evt.preventDefault()
   hidePopup()
 }
 // Наполняет цветом лайк
@@ -148,11 +164,16 @@ const deleteCard = newCard => {
 initialCards.forEach(item => {
   renderCard(item)
 })
-
 // Добавляет обработчики:
-editBtn.addEventListener('click', showProfileEditor)
-addBtn.addEventListener('click', showCardRenderer)
-form.addEventListener('submit', formSubmitHandler)
+editBtn.addEventListener('click', () => {
+  showProfileEditor(editBtn)
+})
+popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
+  formSubmitHandler(evt, popupAdd)
+})
+addBtn.addEventListener('click', () => {
+  showCardRenderer(addBtn)
+})
 overviewCloseBtn.addEventListener('click', () => {
   overview.classList.remove('overview_opened')
 })

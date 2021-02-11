@@ -40,7 +40,7 @@
     <footer class="footer">
         <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
     </footer>
-    <div class="popup appearance">
+    <div class="popup appearance" id="popup__edit-profile">
         <div class="popup__container">
             <h2 class="popup__title">Редактировать профиль</h2>
             <form name="popupForm" class="popup__form">
@@ -51,11 +51,22 @@
             <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
         </div>
     </div>
-    <div class="overview appearance">
+    <div class="popup appearance" id="popup__add-card">
+        <div class="popup__container">
+            <h2 class="popup__title">Новое место</h2>
+            <form name="popupForm" class="popup__form">
+                <input class="popup__input popup__input_data_name" placeholder="Название" name="name" type="text">
+                <input class="popup__input popup__input_data_description" placeholder="Ссылка на картинку" name="description" type="text">
+                <button class="popup__save-btn" name="submitBtn" type="submit">Сохранить</button>
+            </form>
+            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
+        </div>
+    </div>
+    <div class="overview popup appearance">
         <figure class="overview__container">
             <img class="overview__pic" src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="Фото пейзажа">
             <figcaption class="overview__caption"></figcaption>
-            <button type="button" class="overview__close-btn"><img class="overview__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
+            <button type="button" class="popup__close-btn"><img src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
         </figure>
     </div>
 
