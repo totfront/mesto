@@ -14,8 +14,9 @@ const overview = document.querySelector('.overview')
 const overviewPic = document.querySelector('.overview__pic')
 const overviewCloseBtn = document.querySelector('.overview').querySelector('.popup__close-btn')
 const overviewCaption = document.querySelector('.overview__caption')
-
 const popupAdd = document.querySelector('#popup__add-card')
+const popupEdit = document.querySelector('#popup__edit-profile')
+
 const initialCards = [
   {
     name: 'Архыз',
@@ -44,37 +45,40 @@ const initialCards = [
 ]
 // Добавляет карточки и оживляет кнопки "лайк" и "удалить карточку"
 const renderCard = item => {
+  // Создаем карточку
   const newCard = cardTemplate.querySelector('.card').cloneNode(true)
   newCard.querySelector('.card__pic').style.backgroundImage = `url("${item.link}")`
   newCard.querySelector('.card__heading').textContent = item.name
-  cardsContainer.prepend(newCard)
-  // Добавляем карточкам ID
-  const template = 1
-  // Количество дочерних элементов минус шаблон
-  newCard.id = `card_${cardsContainer.childElementCount - template}`
-  // Находим кнопки
-  const deleteBtn = document.querySelector('.card__trash-btn')
-  const likeBtnPic = document.querySelector('.card__like-pic')
+  // Делаем интерактивной картинку: по нажатии открывает попап
   let cardPic = newCard.querySelector('.card__pic')
-  // Добавляем карточку
-  //  Добавляем кнопкам события
   cardPic.addEventListener('click', () => {
-    overview.classList.add('overview_opened')
+    showPopup(cardPic)
     // Обрезает у значения свойства фона всё лишнее и добавляет фоновую картинку в overview
     overviewPic.src = cardPic.style.backgroundImage.slice(5).slice(0, -2)
     overviewCaption.textContent = newCard.querySelector('.card__heading').textContent
   })
-  likeBtnPic.id = cardsContainer.childElementCount - template
-  deleteBtn.id = `trash_${cardsContainer.childElementCount - template}`
-  deleteBtn.addEventListener('click', () => {
-    deleteCard(newCard)
+  const newDeleteBtn = newCard.querySelector('.card__trash-btn')
+  const newLikeBtn = newCard.querySelector('.card__like-pic')
+  // Добавляем кнопке "удалить" листнер на удаление карточек
+  newDeleteBtn.addEventListener('click', () => {
+    newCard.remove()
   })
-  likeBtnPic.addEventListener('click', () => {
-    fillLikePic(newCard)
+  // Добавляем кнопке "лайк" листнер на лайк карточек
+  newLikeBtn.addEventListener('click', () => {
+    newLikeBtn.src = './images/cards/card__like-active.svg'
   })
+  // Вставляем карточки в DOM
+  cardsContainer.prepend(newCard)
 }
 // Показывает попап
 const showPopup = button => {
+  if (button.classList.contains('card__pic')) {
+    overview.classList.add('popup_opened')
+    overview.querySelector('.popup__close-btn').addEventListener('click', () => {
+      hidePopup(button)
+    })
+    return
+  }
   if (button == addBtn) {
     popupAdd.classList.add('popup_opened')
     popupAdd.querySelector('.popup__close-btn').addEventListener('click', () => {
@@ -85,94 +89,75 @@ const showPopup = button => {
     })
   } else {
     popup.classList.add('popup_opened')
+    // Добавляет листнер и передает ему кнопку, по которой кликнули
+    form.addEventListener('submit', evt => {
+      const btn = document.querySelector('#popup__edit-profile')
+      editFormSubmitHandler(evt, btn)
+      evt.preventDefault()
+    })
+    // Заполняет поля формы данными со страницы
+    nameInput.setAttribute('value', profileName.textContent)
+    descriptionInput.setAttribute('value', profileDescription.textContent)
   }
 }
+
 // Закрывает попап
 const hidePopup = button => {
   popupAdd.querySelector('.popup__form').removeEventListener('submit', () => {
     hidePopup(button)
   })
+  popupEdit.querySelector('.popup__form').removeEventListener('submit', () => {
+    hidePopup(button)
+  })
+  if (button.classList.contains('card__pic')) {
+    overview.classList.remove('popup_opened')
+    return
+  }
   if (button == addBtn) {
     popupAdd.classList.remove('popup_opened')
+    return
   } else {
     popup.classList.remove('popup_opened')
   }
 }
-// Показывает попап редактор профиля
-const showProfileEditor = () => {
-  showPopup()
-  form.addEventListener('submit', evt => {
-    const btn = document.querySelector('#popup__edit-profile')
-    formSubmitHandler(evt, btn)
-    evt.preventDefault()
-  })
-  // Добавляем обработчики событий для попапа редактора профиля
-  popupCloseBtn.addEventListener('click', fillProfile)
-  // Заполняет поля формы данными со страницы
-  nameInput.setAttribute('value', profileName.textContent)
-  descriptionInput.setAttribute('value', profileDescription.textContent)
-}
-// Показывает попап с добавлением карточек
-const showCardRenderer = addBtn => {
-  showPopup(addBtn)
-  // Добавляем обработчики событий для попапа добавления карточек
-  popupCloseBtn.addEventListener('click', hidePopup)
-}
 // Переписывает данные профиля введенными в форму и закрывает попап
 const fillProfile = () => {
-  hidePopup()
+  hidePopup(popupEdit.querySelector('.popup__close-pic'))
   profileName.textContent = nameInput.value
   profileDescription.textContent = descriptionInput.value
-  // Убираем обработчики событий, чтобы они не работали в попапе добавления карточек
-  popupCloseBtn.removeEventListener('click', fillProfile)
 }
-// Обработчик «отправки» формы
-function formSubmitHandler(evt, btn) {
+// Обработчик формы редакторования профиля
+const editFormSubmitHandler = evt => {
   evt.preventDefault()
-  if (btn.querySelector('.popup__title').textContent == 'Новое место') {
-    let newCard = {}
-    newCard.name = popupAdd.querySelector('.popup__input_data_name').value
-    newCard.link = popupAdd.querySelector('.popup__input_data_description').value
-    renderCard(newCard)
-    popupAdd.querySelector('.popup__input_data_name').value = ''
-    popupAdd.querySelector('.popup__input_data_description').value = ''
-  } else {
-    profileName.textContent = nameInput.value
-    profileDescription.textContent = descriptionInput.value
-  }
-  hidePopup()
+  profileName.textContent = nameInput.value
+  profileDescription.textContent = descriptionInput.value
+  hidePopup(popupEdit.querySelector('.popup__close-pic'))
 }
-// Наполняет цветом лайк
-const fillLikePic = newCard => {
-  const likePic = newCard.querySelector('.card__like-pic')
-  const cardId = newCard.id[5]
-  if (cardId == likePic.id) {
-    likePic.src = './images/cards/card__like-active.svg'
-  }
-}
-// Удаляет карточку
-const deleteCard = newCard => {
-  const lastIdLetterDeleteBtn = 6
-  const currentDeleteBtnId = newCard.querySelector('.card__trash-btn').id[lastIdLetterDeleteBtn]
-  const lastIdLetterOfCard = 5
-  const cardId = newCard.id[lastIdLetterOfCard]
-  if (cardId == currentDeleteBtnId) {
-    newCard.remove()
-  }
+// Обработчик формы добавления карточек
+function addFormSubmitHandler(evt) {
+  evt.preventDefault()
+  let newCard = {}
+  newCard.name = popupAdd.querySelector('.popup__input_data_name').value
+  newCard.link = popupAdd.querySelector('.popup__input_data_description').value
+  renderCard(newCard)
+  popupAdd.querySelector('.popup__input_data_name').value = ''
+  popupAdd.querySelector('.popup__input_data_description').value = ''
+  hidePopup(popupAdd.querySelector('.popup__close-pic'))
 }
 // Рендерит стартовые 6 карточек
 initialCards.forEach(item => {
   renderCard(item)
 })
 // Добавляет обработчики:
-editBtn.addEventListener('click', () => {
-  showProfileEditor(editBtn)
-})
+popupCloseBtn.addEventListener('click', fillProfile)
 popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
-  formSubmitHandler(evt, popupAdd)
+  addFormSubmitHandler(evt)
+})
+editBtn.addEventListener('click', () => {
+  showPopup(editBtn)
 })
 addBtn.addEventListener('click', () => {
-  showCardRenderer(addBtn)
+  showPopup(addBtn)
 })
 overviewCloseBtn.addEventListener('click', () => {
   overview.classList.remove('overview_opened')
