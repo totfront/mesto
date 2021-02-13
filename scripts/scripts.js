@@ -1,21 +1,22 @@
-const popupCloseBtn = document.querySelector('.popup__close-btn')
-const popup = document.querySelector('.popup')
+const popupEdit = document.querySelector('#profile-popup')
+const popupEditCloseBtn = popupEdit.querySelector('.popup__close-btn')
 const editBtn = document.querySelector('.profile__edit-btn')
 const nameInput = document.querySelector('.popup__input_data_name')
 const descriptionInput = document.querySelector('.popup__input_data_description')
 const profileName = document.querySelector('.profile__name')
 const profileDescription = document.querySelector('.profile__description')
-const form = document.querySelector('.popup__form')
+const editForm = popupEdit.querySelector('.popup__form')
 const addBtn = document.querySelector('.profile__add-btn')
 const popupTitle = document.querySelector('.popup__title')
 const cardTemplate = document.querySelector('#template').content
 const cardsContainer = document.querySelector('.cards')
 const overview = document.querySelector('.overview')
 const overviewPic = document.querySelector('.overview__pic')
-const overviewCloseBtn = document.querySelector('.overview').querySelector('.popup__close-btn')
+const overviewCloseBtn = overview.querySelector('.popup__close-btn')
 const overviewCaption = document.querySelector('.overview__caption')
-const popupAdd = document.querySelector('#popup__add-card')
-const popupEdit = document.querySelector('#popup__edit-profile')
+const popupAdd = document.querySelector('#card-popup')
+const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
+const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
 
 const initialCards = [
   {
@@ -43,14 +44,12 @@ const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ]
-// Добавляет карточки и оживляет кнопки "лайк" и "удалить карточку"
-const renderCard = item => {
-  // Создаем карточку
+// Создает карточку
+const createCard = item => {
   const newCard = cardTemplate.querySelector('.card').cloneNode(true)
-  newCard.querySelector('.card__pic').style.backgroundImage = `url("${item.link}")`
+  const cardPic = newCard.querySelector('.card__pic')
+  cardPic.style.backgroundImage = `url("${item.link}")`
   newCard.querySelector('.card__heading').textContent = item.name
-  // Делаем интерактивной картинку: по нажатии открывает попап
-  let cardPic = newCard.querySelector('.card__pic')
   cardPic.addEventListener('click', () => {
     showPopup(cardPic)
     // Обрезает у значения свойства фона всё лишнее и добавляет фоновую картинку в overview
@@ -58,67 +57,45 @@ const renderCard = item => {
     overviewCaption.textContent = newCard.querySelector('.card__heading').textContent
   })
   const newDeleteBtn = newCard.querySelector('.card__trash-btn')
-  const newLikeBtn = newCard.querySelector('.card__like-pic')
+  const newLikeBtn = newCard.querySelector('.card__like-btn')
   // Добавляем кнопке "удалить" листнер на удаление карточек
   newDeleteBtn.addEventListener('click', () => {
     newCard.remove()
   })
   // Добавляем кнопке "лайк" листнер на лайк карточек
   newLikeBtn.addEventListener('click', () => {
-    newLikeBtn.src = './images/cards/card__like-active.svg'
+    switchLikeBtn(newLikeBtn)
   })
-  // Вставляем карточки в DOM
+  return newCard
+}
+// Добавляет карточки и оживляет кнопки "лайк" и "удалить карточку"
+const renderCard = item => {
+  const newCard = createCard(item)
   cardsContainer.prepend(newCard)
 }
 // Показывает попап
 const showPopup = button => {
   if (button.classList.contains('card__pic')) {
     overview.classList.add('popup_opened')
-    overview.querySelector('.popup__close-btn').addEventListener('click', () => {
-      hidePopup(button)
-    })
     return
   }
   if (button == addBtn) {
     popupAdd.classList.add('popup_opened')
-    popupAdd.querySelector('.popup__close-btn').addEventListener('click', () => {
-      hidePopup(button)
-    })
-    popupAdd.querySelector('.popup__form').addEventListener('submit', () => {
-      hidePopup(button)
-    })
   } else {
-    popup.classList.add('popup_opened')
-    // Добавляет листнер и передает ему кнопку, по которой кликнули
-    form.addEventListener('submit', evt => {
-      const btn = document.querySelector('#popup__edit-profile')
-      editFormSubmitHandler(evt, btn)
-      evt.preventDefault()
-    })
-    // Заполняет поля формы данными со страницы
-    nameInput.setAttribute('value', profileName.textContent)
-    descriptionInput.setAttribute('value', profileDescription.textContent)
+    popupEdit.classList.add('popup_opened')
   }
 }
-
 // Закрывает попап
 const hidePopup = button => {
-  popupAdd.querySelector('.popup__form').removeEventListener('submit', () => {
+  overview.classList.remove('popup_opened')
+  popupAdd.classList.remove('popup_opened')
+  popupEdit.classList.remove('popup_opened')
+  overview.querySelector('.popup__close-btn').removeEventListener('click', () => {
     hidePopup(button)
   })
-  popupEdit.querySelector('.popup__form').removeEventListener('submit', () => {
+  popupAdd.querySelector('.popup__close-btn').removeEventListener('click', () => {
     hidePopup(button)
   })
-  if (button.classList.contains('card__pic')) {
-    overview.classList.remove('popup_opened')
-    return
-  }
-  if (button == addBtn) {
-    popupAdd.classList.remove('popup_opened')
-    return
-  } else {
-    popup.classList.remove('popup_opened')
-  }
 }
 // Переписывает данные профиля введенными в форму и закрывает попап
 const fillProfile = () => {
@@ -126,39 +103,52 @@ const fillProfile = () => {
   profileName.textContent = nameInput.value
   profileDescription.textContent = descriptionInput.value
 }
+// Заполняет поля формы данными со страницы
+const fillProfileForm = () => {
+  nameInput.setAttribute('value', profileName.textContent)
+  descriptionInput.setAttribute('value', profileDescription.textContent)
+}
 // Обработчик формы редакторования профиля
 const editFormSubmitHandler = evt => {
   evt.preventDefault()
   profileName.textContent = nameInput.value
   profileDescription.textContent = descriptionInput.value
-  hidePopup(popupEdit.querySelector('.popup__close-pic'))
+  hidePopup()
+}
+// Изменяет вид кнопки "лайк"
+const switchLikeBtn = newLikeBtn => {
+  newLikeBtn.classList.toggle('card__like-btn_active')
 }
 // Обработчик формы добавления карточек
 function addFormSubmitHandler(evt) {
   evt.preventDefault()
-  let newCard = {}
-  newCard.name = popupAdd.querySelector('.popup__input_data_name').value
-  newCard.link = popupAdd.querySelector('.popup__input_data_description').value
+  const newCard = {}
+  newCard.name = popupAddCardName.value
+  newCard.link = popupAddCardDescription.value
   renderCard(newCard)
-  popupAdd.querySelector('.popup__input_data_name').value = ''
-  popupAdd.querySelector('.popup__input_data_description').value = ''
-  hidePopup(popupAdd.querySelector('.popup__close-pic'))
+  popupAddCardName.value = ''
+  popupAddCardDescription.value = ''
+  popupAdd.classList.toggle('popup_opened')
+  hidePopup()
 }
 // Рендерит стартовые 6 карточек
 initialCards.forEach(item => {
   renderCard(item)
 })
 // Добавляет обработчики:
-popupCloseBtn.addEventListener('click', fillProfile)
-popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
-  addFormSubmitHandler(evt)
-})
+popupEditCloseBtn.addEventListener('click', fillProfile)
+overviewCloseBtn.addEventListener('click', hidePopup)
+popupAdd.querySelector('.popup__close-pic').addEventListener('click', hidePopup)
 editBtn.addEventListener('click', () => {
   showPopup(editBtn)
+  fillProfileForm()
 })
 addBtn.addEventListener('click', () => {
   showPopup(addBtn)
 })
-overviewCloseBtn.addEventListener('click', () => {
-  overview.classList.remove('overview_opened')
+editForm.addEventListener('submit', evt => {
+  editFormSubmitHandler(evt)
+})
+popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
+  addFormSubmitHandler(evt)
 })
