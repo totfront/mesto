@@ -77,23 +77,8 @@ const showPopup = popup => {
   popup.classList.add('popup_opened')
 }
 // Закрывает попап
-// const hidePopup = button => {
-//   overview.querySelector('.popup__close-btn').removeEventListener('click', () => {
-//     hidePopup(button)
-//   })
-//   popupAdd.querySelector('.popup__close-btn').removeEventListener('click', () => {
-//     hidePopup(button)
-//   })
-// }
 const hidePopup = popup => {
   popup.classList.remove('popup_opened')
-}
-
-// Переписывает данные профиля введенными в форму и закрывает попап
-const fillProfile = () => {
-  hidePopup(popupEdit)
-  profileName.textContent = nameInput.value
-  profileDescription.textContent = descriptionInput.value
 }
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
@@ -120,7 +105,6 @@ const addFormSubmitHandler = evt => {
   renderCard(newCard)
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
-  popupAdd.classList.toggle('popup_opened')
   hidePopup(popupAdd)
 }
 // Рендерит стартовые 6 карточек
@@ -128,7 +112,9 @@ initialCards.forEach(item => {
   renderCard(item)
 })
 // Добавляет обработчики:
-popupEditCloseBtn.addEventListener('click', fillProfile)
+popupEditCloseBtn.addEventListener('click', () => {
+  hidePopup(popupEdit)
+})
 overviewCloseBtn.addEventListener('click', () => {
   hidePopup(overview)
 })
