@@ -51,7 +51,7 @@ const createCard = item => {
   cardPic.style.backgroundImage = `url("${item.link}")`
   newCard.querySelector('.card__heading').textContent = item.name
   cardPic.addEventListener('click', () => {
-    showPopup(cardPic)
+    showPopup(overview)
     // Обрезает у значения свойства фона всё лишнее и добавляет фоновую картинку в overview
     overviewPic.src = cardPic.style.backgroundImage.slice(5).slice(0, -2)
     overviewCaption.textContent = newCard.querySelector('.card__heading').textContent
@@ -74,16 +74,8 @@ const renderCard = item => {
   cardsContainer.prepend(newCard)
 }
 // Показывает попап
-const showPopup = button => {
-  if (button.classList.contains('card__pic')) {
-    overview.classList.add('popup_opened')
-    return
-  }
-  if (button == addBtn) {
-    popupAdd.classList.add('popup_opened')
-  } else {
-    popupEdit.classList.add('popup_opened')
-  }
+const showPopup = popup => {
+  popup.classList.add('popup_opened')
 }
 // Закрывает попап
 const hidePopup = button => {
@@ -140,11 +132,11 @@ popupEditCloseBtn.addEventListener('click', fillProfile)
 overviewCloseBtn.addEventListener('click', hidePopup)
 popupAdd.querySelector('.popup__close-pic').addEventListener('click', hidePopup)
 editBtn.addEventListener('click', () => {
-  showPopup(editBtn)
+  showPopup(popupEdit)
   fillProfileForm()
 })
 addBtn.addEventListener('click', () => {
-  showPopup(addBtn)
+  showPopup(popupAdd)
 })
 editForm.addEventListener('submit', evt => {
   editFormSubmitHandler(evt)
