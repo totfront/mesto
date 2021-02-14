@@ -77,20 +77,21 @@ const showPopup = popup => {
   popup.classList.add('popup_opened')
 }
 // Закрывает попап
-const hidePopup = button => {
-  overview.classList.remove('popup_opened')
-  popupAdd.classList.remove('popup_opened')
-  popupEdit.classList.remove('popup_opened')
-  overview.querySelector('.popup__close-btn').removeEventListener('click', () => {
-    hidePopup(button)
-  })
-  popupAdd.querySelector('.popup__close-btn').removeEventListener('click', () => {
-    hidePopup(button)
-  })
+// const hidePopup = button => {
+//   overview.querySelector('.popup__close-btn').removeEventListener('click', () => {
+//     hidePopup(button)
+//   })
+//   popupAdd.querySelector('.popup__close-btn').removeEventListener('click', () => {
+//     hidePopup(button)
+//   })
+// }
+const hidePopup = popup => {
+  popup.classList.remove('popup_opened')
 }
+
 // Переписывает данные профиля введенными в форму и закрывает попап
 const fillProfile = () => {
-  hidePopup(popupEdit.querySelector('.popup__close-pic'))
+  hidePopup(popupEdit)
   profileName.textContent = nameInput.value
   profileDescription.textContent = descriptionInput.value
 }
@@ -104,14 +105,14 @@ const editFormSubmitHandler = evt => {
   evt.preventDefault()
   profileName.textContent = nameInput.value
   profileDescription.textContent = descriptionInput.value
-  hidePopup()
+  hidePopup(popupEdit)
 }
 // Изменяет вид кнопки "лайк"
 const switchLikeBtn = newLikeBtn => {
   newLikeBtn.classList.toggle('card__like-btn_active')
 }
 // Обработчик формы добавления карточек
-function addFormSubmitHandler(evt) {
+const addFormSubmitHandler = evt => {
   evt.preventDefault()
   const newCard = {}
   newCard.name = popupAddCardName.value
@@ -120,7 +121,7 @@ function addFormSubmitHandler(evt) {
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
   popupAdd.classList.toggle('popup_opened')
-  hidePopup()
+  hidePopup(popupAdd)
 }
 // Рендерит стартовые 6 карточек
 initialCards.forEach(item => {
@@ -128,8 +129,12 @@ initialCards.forEach(item => {
 })
 // Добавляет обработчики:
 popupEditCloseBtn.addEventListener('click', fillProfile)
-overviewCloseBtn.addEventListener('click', hidePopup)
-popupAdd.querySelector('.popup__close-pic').addEventListener('click', hidePopup)
+overviewCloseBtn.addEventListener('click', () => {
+  hidePopup(overview)
+})
+popupAdd.querySelector('.popup__close-pic').addEventListener('click', () => {
+  hidePopup(popupAdd)
+})
 editBtn.addEventListener('click', () => {
   showPopup(popupEdit)
   fillProfileForm()
