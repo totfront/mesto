@@ -52,9 +52,8 @@ const createCard = item => {
   newCard.querySelector('.card__heading').textContent = item.name
   cardPic.addEventListener('click', () => {
     showPopup(overview)
-    // Обрезает у значения свойства фона всё лишнее и добавляет фоновую картинку в overview
-    overviewPic.src = cardPic.style.backgroundImage.slice(5).slice(0, -2)
-    overviewCaption.textContent = newCard.querySelector('.card__heading').textContent
+    overviewPic.src = item.link
+    overviewCaption.textContent = item.name
   })
   const newDeleteBtn = newCard.querySelector('.card__trash-btn')
   const newLikeBtn = newCard.querySelector('.card__like-btn')
