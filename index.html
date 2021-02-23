@@ -39,18 +39,50 @@
     <footer class="footer">
         <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
     </footer>
-    <div class="popup appearance">
+    <!-- Работаю здесь -->
+    <div class="popup appearance" id="profile-popup">
         <div class="popup__container">
             <h2 class="popup__title">Редактировать профиль</h2>
-            <form name="popupForm" class="popup__form">
-                <input name="name" class="popup__input popup__input_data_name" type="text">
-                <input name="description" class="popup__input popup__input_data_description" type="text">
+            <form class="popup__form" name="profile-editor" action="#" method="post">
+                <div class="popup__input-wrapper">
+                    <input class="popup__input popup__input_data_name" id='profile-name' name="name" type="text" minlength="2" maxlength="40" autocomplete="off" required>
+                    <span class="popup__input-error  appearance" id='profile-name-error'>123</span>
+                </div>
+                <div class="popup__input-wrapper">
+                    <input class="popup__input popup__input_data_description" id='profile-job' name="description" type="text" minlength="2" maxlength="200" autocomplete="off" required>
+                    <span class="popup__input-error   appearance" id='profile-job-error'>123</span>
+                </div>
                 <button name="submitBtn" class="popup__save-btn" type="submit">Сохранить</button>
             </form>
             <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
         </div>
     </div>
+    <div class="popup appearance" id="card-popup">
+        <div class="popup__container">
+            <h2 class="popup__title">Новое место</h2>
+            <form class="popup__form" name="card-renderer" action="#" method="post">
+                <div class="popup__input-wrapper"> <input class="popup__input popup__input_data_name" placeholder="Название" id='pic-name' name="name" type="text" autocomplete="off" required>
+                    <span class="popup__input-error  appearance" id='pic-name-error'>Вы пропустили это поле.</span>
+                </div>
+                <div class="popup__input-wrapper"> <input class="popup__input popup__input_data_description" placeholder="Ссылка на картинку" id='url' name="description" type="url" autocomplete="off" required>
+                    <span class="popup__input-error  appearance" id='url-error'>Введите адрес сайта.</span>
+                </div>
+                <button class="popup__save-btn" name="submitBtn" type="submit">Сохранить</button>
+            </form>
+            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
+        </div>
+    </div>
+    <!-- Работаю здесь -->
+    <div class="popup overview appearance">
+        <figure class="overview__container">
+            <img class="overview__pic" src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="Фото пейзажа">
+            <figcaption class="overview__caption"></figcaption>
+            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
+        </figure>
+    </div>
 
     <script src="./scripts/scripts.js"></script>
+
+    <script src="./scripts/validate.js"></script>
 </body>
 </html>
