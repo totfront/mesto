@@ -17,6 +17,7 @@ const overviewCaption = document.querySelector('.overview__caption')
 const popupAdd = document.querySelector('#card-popup')
 const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
 const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
+const popups = Array.from(document.querySelectorAll('.popup'))
 
 const initialCards = [
   {
@@ -133,4 +134,16 @@ editForm.addEventListener('submit', evt => {
 })
 popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
   addFormSubmitHandler(evt)
+})
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    hidePopup(popupAdd)
+    hidePopup(overview)
+    hidePopup(popupEdit)
+  }
+})
+popups.forEach(popup => {
+  popup.addEventListener('click', event => {
+    hidePopup(popup)
+  })
 })
