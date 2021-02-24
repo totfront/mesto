@@ -1,0 +1,5 @@
+.card__like-btn {
+  min-width: 20px;
+  height: 20px;
+  background: center/100% no-repeat url('../../../images/cards/card__like.svg');
+}
