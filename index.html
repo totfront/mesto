@@ -46,11 +46,11 @@
             <form class="popup__form" name="profile-editor" action="#" method="post">
                 <div class="popup__input-wrapper">
                     <input class="popup__input popup__input_data_name" id='profile-name' name="name" type="text" minlength="2" maxlength="40" autocomplete="off" required>
-                    <span class="popup__input-error  appearance" id='profile-name-error'>123</span>
+                    <span class="popup__input-error" id='profile-name-error'>Вы пропустили это поле.</span>
                 </div>
                 <div class="popup__input-wrapper">
                     <input class="popup__input popup__input_data_description" id='profile-job' name="description" type="text" minlength="2" maxlength="200" autocomplete="off" required>
-                    <span class="popup__input-error   appearance" id='profile-job-error'>123</span>
+                    <span class="popup__input-error" id='profile-job-error'>Вы пропустили это поле.</span>
                 </div>
                 <button name="submitBtn" class="popup__save-btn" type="submit">Сохранить</button>
             </form>
@@ -61,11 +61,13 @@
         <div class="popup__container">
             <h2 class="popup__title">Новое место</h2>
             <form class="popup__form" name="card-renderer" action="#" method="post">
-                <div class="popup__input-wrapper"> <input class="popup__input popup__input_data_name" placeholder="Название" id='pic-name' name="name" type="text" autocomplete="off" required>
-                    <span class="popup__input-error  appearance" id='pic-name-error'>Вы пропустили это поле.</span>
+                <div class="popup__input-wrapper">
+                    <input class="popup__input popup__input_data_name" placeholder="Название" id='pic-name' name="name" type="text" minlength="2" maxlength="30" autocomplete="off" required>
+                    <span class="popup__input-error" id='pic-name-error'>Вы пропустили это поле.</span>
                 </div>
-                <div class="popup__input-wrapper"> <input class="popup__input popup__input_data_description" placeholder="Ссылка на картинку" id='url' name="description" type="url" autocomplete="off" required>
-                    <span class="popup__input-error  appearance" id='url-error'>Введите адрес сайта.</span>
+                <div class="popup__input-wrapper">
+                    <input class="popup__input popup__input_data_description" placeholder="Ссылка на картинку" id='url' name="url" type="url" autocomplete="off" required>
+                    <span class="popup__input-error" id='url-error'>Введите адрес сайта.</span>
                 </div>
                 <button class="popup__save-btn" name="submitBtn" type="submit">Сохранить</button>
             </form>

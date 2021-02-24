@@ -4,3 +4,7 @@
   border: 2px solid black;
   background: transparent;
 }
+
+.popup__save-btn_inactive:hover {
+  opacity: 0.2;
+}
