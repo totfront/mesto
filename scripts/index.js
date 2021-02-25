@@ -73,9 +73,21 @@ const renderCard = item => {
   const newCard = createCard(item)
   cardsContainer.prepend(newCard)
 }
+// Добавляет и удаляет обработчики событий на Esc в попапах
+const handleEventListener = popup => {
+  const setEventListenersStateForEscBtn = event => {
+    if (event.key === 'Escape') {
+      hidePopup(popup)
+      document.removeEventListener('keydown', setEventListenersStateForEscBtn)
+    }
+  }
+  document.addEventListener('keydown', setEventListenersStateForEscBtn)
+}
+
 // Показывает попап
 const showPopup = popup => {
   popup.classList.add('popup_opened')
+  handleEventListener(popup)
 }
 // Закрывает попап
 const hidePopup = popup => {
@@ -135,15 +147,11 @@ editForm.addEventListener('submit', evt => {
 popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
   addFormSubmitHandler(evt)
 })
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape') {
-    hidePopup(popupAdd)
-    hidePopup(overview)
-    hidePopup(popupEdit)
-  }
-})
+
 popups.forEach(popup => {
   popup.addEventListener('click', event => {
-    hidePopup(popup)
+    if (event.target.classList.contains('popup')) {
+      hidePopup(popup)
+    }
   })
 })
