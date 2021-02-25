@@ -74,24 +74,30 @@ const renderCard = item => {
   cardsContainer.prepend(newCard)
 }
 // Добавляет и удаляет обработчики событий на Esc в попапах
-const handleEventListener = popup => {
-  const setEventListenersStateForEscBtn = event => {
-    if (event.key === 'Escape') {
-      hidePopup(popup)
-      document.removeEventListener('keydown', setEventListenersStateForEscBtn)
-    }
+// const handleEventListener = popup => {
+//   const setEventListenersStateForEscBtn = event => {
+//     if (event.key === 'Escape') {
+//       hidePopup(popup)
+//       document.removeEventListener('keydown', setEventListenersStateForEscBtn)
+//     }
+//   }
+//   document.addEventListener('keydown', setEventListenersStateForEscBtn)
+// }
+function closeByEscape(evt) {
+  if (evt.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened')
+    hidePopup(openedPopup)
   }
-  document.addEventListener('keydown', setEventListenersStateForEscBtn)
 }
-
 // Показывает попап
-const showPopup = popup => {
+function showPopup(popup) {
   popup.classList.add('popup_opened')
-  handleEventListener(popup)
+  document.addEventListener('keydown', closeByEscape)
 }
 // Закрывает попап
-const hidePopup = popup => {
+function hidePopup(popup) {
   popup.classList.remove('popup_opened')
+  document.removeEventListener('keydown', closeByEscape)
 }
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
