@@ -1,3 +1,6 @@
+import { hidePopup, editForm, profileName, nameInput, profileDescription, descriptionInput, popupEdit, popupAdd } from './index.js'
+import { Card } from './Card.js'
+
 const settings = {
   formSelector: 'form',
   inputSelector: '.popup__input',
@@ -97,21 +100,40 @@ class FormValidator {
     }
     inputList.forEach(inputListIterator)
     this._toggleButtonState(inputList, submitBtn, inputErrorClass, inactiveButtonClass)
+    editForm.addEventListener('submit', evt => {
+      this._editFormSubmitHandler(evt)
+    })
+    popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
+      this._addFormSubmitHandler(evt)
+    })
   }
-
-  _enableValidation = ({ formSelector, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass }) => {
+  // Обработчик формы добавления карточек
+  _addFormSubmitHandler(evt) {
+    evt.preventDefault()
+    const newCard = {}
+    const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
+    const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
+    newCard.name = popupAddCardName.value
+    newCard.link = popupAddCardDescription.value
+    Card.renderCard(newCard)
+    popupAddCardName.value = ''
+    popupAddCardDescription.value = ''
+    hidePopup(popupAdd)
+  }
+  // Обработчик формы редакторования профиля
+  _editFormSubmitHandler(evt) {
+    evt.preventDefault()
+    profileName.textContent = nameInput.value
+    profileDescription.textContent = descriptionInput.value
+    hidePopup(popupEdit)
+  }
+  enableValidation = ({ errorClass, formSelector, inactiveButtonClass, inputErrorClass, inputSelector, submitButtonSelector }) => {
     const formElements = document.querySelectorAll(formSelector)
     const formList = Array.from(formElements)
     formList.forEach(formElement => {
-      setEventListeners(formElement, inputSelector, inputErrorClass, submitButtonSelector, inactiveButtonClass, errorClass)
+      this._setEventListeners(formElement, inputSelector, inputErrorClass, submitButtonSelector, inactiveButtonClass, errorClass)
     })
   }
 }
 
-const formList = Array.from(document.querySelectorAll(settings.formSelector))
-formList.forEach(formElement => {
-  const validation = new FormValidator(settings, formElement)
-  console.log(validation)
-})
-
-export { FormValidator }
+export { FormValidator, settings }

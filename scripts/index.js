@@ -1,5 +1,5 @@
 import { Card } from './Card.js'
-import { FormValidator } from './FormValidator.js'
+import { FormValidator, settings } from './FormValidator.js'
 
 const popupEdit = document.querySelector('#profile-popup')
 const popupEditCloseBtn = popupEdit.querySelector('.popup__close-btn')
@@ -18,9 +18,34 @@ const overviewPic = document.querySelector('.overview__pic')
 const overviewCloseBtn = overview.querySelector('.popup__close-btn')
 const overviewCaption = document.querySelector('.overview__caption')
 const popupAdd = document.querySelector('#card-popup')
-const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
-const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
 const popups = Array.from(document.querySelectorAll('.popup'))
+
+const initialCards = [
+  {
+    name: 'Архыз',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
+  },
+  {
+    name: 'Челябинская область',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
+  },
+  {
+    name: 'Иваново',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
+  },
+  {
+    name: 'Камчатка',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
+  },
+  {
+    name: 'Холмогорский район',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
+  },
+  {
+    name: 'Байкал',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
+  }
+]
 
 // Показывает попап
 const showPopup = popup => {
@@ -59,12 +84,6 @@ editBtn.addEventListener('click', () => {
 addBtn.addEventListener('click', () => {
   showPopup(popupAdd)
 })
-editForm.addEventListener('submit', evt => {
-  editFormSubmitHandler(evt)
-})
-popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
-  addFormSubmitHandler(evt)
-})
 
 popups.forEach(popup => {
   popup.addEventListener('click', event => {
@@ -77,37 +96,16 @@ popups.forEach(popup => {
   })
 })
 
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-]
-
 // Рендерит стартовые 6 карточек
 initialCards.forEach(item => {
   const card = new Card(item, '#template')
   card.renderCard(this)
 })
 
-export { cardTemplate, cardsContainer }
+const formList = Array.from(document.querySelectorAll(settings.formSelector))
+formList.forEach(formElement => {
+  const validation = new FormValidator(settings, formElement)
+  validation.enableValidation(settings)
+})
+
+export { cardTemplate, cardsContainer, overview, showPopup, hidePopup, overviewPic, overviewCaption, editForm, profileName, nameInput, profileDescription, descriptionInput, popupEdit, popupAdd }
