@@ -1,3 +1,6 @@
+import { Card } from './Card.js'
+import { FormValidator } from './FormValidator.js'
+
 const popupEdit = document.querySelector('#profile-popup')
 const popupEditCloseBtn = popupEdit.querySelector('.popup__close-btn')
 const editBtn = document.querySelector('.profile__edit-btn')
@@ -18,6 +21,61 @@ const popupAdd = document.querySelector('#card-popup')
 const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
 const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
 const popups = Array.from(document.querySelectorAll('.popup'))
+
+// Показывает попап
+const showPopup = popup => {
+  popup.classList.add('popup_opened')
+  document.addEventListener('keydown', closeByEscape)
+}
+// Закрывает попап
+const hidePopup = popup => {
+  popup.classList.remove('popup_opened')
+  document.removeEventListener('keydown', closeByEscape)
+}
+const closeByEscape = evt => {
+  if (evt.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened')
+    hidePopup(openedPopup)
+  }
+}
+
+// Заполняет поля формы данными со страницы
+const fillProfileForm = () => {
+  nameInput.setAttribute('value', profileName.textContent)
+  descriptionInput.setAttribute('value', profileDescription.textContent)
+}
+
+// Добавляет обработчики:
+popupEditCloseBtn.addEventListener('click', () => {
+  hidePopup(popupEdit)
+})
+overviewCloseBtn.addEventListener('click', () => {
+  hidePopup(overview)
+})
+editBtn.addEventListener('click', () => {
+  showPopup(popupEdit)
+  fillProfileForm()
+})
+addBtn.addEventListener('click', () => {
+  showPopup(popupAdd)
+})
+editForm.addEventListener('submit', evt => {
+  editFormSubmitHandler(evt)
+})
+popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
+  addFormSubmitHandler(evt)
+})
+
+popups.forEach(popup => {
+  popup.addEventListener('click', event => {
+    if (event.target.classList.contains('popup')) {
+      hidePopup(popup)
+    }
+    if (event.target.classList.contains('popup__close-pic')) {
+      hidePopup(popup)
+    }
+  })
+})
 
 const initialCards = [
   {
@@ -45,119 +103,11 @@ const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ]
-// Создает карточку
-const createCard = item => {
-  const newCard = cardTemplate.querySelector('.card').cloneNode(true)
-  const cardPic = newCard.querySelector('.card__pic')
-  cardPic.style.backgroundImage = `url("${item.link}")`
-  newCard.querySelector('.card__heading').textContent = item.name
-  cardPic.addEventListener('click', () => {
-    showPopup(overview)
-    overviewPic.src = item.link
-    overviewCaption.textContent = item.name
-  })
-  const newDeleteBtn = newCard.querySelector('.card__trash-btn')
-  const newLikeBtn = newCard.querySelector('.card__like-btn')
-  // Добавляем кнопке "удалить" листнер на удаление карточек
-  newDeleteBtn.addEventListener('click', () => {
-    newCard.remove()
-  })
-  // Добавляем кнопке "лайк" листнер на лайк карточек
-  newLikeBtn.addEventListener('click', () => {
-    switchLikeBtn(newLikeBtn)
-  })
-  return newCard
-}
-// Добавляет карточки и оживляет кнопки "лайк" и "удалить карточку"
-const renderCard = item => {
-  const newCard = createCard(item)
-  cardsContainer.prepend(newCard)
-}
-// Добавляет и удаляет обработчики событий на Esc в попапах
-// const handleEventListener = popup => {
-//   const setEventListenersStateForEscBtn = event => {
-//     if (event.key === 'Escape') {
-//       hidePopup(popup)
-//       document.removeEventListener('keydown', setEventListenersStateForEscBtn)
-//     }
-//   }
-//   document.addEventListener('keydown', setEventListenersStateForEscBtn)
-// }
-function closeByEscape(evt) {
-  if (evt.key === 'Escape') {
-    const openedPopup = document.querySelector('.popup_opened')
-    hidePopup(openedPopup)
-  }
-}
-// Показывает попап
-function showPopup(popup) {
-  popup.classList.add('popup_opened')
-  document.addEventListener('keydown', closeByEscape)
-}
-// Закрывает попап
-function hidePopup(popup) {
-  popup.classList.remove('popup_opened')
-  document.removeEventListener('keydown', closeByEscape)
-}
-// Заполняет поля формы данными со страницы
-const fillProfileForm = () => {
-  nameInput.setAttribute('value', profileName.textContent)
-  descriptionInput.setAttribute('value', profileDescription.textContent)
-}
-// Обработчик формы редакторования профиля
-const editFormSubmitHandler = evt => {
-  evt.preventDefault()
-  profileName.textContent = nameInput.value
-  profileDescription.textContent = descriptionInput.value
-  hidePopup(popupEdit)
-}
-// Изменяет вид кнопки "лайк"
-const switchLikeBtn = newLikeBtn => {
-  newLikeBtn.classList.toggle('card__like-btn_active')
-}
-// Обработчик формы добавления карточек
-const addFormSubmitHandler = evt => {
-  evt.preventDefault()
-  const newCard = {}
-  newCard.name = popupAddCardName.value
-  newCard.link = popupAddCardDescription.value
-  renderCard(newCard)
-  popupAddCardName.value = ''
-  popupAddCardDescription.value = ''
-  hidePopup(popupAdd)
-}
+
 // Рендерит стартовые 6 карточек
 initialCards.forEach(item => {
-  renderCard(item)
-})
-// Добавляет обработчики:
-popupEditCloseBtn.addEventListener('click', () => {
-  hidePopup(popupEdit)
-})
-overviewCloseBtn.addEventListener('click', () => {
-  hidePopup(overview)
-})
-popupAdd.querySelector('.popup__close-pic').addEventListener('click', () => {
-  hidePopup(popupAdd)
-})
-editBtn.addEventListener('click', () => {
-  showPopup(popupEdit)
-  fillProfileForm()
-})
-addBtn.addEventListener('click', () => {
-  showPopup(popupAdd)
-})
-editForm.addEventListener('submit', evt => {
-  editFormSubmitHandler(evt)
-})
-popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
-  addFormSubmitHandler(evt)
+  const card = new Card(item, '#template')
+  card.renderCard(this)
 })
 
-popups.forEach(popup => {
-  popup.addEventListener('click', event => {
-    if (event.target.classList.contains('popup')) {
-      hidePopup(popup)
-    }
-  })
-})
+export { cardTemplate, cardsContainer }
