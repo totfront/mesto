@@ -1,5 +1,11 @@
-import { hidePopup, editForm, profileName, nameInput, profileDescription, descriptionInput, popupEdit, popupAdd } from './index.js'
+import { hidePopup, profileName, nameInput, profileDescription, descriptionInput } from './index.js'
 import { Card } from './Card.js'
+
+const popupEdit = document.querySelector('#profile-popup')
+const editForm = popupEdit.querySelector('.popup__form')
+const popupAdd = document.querySelector('#card-popup')
+const cardRenderForm = document.querySelector('#card-renderer')
+const profileEditorForm = document.querySelector('#profile-editor')
 
 const settings = {
   formSelector: 'form',
@@ -20,34 +26,39 @@ class FormValidator {
     this._errorClass = settings.errorClass
     this._formElement = formElement
   }
-  _showInputError = (formElement, inputElement, errorMessage, errorClass) => {
-    const errorElement = formElement.querySelector(`#${inputElement.id}-error`)
+
+  // Показывает ошибку ввода
+  _showInputError = (inputElement, errorMessage) => {
+    const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
 
     errorElement.textContent = errorMessage
-    errorElement.classList.add(errorClass)
+    errorElement.classList.add(this._errorClass)
   }
 
-  _hideInputError = (formElement, inputElement, errorClass) => {
-    const errorElement = formElement.querySelector(`#${inputElement.id}-error`)
+  // Скрывает ошибку ввода
+  _hideInputError = inputElement => {
+    const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
     errorElement.textContent = ''
-    errorElement.classList.remove(errorClass)
+    errorElement.classList.remove(this._errorClass)
   }
 
-  _toggleButtonState = (inputList, buttonElement, inputErrorClass, inactiveButtonClass) => {
+  // Меняет состояние кнопки
+  _toggleButtonState = (inputList, buttonElement) => {
     const findTheOneNotValid = inputElement => {
       return !inputElement.validity.valid
     }
     const notValidInput = inputList.find(findTheOneNotValid)
     if (notValidInput) {
       buttonElement.setAttribute('disabled', true)
-      buttonElement.classList.add(inactiveButtonClass)
-      notValidInput.classList.add(inputErrorClass)
+      buttonElement.classList.add(this._inactiveButtonClass)
+      notValidInput.classList.add(this._inputErrorClass)
     } else {
       buttonElement.removeAttribute('disabled')
-      buttonElement.classList.remove(inactiveButtonClass)
+      buttonElement.classList.remove(this._inactiveButtonClass)
     }
   }
 
+  // Меняет сообщения с ошибкой на кастомные
   _getErrorMessage = inputElement => {
     const defaultErrorHandler = inputElement => inputElement.validationMessage
     const multyErrorHandler = inputElement => {
@@ -73,67 +84,87 @@ class FormValidator {
     return errorHandler(inputElement)
   }
 
-  _checkInputValidity = (formElement, inputElement, errorClass) => {
+  // Проверяет поля для ввода на валидность
+  _checkInputValidity = inputElement => {
     const isInputNotValid = !inputElement.validity.valid
     if (isInputNotValid) {
       const errorMessage = this._getErrorMessage(inputElement)
-      this._showInputError(formElement, inputElement, errorMessage, errorClass)
+      this._showInputError(inputElement, errorMessage)
     } else {
-      this._hideInputError(formElement, inputElement, errorClass)
+      this._hideInputError(inputElement)
     }
   }
 
-  _setEventListeners = (formElement, inputSelector, inputErrorClass, submitButtonSelector, inactiveButtonClass, errorClass) => {
+  // Включает валидацию и добавляет слушатели событий всем интерактивным элементам
+  enableValidation = () => {
     const handleFormSubmit = event => {
       event.preventDefault()
     }
-    formElement.addEventListener('submit', handleFormSubmit)
+    this._formElement.addEventListener('submit', handleFormSubmit)
 
-    const inputList = Array.from(formElement.querySelectorAll(inputSelector))
-    const submitBtn = formElement.querySelector(submitButtonSelector)
+    const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector))
+    const submitBtn = this._formElement.querySelector(this._submitButtonSelector)
     const inputListIterator = inputElement => {
       const handleInput = () => {
-        this._checkInputValidity(formElement, inputElement, errorClass)
-        this._toggleButtonState(inputList, submitBtn, inputErrorClass, inactiveButtonClass)
+        this._checkInputValidity(inputElement, this._errorClass)
+        this._toggleButtonState(inputList, submitBtn)
       }
       inputElement.addEventListener('input', handleInput)
     }
     inputList.forEach(inputListIterator)
-    this._toggleButtonState(inputList, submitBtn, inputErrorClass, inactiveButtonClass)
+    this._toggleButtonState(inputList, submitBtn)
     editForm.addEventListener('submit', evt => {
       this._editFormSubmitHandler(evt)
     })
     popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
-      this._addFormSubmitHandler(evt)
+      this.addFormSubmitHandler(evt)
     })
   }
   // Обработчик формы добавления карточек
-  _addFormSubmitHandler(evt) {
+  addFormSubmitHandler(evt) {
     evt.preventDefault()
-    const newCard = {}
-    const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
-    const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
-    newCard.name = popupAddCardName.value
-    newCard.link = popupAddCardDescription.value
-    Card.renderCard(newCard)
-    popupAddCardName.value = ''
-    popupAddCardDescription.value = ''
     hidePopup(popupAdd)
   }
   // Обработчик формы редакторования профиля
   _editFormSubmitHandler(evt) {
     evt.preventDefault()
-    profileName.textContent = nameInput.value
-    profileDescription.textContent = descriptionInput.value
     hidePopup(popupEdit)
-  }
-  enableValidation = ({ errorClass, formSelector, inactiveButtonClass, inputErrorClass, inputSelector, submitButtonSelector }) => {
-    const formElements = document.querySelectorAll(formSelector)
-    const formList = Array.from(formElements)
-    formList.forEach(formElement => {
-      this._setEventListeners(formElement, inputSelector, inputErrorClass, submitButtonSelector, inactiveButtonClass, errorClass)
-    })
   }
 }
 
-export { FormValidator, settings }
+class FormCardRender extends FormValidator {
+  _addFormSubmitHandler(evt) {
+    super.addFormSubmitHandler(evt)
+    const newCard = {}
+    const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
+    const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
+    newCard.name = popupAddCardName.value
+    newCard.link = popupAddCardDescription.value
+    new Card(newCard, '#template').renderCard(newCard)
+    popupAddCardName.value = ''
+    popupAddCardDescription.value = ''
+  }
+
+  enableValidation() {
+    super.enableValidation()
+    this._editFormSubmitHandler(evt)
+  }
+}
+
+class FormEditProfile extends FormValidator {
+  _editFormSubmitHandler(evt) {
+    super._editFormSubmitHandler(evt)
+    profileName.textContent = nameInput.value
+    profileDescription.textContent = descriptionInput.value
+  }
+
+  enableValidation() {
+    super.enableValidation()
+    this._editFormSubmitHandler(evt)
+  }
+}
+
+new FormCardRender(settings, cardRenderForm).enableValidation()
+new FormEditProfile(settings, profileEditorForm).enableValidation()
+
+export { FormValidator, settings, popupEdit, popupAdd }

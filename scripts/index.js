@@ -1,14 +1,12 @@
 import { Card } from './Card.js'
-import { FormValidator, settings } from './FormValidator.js'
+import { FormValidator, settings, popupEdit, popupAdd } from './FormValidator.js'
 
-const popupEdit = document.querySelector('#profile-popup')
 const popupEditCloseBtn = popupEdit.querySelector('.popup__close-btn')
 const editBtn = document.querySelector('.profile__edit-btn')
 const nameInput = document.querySelector('.popup__input_data_name')
 const descriptionInput = document.querySelector('.popup__input_data_description')
 const profileName = document.querySelector('.profile__name')
 const profileDescription = document.querySelector('.profile__description')
-const editForm = popupEdit.querySelector('.popup__form')
 const addBtn = document.querySelector('.profile__add-btn')
 const popupTitle = document.querySelector('.popup__title')
 const cardTemplate = document.querySelector('#template').content
@@ -17,8 +15,8 @@ const overview = document.querySelector('.overview')
 const overviewPic = document.querySelector('.overview__pic')
 const overviewCloseBtn = overview.querySelector('.popup__close-btn')
 const overviewCaption = document.querySelector('.overview__caption')
-const popupAdd = document.querySelector('#card-popup')
 const popups = Array.from(document.querySelectorAll('.popup'))
+const cardRenderForm = document.querySelector('#card-renderer')
 
 const initialCards = [
   {
@@ -102,10 +100,4 @@ initialCards.forEach(item => {
   card.renderCard(this)
 })
 
-const formList = Array.from(document.querySelectorAll(settings.formSelector))
-formList.forEach(formElement => {
-  const validation = new FormValidator(settings, formElement)
-  validation.enableValidation(settings)
-})
-
-export { cardTemplate, cardsContainer, overview, showPopup, hidePopup, overviewPic, overviewCaption, editForm, profileName, nameInput, profileDescription, descriptionInput, popupEdit, popupAdd }
+export { cardTemplate, cardsContainer, overview, showPopup, hidePopup, overviewPic, overviewCaption, profileName, nameInput, profileDescription, descriptionInput, popupEdit, popupAdd }
