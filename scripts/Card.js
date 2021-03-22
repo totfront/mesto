@@ -1,4 +1,7 @@
-import { cardTemplate, cardsContainer, overview, showPopup, overviewPic, overviewCaption } from './index.js'
+import { overview, showPopup, overviewPic, overviewCaption } from './index.js'
+
+const cardTemplate = document.querySelector('#template').content
+const cardsContainer = document.querySelector('.cards')
 
 class Card {
   constructor(data, selector) {

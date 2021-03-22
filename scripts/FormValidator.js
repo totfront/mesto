@@ -1,20 +1,5 @@
-import { hidePopup, profileName, nameInput, profileDescription, descriptionInput } from './index.js'
+import { popupEdit, editForm, popupAdd, cardRenderForm, profileEditorForm, settings, hidePopup, profileName, nameInput, profileDescription, descriptionInput } from './index.js'
 import { Card } from './Card.js'
-
-const popupEdit = document.querySelector('#profile-popup')
-const editForm = popupEdit.querySelector('.popup__form')
-const popupAdd = document.querySelector('#card-popup')
-const cardRenderForm = document.querySelector('#card-renderer')
-const profileEditorForm = document.querySelector('#profile-editor')
-
-const settings = {
-  formSelector: 'form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__save-btn',
-  inactiveButtonClass: 'popup__save-btn_inactive',
-  inputErrorClass: '.popup__input-error',
-  errorClass: 'popup__input-error_active'
-}
 
 class FormValidator {
   constructor(settings, formElement) {
@@ -113,28 +98,32 @@ class FormValidator {
     }
     inputList.forEach(inputListIterator)
     this._toggleButtonState(inputList, submitBtn)
-    editForm.addEventListener('submit', evt => {
-      this._editFormSubmitHandler(evt)
-    })
-    popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
-      this.addFormSubmitHandler(evt)
-    })
   }
   // Обработчик формы добавления карточек
-  addFormSubmitHandler(evt) {
+  formSubmitHandler(evt) {
     evt.preventDefault()
     hidePopup(popupAdd)
   }
   // Обработчик формы редакторования профиля
-  _editFormSubmitHandler(evt) {
+  editFormSubmitHandler(evt) {
     evt.preventDefault()
     hidePopup(popupEdit)
   }
 }
 
 class FormCardRender extends FormValidator {
-  _addFormSubmitHandler(evt) {
-    super.addFormSubmitHandler(evt)
+  constructor(settings, cardRenderForm) {
+    super(settings, cardRenderForm)
+  }
+  handleCardRenderForm = () => {
+    new FormValidator(settings, cardRenderForm).enableValidation()
+    popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
+      super.formSubmitHandler(evt)
+      this._renderCard()
+    })
+  }
+
+  _renderCard = () => {
     const newCard = {}
     const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
     const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
@@ -144,27 +133,20 @@ class FormCardRender extends FormValidator {
     popupAddCardName.value = ''
     popupAddCardDescription.value = ''
   }
-
-  enableValidation() {
-    super.enableValidation()
-    this._editFormSubmitHandler(evt)
-  }
 }
 
 class FormEditProfile extends FormValidator {
-  _editFormSubmitHandler(evt) {
-    super._editFormSubmitHandler(evt)
-    profileName.textContent = nameInput.value
-    profileDescription.textContent = descriptionInput.value
+  constructor(settings, profileEditorForm) {
+    super(settings, profileEditorForm)
   }
-
-  enableValidation() {
-    super.enableValidation()
-    this._editFormSubmitHandler(evt)
+  changeProfileData = () => {
+    new FormValidator(settings, profileEditorForm).enableValidation()
+    editForm.addEventListener('submit', evt => {
+      profileName.textContent = nameInput.value
+      profileDescription.textContent = descriptionInput.value
+      super.editFormSubmitHandler(evt)
+    })
   }
 }
 
-new FormCardRender(settings, cardRenderForm).enableValidation()
-new FormEditProfile(settings, profileEditorForm).enableValidation()
-
-export { FormValidator, settings, popupEdit, popupAdd }
+export { FormEditProfile, FormCardRender }

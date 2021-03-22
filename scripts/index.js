@@ -1,5 +1,20 @@
+import { FormEditProfile, FormCardRender } from './FormValidator.js'
 import { Card } from './Card.js'
-import { FormValidator, settings, popupEdit, popupAdd } from './FormValidator.js'
+
+const popupEdit = document.querySelector('#profile-popup')
+const editForm = popupEdit.querySelector('.popup__form')
+const popupAdd = document.querySelector('#card-popup')
+const cardRenderForm = document.querySelector('#card-renderer')
+const profileEditorForm = document.querySelector('#profile-editor')
+
+const settings = {
+  formSelector: 'form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__save-btn',
+  inactiveButtonClass: 'popup__save-btn_inactive',
+  inputErrorClass: '.popup__input-error',
+  errorClass: 'popup__input-error_active'
+}
 
 const popupEditCloseBtn = popupEdit.querySelector('.popup__close-btn')
 const editBtn = document.querySelector('.profile__edit-btn')
@@ -9,14 +24,11 @@ const profileName = document.querySelector('.profile__name')
 const profileDescription = document.querySelector('.profile__description')
 const addBtn = document.querySelector('.profile__add-btn')
 const popupTitle = document.querySelector('.popup__title')
-const cardTemplate = document.querySelector('#template').content
-const cardsContainer = document.querySelector('.cards')
 const overview = document.querySelector('.overview')
 const overviewPic = document.querySelector('.overview__pic')
 const overviewCloseBtn = overview.querySelector('.popup__close-btn')
 const overviewCaption = document.querySelector('.overview__caption')
 const popups = Array.from(document.querySelectorAll('.popup'))
-const cardRenderForm = document.querySelector('#card-renderer')
 
 const initialCards = [
   {
@@ -96,8 +108,10 @@ popups.forEach(popup => {
 
 // Рендерит стартовые 6 карточек
 initialCards.forEach(item => {
-  const card = new Card(item, '#template')
-  card.renderCard(this)
+  new Card(item, '#template').renderCard()
 })
 
-export { cardTemplate, cardsContainer, overview, showPopup, hidePopup, overviewPic, overviewCaption, profileName, nameInput, profileDescription, descriptionInput, popupEdit, popupAdd }
+new FormCardRender(settings, cardRenderForm).handleCardRenderForm()
+new FormEditProfile(settings, cardRenderForm).changeProfileData()
+
+export { initialCards, popupEdit, editForm, popupAdd, cardRenderForm, profileEditorForm, settings, overview, showPopup, hidePopup, overviewPic, overviewCaption, profileName, nameInput, profileDescription, descriptionInput }
