@@ -56,7 +56,6 @@ const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ]
-
 // Показывает попап
 const showPopup = popup => {
   popup.classList.add('popup_opened')
