@@ -9,20 +9,25 @@ class Card {
     this._image = data.link
     this._selector = selector
   }
-  // Создает карточку и наполняет её
-  _createCard(item) {
+  // Подготавливает карточку к публикации
+  _createCard() {
     const newCard = cardTemplate.querySelector('.card').cloneNode(true)
     const cardPic = newCard.querySelector('.card__pic')
-    // Наполняет карточку
     cardPic.style.backgroundImage = `url("${this._image}")`
     newCard.querySelector('.card__heading').textContent = this._heading
+    this._handleEventListeners(cardPic, newCard)
+    return newCard
+  }
+
+  _handleEventListeners = (cardPic, newCard) => {
+    const newDeleteBtn = newCard.querySelector('.card__trash-btn')
+    const newLikeBtn = newCard.querySelector('.card__like-btn')
+    // Добавляет слушатель на попап с фуллсайз превью карточки и записывает в него текст с картинкой
     cardPic.addEventListener('click', () => {
       showPopup(overview)
       overviewPic.src = this._image
       overviewCaption.textContent = this._heading
     })
-    const newDeleteBtn = newCard.querySelector('.card__trash-btn')
-    const newLikeBtn = newCard.querySelector('.card__like-btn')
     // Добавляем кнопке "удалить" листнер на удаление карточек
     newDeleteBtn.addEventListener('click', () => {
       newCard.remove()
@@ -31,7 +36,6 @@ class Card {
     newLikeBtn.addEventListener('click', () => {
       this._switchLikeBtn(newLikeBtn)
     })
-    return newCard
   }
 
   // Изменяет вид кнопки "лайк"
@@ -41,8 +45,8 @@ class Card {
   // Добавляет карточку
   renderCard(item) {
     const newCard = this._createCard(item)
-    cardsContainer.prepend(newCard)
+    return newCard
   }
 }
 
-export { Card }
+export { Card, cardsContainer }
