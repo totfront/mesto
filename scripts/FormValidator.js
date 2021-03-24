@@ -1,5 +1,5 @@
 import { popupEdit, editForm, popupAdd, cardRenderForm, profileEditorForm, settings, hidePopup, profileName, nameInput, profileDescription, descriptionInput } from './index.js'
-import { Card } from './Card.js'
+import { cardsContainer, Card } from './Card.js'
 
 class FormValidator {
   constructor(settings, formElement) {
@@ -115,8 +115,12 @@ class FormCardRender extends FormValidator {
   constructor(settings, cardRenderForm) {
     super(settings, cardRenderForm)
   }
-  handleCardRenderForm = () => {
+  enableValidation = () => {
     new FormValidator(settings, cardRenderForm).enableValidation()
+    this._handleEventListner()
+  }
+
+  _handleEventListner = () => {
     popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
       super.formSubmitHandler(evt)
       this._renderCard()
@@ -129,7 +133,8 @@ class FormCardRender extends FormValidator {
     const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
     newCard.name = popupAddCardName.value
     newCard.link = popupAddCardDescription.value
-    new Card(newCard, '#template').renderCard(newCard)
+    const filledNewCard = new Card(newCard, '#template').renderCard()
+    cardsContainer.prepend(filledNewCard)
     popupAddCardName.value = ''
     popupAddCardDescription.value = ''
   }
@@ -139,8 +144,12 @@ class FormEditProfile extends FormValidator {
   constructor(settings, profileEditorForm) {
     super(settings, profileEditorForm)
   }
-  changeProfileData = () => {
+  enableValidation = () => {
     new FormValidator(settings, profileEditorForm).enableValidation()
+    this._changeProfileData()
+  }
+
+  _changeProfileData = () => {
     editForm.addEventListener('submit', evt => {
       profileName.textContent = nameInput.value
       profileDescription.textContent = descriptionInput.value
