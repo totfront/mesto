@@ -1,5 +1,5 @@
 import { FormEditProfile, FormCardRender } from './FormValidator.js'
-import { Card } from './Card.js'
+import { Card, cardsContainer } from './Card.js'
 
 const popupEdit = document.querySelector('#profile-popup')
 const editForm = popupEdit.querySelector('.popup__form')
@@ -105,12 +105,13 @@ popups.forEach(popup => {
   })
 })
 
-// Рендерит стартовые 6 карточек
+// Добавляет стартовые 6 карточек
 initialCards.forEach(item => {
-  new Card(item, '#template').renderCard()
+  const filledNewCard = new Card(item, '#template').renderCard()
+  cardsContainer.prepend(filledNewCard)
 })
 
-new FormCardRender(settings, cardRenderForm).handleCardRenderForm()
-new FormEditProfile(settings, cardRenderForm).changeProfileData()
+new FormCardRender(settings, cardRenderForm).enableValidation()
+new FormEditProfile(settings, cardRenderForm).enableValidation()
 
 export { initialCards, popupEdit, editForm, popupAdd, cardRenderForm, profileEditorForm, settings, overview, showPopup, hidePopup, overviewPic, overviewCaption, profileName, nameInput, profileDescription, descriptionInput }
