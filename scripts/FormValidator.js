@@ -1,6 +1,4 @@
-import { popupEdit, editForm, popupAdd, cardRenderForm, profileEditorForm, settings, hidePopup, profileName, nameInput, profileDescription, descriptionInput } from './index.js'
-import { cardsContainer, Card } from './Card.js'
-
+import { hidePopup } from './index.js'
 class FormValidator {
   constructor(settings, formElement) {
     this._formSelector = settings.formSelector
@@ -11,7 +9,6 @@ class FormValidator {
     this._errorClass = settings.errorClass
     this._formElement = formElement
   }
-
   // Показывает ошибку ввода
   _showInputError = (inputElement, errorMessage) => {
     const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
@@ -19,14 +16,12 @@ class FormValidator {
     errorElement.textContent = errorMessage
     errorElement.classList.add(this._errorClass)
   }
-
   // Скрывает ошибку ввода
   _hideInputError = inputElement => {
     const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
     errorElement.textContent = ''
     errorElement.classList.remove(this._errorClass)
   }
-
   // Меняет состояние кнопки
   _toggleButtonState = (inputList, buttonElement) => {
     const findTheOneNotValid = inputElement => {
@@ -42,7 +37,6 @@ class FormValidator {
       buttonElement.classList.remove(this._inactiveButtonClass)
     }
   }
-
   // Меняет сообщения с ошибкой на кастомные
   _getErrorMessage = inputElement => {
     const defaultErrorHandler = inputElement => inputElement.validationMessage
@@ -64,11 +58,9 @@ class FormValidator {
       url: multyErrorHandler,
       DEFAULT: defaultErrorHandler
     }
-
     const errorHandler = errorHandlers[inputElement.name] || errorHandlers.DEFAULT
     return errorHandler(inputElement)
   }
-
   // Проверяет поля для ввода на валидность
   _checkInputValidity = inputElement => {
     const isInputNotValid = !inputElement.validity.valid
@@ -79,14 +71,12 @@ class FormValidator {
       this._hideInputError(inputElement)
     }
   }
-
   // Включает валидацию и добавляет слушатели событий всем интерактивным элементам
   enableValidation = () => {
     const handleFormSubmit = event => {
       event.preventDefault()
     }
     this._formElement.addEventListener('submit', handleFormSubmit)
-
     const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector))
     const submitBtn = this._formElement.querySelector(this._submitButtonSelector)
     const inputListIterator = inputElement => {
@@ -99,63 +89,10 @@ class FormValidator {
     inputList.forEach(inputListIterator)
     this._toggleButtonState(inputList, submitBtn)
   }
-  // Обработчик формы добавления карточек
-  formSubmitHandler(evt) {
+  // Обработчик кнопки submit
+  handleSubmitBtn = (evt, popup) => {
     evt.preventDefault()
-    hidePopup(popupAdd)
-  }
-  // Обработчик формы редакторования профиля
-  editFormSubmitHandler(evt) {
-    evt.preventDefault()
-    hidePopup(popupEdit)
+    hidePopup(popup)
   }
 }
-
-class FormCardRender extends FormValidator {
-  constructor(settings, cardRenderForm) {
-    super(settings, cardRenderForm)
-  }
-  enableValidation = () => {
-    new FormValidator(settings, cardRenderForm).enableValidation()
-    this._handleEventListner()
-  }
-
-  _handleEventListner = () => {
-    popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
-      super.formSubmitHandler(evt)
-      this._renderCard()
-    })
-  }
-
-  _renderCard = () => {
-    const newCard = {}
-    const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
-    const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
-    newCard.name = popupAddCardName.value
-    newCard.link = popupAddCardDescription.value
-    const filledNewCard = new Card(newCard, '#template').renderCard()
-    cardsContainer.prepend(filledNewCard)
-    popupAddCardName.value = ''
-    popupAddCardDescription.value = ''
-  }
-}
-
-class FormEditProfile extends FormValidator {
-  constructor(settings, profileEditorForm) {
-    super(settings, profileEditorForm)
-  }
-  enableValidation = () => {
-    new FormValidator(settings, profileEditorForm).enableValidation()
-    this._changeProfileData()
-  }
-
-  _changeProfileData = () => {
-    editForm.addEventListener('submit', evt => {
-      profileName.textContent = nameInput.value
-      profileDescription.textContent = descriptionInput.value
-      super.editFormSubmitHandler(evt)
-    })
-  }
-}
-
-export { FormEditProfile, FormCardRender }
+export { FormValidator }

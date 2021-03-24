@@ -1,12 +1,10 @@
-import { FormEditProfile, FormCardRender } from './FormValidator.js'
+import { FormValidator } from './FormValidator.js'
 import { Card, cardsContainer } from './Card.js'
-
 const popupEdit = document.querySelector('#profile-popup')
 const editForm = popupEdit.querySelector('.popup__form')
 const popupAdd = document.querySelector('#card-popup')
 const cardRenderForm = document.querySelector('#card-renderer')
 const profileEditorForm = document.querySelector('#profile-editor')
-
 const settings = {
   formSelector: 'form',
   inputSelector: '.popup__input',
@@ -15,7 +13,6 @@ const settings = {
   inputErrorClass: '.popup__input-error',
   errorClass: 'popup__input-error_active'
 }
-
 const popupEditCloseBtn = popupEdit.querySelector('.popup__close-btn')
 const editBtn = document.querySelector('.profile__edit-btn')
 const nameInput = document.querySelector('.popup__input_data_name')
@@ -29,7 +26,6 @@ const overviewPic = document.querySelector('.overview__pic')
 const overviewCloseBtn = overview.querySelector('.popup__close-btn')
 const overviewCaption = document.querySelector('.overview__caption')
 const popups = Array.from(document.querySelectorAll('.popup'))
-
 const initialCards = [
   {
     name: 'Архыз',
@@ -72,13 +68,11 @@ const closeByEscape = evt => {
     hidePopup(openedPopup)
   }
 }
-
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
   nameInput.setAttribute('value', profileName.textContent)
   descriptionInput.setAttribute('value', profileDescription.textContent)
 }
-
 // Добавляет обработчики:
 popupEditCloseBtn.addEventListener('click', () => {
   hidePopup(popupEdit)
@@ -93,7 +87,6 @@ editBtn.addEventListener('click', () => {
 addBtn.addEventListener('click', () => {
   showPopup(popupAdd)
 })
-
 popups.forEach(popup => {
   popup.addEventListener('click', event => {
     if (event.target.classList.contains('popup')) {
@@ -104,14 +97,51 @@ popups.forEach(popup => {
     }
   })
 })
-
+//Обрабытывает кнопку submit в форме добавления карточек
+const handleEventListner = () => {
+  popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
+    new FormValidator(settings, cardRenderForm).handleSubmitBtn(evt, popupAdd)
+    renderCard()
+  })
+}
+//Создает и наполняет новую карточку из формы, затем очищает форму
+const renderCard = () => {
+  const newCard = {}
+  const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
+  const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
+  newCard.name = popupAddCardName.value
+  newCard.link = popupAddCardDescription.value
+  const filledNewCard = new Card(newCard, '#template').renderCard()
+  cardsContainer.prepend(filledNewCard)
+  popupAddCardName.value = ''
+  popupAddCardDescription.value = ''
+}
+// Изменяет данные профиля
+const changeProfileData = form => {
+  editForm.addEventListener('submit', evt => {
+    profileName.textContent = nameInput.value
+    profileDescription.textContent = descriptionInput.value
+    new FormValidator(settings, profileEditorForm).handleSubmitBtn(evt, popupEdit)
+  })
+}
+// Рендерит заполненную карточку и вставляет её вначало контейнера
+const createCard = item => {
+  return new Card(item, '#template').renderCard()
+}
 // Добавляет стартовые 6 карточек
 initialCards.forEach(item => {
-  const filledNewCard = new Card(item, '#template').renderCard()
-  cardsContainer.prepend(filledNewCard)
+  cardsContainer.prepend(createCard(item))
 })
-
-new FormCardRender(settings, cardRenderForm).enableValidation()
-new FormEditProfile(settings, cardRenderForm).enableValidation()
-
+// Включает валидацию для формы добавления карточек и добавляет слушатель на submit
+const handleForm = form => {
+  new FormValidator(settings, form).enableValidation()
+  if (form == cardRenderForm) {
+    handleEventListner()
+  }
+  if (form == profileEditorForm) {
+    changeProfileData(profileEditorForm)
+  }
+}
+handleForm(cardRenderForm)
+handleForm(profileEditorForm)
 export { initialCards, popupEdit, editForm, popupAdd, cardRenderForm, profileEditorForm, settings, overview, showPopup, hidePopup, overviewPic, overviewCaption, profileName, nameInput, profileDescription, descriptionInput }
