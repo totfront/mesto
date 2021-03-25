@@ -89,10 +89,5 @@ class FormValidator {
     inputList.forEach(inputListIterator)
     this._toggleButtonState(inputList, submitBtn)
   }
-  // Обработчик кнопки submit
-  handleSubmitBtn = (evt, popup) => {
-    evt.preventDefault()
-    hidePopup(popup)
-  }
 }
 export { FormValidator }
