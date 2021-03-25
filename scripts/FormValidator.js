@@ -1,4 +1,3 @@
-import { hidePopup } from './index.js'
 class FormValidator {
   constructor(settings, formElement) {
     this._formSelector = settings.formSelector

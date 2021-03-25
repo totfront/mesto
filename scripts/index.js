@@ -13,14 +13,12 @@ const settings = {
   inputErrorClass: '.popup__input-error',
   errorClass: 'popup__input-error_active'
 }
-const popupEditCloseBtn = popupEdit.querySelector('.popup__close-btn')
 const editBtn = document.querySelector('.profile__edit-btn')
 const nameInput = document.querySelector('.popup__input_data_name')
 const descriptionInput = document.querySelector('.popup__input_data_description')
 const profileName = document.querySelector('.profile__name')
 const profileDescription = document.querySelector('.profile__description')
 const addBtn = document.querySelector('.profile__add-btn')
-const popupTitle = document.querySelector('.popup__title')
 const overview = document.querySelector('.overview')
 const overviewPic = document.querySelector('.overview__pic')
 const overviewCloseBtn = overview.querySelector('.popup__close-btn')
@@ -140,4 +138,3 @@ new FormValidator(settings, profileEditorForm).enableValidation()
 new FormValidator(settings, cardRenderForm).enableValidation()
 handleCardRenderForm()
 handleProfileEditorForm()
-export { initialCards, popupEdit, editForm, popupAdd, cardRenderForm, profileEditorForm, settings, overview, showPopup, hidePopup, overviewPic, overviewCaption, profileName, nameInput, profileDescription, descriptionInput }

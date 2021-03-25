@@ -1,4 +1,3 @@
-import { overview, showPopup, overviewPic, overviewCaption } from './index.js'
 const cardsContainer = document.querySelector('.cards')
 class Card {
   constructor(data, selector, handleCardClick) {
