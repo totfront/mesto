@@ -74,9 +74,6 @@ const fillProfileForm = () => {
   descriptionInput.setAttribute('value', profileDescription.textContent)
 }
 // Добавляет обработчики:
-popupEditCloseBtn.addEventListener('click', () => {
-  hidePopup(popupEdit)
-})
 overviewCloseBtn.addEventListener('click', () => {
   hidePopup(overview)
 })
@@ -98,9 +95,9 @@ popups.forEach(popup => {
   })
 })
 //Обрабытывает кнопку submit в форме добавления карточек
-const handleEventListner = () => {
-  popupAdd.querySelector('.popup__form').addEventListener('submit', evt => {
-    new FormValidator(settings, cardRenderForm).handleSubmitBtn(evt, popupAdd)
+const handleCardRenderForm = () => {
+  popupAdd.querySelector('.popup__form').addEventListener('submit', () => {
+    hidePopup(popupAdd)
     renderCard()
   })
 }
@@ -111,37 +108,36 @@ const renderCard = () => {
   const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
-  const filledNewCard = new Card(newCard, '#template').renderCard()
+  const filledNewCard = new Card(newCard, '#template', handleCardClick).renderCard()
   cardsContainer.prepend(filledNewCard)
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
 }
-// Изменяет данные профиля
-const changeProfileData = form => {
+// Изменяет данные профиля и закрывает попап
+const handleProfileEditorForm = () => {
   editForm.addEventListener('submit', evt => {
     profileName.textContent = nameInput.value
     profileDescription.textContent = descriptionInput.value
-    new FormValidator(settings, profileEditorForm).handleSubmitBtn(evt, popupEdit)
+    hidePopup(popupEdit)
   })
+}
+// Наполняет попап с превью данными (название, ссылку) и открывает его
+const handleCardClick = (name, link) => {
+  overviewPic.src = link
+  overviewCaption.textContent = name
+  showPopup(overview)
 }
 // Рендерит заполненную карточку и вставляет её вначало контейнера
 const createCard = item => {
-  return new Card(item, '#template').renderCard()
+  return new Card(item, '#template', handleCardClick).renderCard()
 }
 // Добавляет стартовые 6 карточек
 initialCards.forEach(item => {
   cardsContainer.prepend(createCard(item))
 })
-// Включает валидацию для формы добавления карточек и добавляет слушатель на submit
-const handleForm = form => {
-  new FormValidator(settings, form).enableValidation()
-  if (form == cardRenderForm) {
-    handleEventListner()
-  }
-  if (form == profileEditorForm) {
-    changeProfileData(profileEditorForm)
-  }
-}
-handleForm(cardRenderForm)
-handleForm(profileEditorForm)
+// Включает валидацию для формы добавления карточек
+new FormValidator(settings, profileEditorForm).enableValidation()
+new FormValidator(settings, cardRenderForm).enableValidation()
+handleCardRenderForm()
+handleProfileEditorForm()
 export { initialCards, popupEdit, editForm, popupAdd, cardRenderForm, profileEditorForm, settings, overview, showPopup, hidePopup, overviewPic, overviewCaption, profileName, nameInput, profileDescription, descriptionInput }
