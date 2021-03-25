@@ -1,32 +1,27 @@
 import { overview, showPopup, overviewPic, overviewCaption } from './index.js'
-
-const cardTemplate = document.querySelector('#template').content
 const cardsContainer = document.querySelector('.cards')
-
 class Card {
-  constructor(data, selector) {
+  constructor(data, selector, handleCardClick) {
     this._heading = data.name
     this._image = data.link
     this._selector = selector
+    this._handleCardClick = handleCardClick
   }
   // Подготавливает карточку к публикации
   _createCard() {
-    const newCard = cardTemplate.querySelector('.card').cloneNode(true)
+    const newCard = document.querySelector(this._selector).content.querySelector('.card').cloneNode(true)
     const cardPic = newCard.querySelector('.card__pic')
     cardPic.style.backgroundImage = `url("${this._image}")`
     newCard.querySelector('.card__heading').textContent = this._heading
     this._handleEventListeners(cardPic, newCard)
     return newCard
   }
-
   _handleEventListeners = (cardPic, newCard) => {
     const newDeleteBtn = newCard.querySelector('.card__trash-btn')
     const newLikeBtn = newCard.querySelector('.card__like-btn')
-    // Добавляет слушатель на попап с фуллсайз превью карточки и записывает в него текст с картинкой
+    // Добавляет слушатель на функцию, куда нужно передать подпись и ссылку на картинку
     cardPic.addEventListener('click', () => {
-      showPopup(overview)
-      overviewPic.src = this._image
-      overviewCaption.textContent = this._heading
+      this._handleCardClick(this._heading, this._image)
     })
     // Добавляем кнопке "удалить" листнер на удаление карточек
     newDeleteBtn.addEventListener('click', () => {
@@ -37,7 +32,6 @@ class Card {
       this._switchLikeBtn(newLikeBtn)
     })
   }
-
   // Изменяет вид кнопки "лайк"
   _switchLikeBtn(newLikeBtn) {
     newLikeBtn.classList.toggle('card__like-btn_active')
@@ -48,5 +42,4 @@ class Card {
     return newCard
   }
 }
-
 export { Card, cardsContainer }
