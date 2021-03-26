@@ -106,7 +106,7 @@ const renderCard = () => {
   const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
-  const filledNewCard = new Card(newCard, '#template', handleCardClick).renderCard()
+  const filledNewCard = createCard(newCard)
   cardsContainer.prepend(filledNewCard)
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
@@ -125,7 +125,7 @@ const handleCardClick = (name, link) => {
   overviewCaption.textContent = name
   showPopup(overview)
 }
-// Рендерит заполненную карточку и вставляет её вначало контейнера
+// Рендерит заполненную карточку
 const createCard = item => {
   return new Card(item, '#template', handleCardClick).renderCard()
 }
