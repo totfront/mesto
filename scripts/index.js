@@ -1,8 +1,10 @@
 import { FormValidator } from './FormValidator.js'
 import { Card, cardsContainer } from './Card.js'
-const popupEdit = document.querySelector('#profile-popup')
-const editForm = popupEdit.querySelector('.popup__form')
-const popupAdd = document.querySelector('#card-popup')
+import { Popup } from './Popup.js'
+
+const popupEdit = new Popup('#profile-popup')
+const popupAdd = new Popup('#card-popup')
+const editForm = popupEdit.getPopup().querySelector('.popup__form')
 const cardRenderForm = document.querySelector('#card-renderer')
 const profileEditorForm = document.querySelector('#profile-editor')
 const settings = {
@@ -51,21 +53,21 @@ const initialCards = [
   }
 ]
 // Показывает попап
-const showPopup = popup => {
-  popup.classList.add('popup_opened')
-  document.addEventListener('keydown', closeByEscape)
-}
+// const showPopup = popup => {
+//   popup.classList.add('popup_opened')
+//   document.addEventListener('keydown', closeByEscape)
+// }
 // Закрывает попап
-const hidePopup = popup => {
-  popup.classList.remove('popup_opened')
-  document.removeEventListener('keydown', closeByEscape)
-}
-const closeByEscape = evt => {
-  if (evt.key === 'Escape') {
-    const openedPopup = document.querySelector('.popup_opened')
-    hidePopup(openedPopup)
-  }
-}
+// const hidePopup = popup => {
+//   popup.classList.remove('popup_opened')
+//   document.removeEventListener('keydown', closeByEscape)
+// }
+// const closeByEscape = evt => {
+//   if (evt.key === 'Escape') {
+//     const openedPopup = document.querySelector('.popup_opened')
+//     hidePopup(openedPopup)
+//   }
+// }
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
   nameInput.setAttribute('value', profileName.textContent)
@@ -76,34 +78,41 @@ overviewCloseBtn.addEventListener('click', () => {
   hidePopup(overview)
 })
 editBtn.addEventListener('click', () => {
-  showPopup(popupEdit)
+  popupEdit.open()
+  popupEdit.setEventListeners()
+  popupAdd.open()
+  popupAdd.setEventListeners()
   fillProfileForm()
 })
 addBtn.addEventListener('click', () => {
-  showPopup(popupAdd)
+  popupAdd.open()
 })
 popups.forEach(popup => {
   popup.addEventListener('click', event => {
     if (event.target.classList.contains('popup')) {
-      hidePopup(popup)
+      popupAdd.close()
     }
     if (event.target.classList.contains('popup__close-pic')) {
-      hidePopup(popup)
+      popupAdd.close()
     }
   })
 })
 //Обрабытывает кнопку submit в форме добавления карточек
 const handleCardRenderForm = () => {
-  popupAdd.querySelector('.popup__form').addEventListener('submit', () => {
-    hidePopup(popupAdd)
-    renderCard()
-  })
+  popupAdd
+    .getPopup()
+    .querySelector('.popup__form')
+    .addEventListener('submit', () => {
+      popupAdd.close()
+      // hidePopup(popupAdd)
+      renderCard()
+    })
 }
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = () => {
   const newCard = {}
-  const popupAddCardDescription = popupAdd.querySelector('.popup__input_data_description')
-  const popupAddCardName = popupAdd.querySelector('.popup__input_data_name')
+  const popupAddCardDescription = popupAdd.getPopup().querySelector('.popup__input_data_description')
+  const popupAddCardName = popupAdd.getPopup().querySelector('.popup__input_data_name')
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
   const filledNewCard = createCard(newCard)
@@ -116,7 +125,7 @@ const handleProfileEditorForm = () => {
   editForm.addEventListener('submit', evt => {
     profileName.textContent = nameInput.value
     profileDescription.textContent = descriptionInput.value
-    hidePopup(popupEdit)
+    popupEdit.close()
   })
 }
 // Наполняет попап с превью данными (название, ссылку) и открывает его
