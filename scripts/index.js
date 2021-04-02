@@ -1,6 +1,7 @@
 import { FormValidator } from './FormValidator.js'
 import { Card, cardsContainer } from './Card.js'
 import { Popup } from './Popup.js'
+import { Section } from './Section.js'
 
 const popupEdit = new Popup('#profile-popup')
 const popupAdd = new Popup('#card-popup')
@@ -52,22 +53,6 @@ const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ]
-// Показывает попап
-// const showPopup = popup => {
-//   popup.classList.add('popup_opened')
-//   document.addEventListener('keydown', closeByEscape)
-// }
-// Закрывает попап
-// const hidePopup = popup => {
-//   popup.classList.remove('popup_opened')
-//   document.removeEventListener('keydown', closeByEscape)
-// }
-// const closeByEscape = evt => {
-//   if (evt.key === 'Escape') {
-//     const openedPopup = document.querySelector('.popup_opened')
-//     hidePopup(openedPopup)
-//   }
-// }
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
   nameInput.setAttribute('value', profileName.textContent)
@@ -80,17 +65,18 @@ overviewCloseBtn.addEventListener('click', () => {
 editBtn.addEventListener('click', () => {
   popupEdit.open()
   popupEdit.setEventListeners()
-  popupAdd.open()
-  popupAdd.setEventListeners()
   fillProfileForm()
 })
 addBtn.addEventListener('click', () => {
   popupAdd.open()
+  popupAdd.setEventListeners()
 })
+// Скрывает попапы по клику на затемнение
 popups.forEach(popup => {
   popup.addEventListener('click', event => {
     if (event.target.classList.contains('popup')) {
       popupAdd.close()
+      popupEdit.close()
     }
     if (event.target.classList.contains('popup__close-pic')) {
       popupAdd.close()
@@ -104,7 +90,6 @@ const handleCardRenderForm = () => {
     .querySelector('.popup__form')
     .addEventListener('submit', () => {
       popupAdd.close()
-      // hidePopup(popupAdd)
       renderCard()
     })
 }
@@ -115,8 +100,7 @@ const renderCard = () => {
   const popupAddCardName = popupAdd.getPopup().querySelector('.popup__input_data_name')
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
-  const filledNewCard = createCard(newCard)
-  cardsContainer.prepend(filledNewCard)
+  new Section({ items: [newCard], renderer: createCard }, '.cards').renderItems()
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
 }
@@ -138,10 +122,9 @@ const handleCardClick = (name, link) => {
 const createCard = item => {
   return new Card(item, '#template', handleCardClick).renderCard()
 }
-// Добавляет стартовые 6 карточек
-initialCards.forEach(item => {
-  cardsContainer.prepend(createCard(item))
-})
+
+new Section({ items: initialCards, renderer: createCard }, '.cards').renderItems()
+
 // Включает валидацию для формы добавления карточек
 new FormValidator(settings, profileEditorForm).enableValidation()
 new FormValidator(settings, cardRenderForm).enableValidation()
