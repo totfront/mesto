@@ -1,8 +1,7 @@
-const openedPopupSelector = 'popup_opened'
-
 export class Popup {
   constructor(popupSelector) {
     this._popup = document.querySelector(popupSelector)
+    this._openedPopupSelector = 'popup_opened'
   }
 
   _handleEscClose = evt => {
@@ -15,6 +14,10 @@ export class Popup {
     return this._popup
   }
 
+  test = item => {
+    console.log(item)
+  }
+
   setEventListeners = () => {
     document.addEventListener('keydown', this._handleEscClose)
     this._popup.querySelector('.popup__close-pic').addEventListener('click', this.close)
@@ -22,11 +25,11 @@ export class Popup {
 
   // Открывает попап
   open = () => {
-    this._popup.classList.add(openedPopupSelector)
+    this._popup.classList.add(this._openedPopupSelector)
   }
   // Закрывает попап
   close = () => {
-    this._popup.classList.remove(openedPopupSelector)
+    this._popup.classList.remove(this._openedPopupSelector)
     document.removeEventListener('keydown', this._handleEscClose)
   }
 }

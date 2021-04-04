@@ -1,7 +1,8 @@
 import { FormValidator } from './FormValidator.js'
-import { Card, cardsContainer } from './Card.js'
+import { Card } from './Card.js'
 import { Popup } from './Popup.js'
 import { Section } from './Section.js'
+import { PopupWithImage } from './PopupWithImage.js'
 
 const popupEdit = new Popup('#profile-popup')
 const popupAdd = new Popup('#card-popup')
@@ -23,9 +24,7 @@ const profileName = document.querySelector('.profile__name')
 const profileDescription = document.querySelector('.profile__description')
 const addBtn = document.querySelector('.profile__add-btn')
 const overview = document.querySelector('.overview')
-const overviewPic = document.querySelector('.overview__pic')
 const overviewCloseBtn = overview.querySelector('.popup__close-btn')
-const overviewCaption = document.querySelector('.overview__caption')
 const popups = Array.from(document.querySelectorAll('.popup'))
 const initialCards = [
   {
@@ -60,7 +59,7 @@ const fillProfileForm = () => {
 }
 // Добавляет обработчики:
 overviewCloseBtn.addEventListener('click', () => {
-  hidePopup(overview)
+  new PopupWithImage('overview').close()
 })
 editBtn.addEventListener('click', () => {
   popupEdit.open()
@@ -114,9 +113,7 @@ const handleProfileEditorForm = () => {
 }
 // Наполняет попап с превью данными (название, ссылку) и открывает его
 const handleCardClick = (name, link) => {
-  overviewPic.src = link
-  overviewCaption.textContent = name
-  showPopup(overview)
+  new PopupWithImage('overview').open(name, link)
 }
 // Рендерит заполненную карточку
 const createCard = item => {

@@ -41,4 +41,4 @@ class Card {
     return newCard
   }
 }
-export { Card, cardsContainer }
+export { Card }
