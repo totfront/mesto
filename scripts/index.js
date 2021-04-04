@@ -3,6 +3,9 @@ import { Card } from './Card.js'
 import { Popup } from './Popup.js'
 import { Section } from './Section.js'
 import { PopupWithImage } from './PopupWithImage.js'
+import { UserInfo } from './UserInfo.js'
+
+new UserInfo().getUserInfo(123)
 
 const popupEdit = new Popup('#profile-popup')
 const popupAdd = new Popup('#card-popup')
