@@ -4,14 +4,13 @@ import { Popup } from './Popup.js'
 import { Section } from './Section.js'
 import { PopupWithImage } from './PopupWithImage.js'
 import { UserInfo } from './UserInfo.js'
+import { PopupWithForm } from './PopupWithForm.js'
 
 const popupEdit = new Popup('#profile-popup')
 const popupAdd = new Popup('#card-popup')
 const editForm = popupEdit.getPopup().querySelector('.popup__form')
 const cardRenderForm = document.querySelector('#card-renderer')
 const profileEditorForm = document.querySelector('#profile-editor')
-// const userNameSelector = '#profile-name'
-// const userDescriptionSelector = '#profile-job'
 const settings = {
   formSelector: 'form',
   inputSelector: '.popup__input',
@@ -56,7 +55,6 @@ const initialCards = [
   }
 ]
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
-
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
   nameInput.setAttribute('value', profileInfo.getUserInfo().name)
@@ -68,8 +66,8 @@ overviewCloseBtn.addEventListener('click', () => {
 })
 editBtn.addEventListener('click', () => {
   popupEdit.open()
-  popupEdit.setEventListeners()
   fillProfileForm()
+  new PopupWithForm('#profile-popup', handleProfileEditorSubmit).setEventListeners()
 })
 addBtn.addEventListener('click', () => {
   popupAdd.open()
@@ -109,14 +107,19 @@ const renderCard = () => {
   popupAddCardDescription.value = ''
 }
 // Изменяет данные профиля и закрывает попап
-const handleProfileEditorForm = () => {
-  editForm.addEventListener('submit', evt => {
-    let newProfileData = {}
-    newProfileData.name = nameInput.value
-    newProfileData.description = descriptionInput.value
-    profileInfo.setUserInfo(newProfileData)
-    popupEdit.close()
-  })
+editForm.addEventListener('submit', evt => {
+  let newProfileData = {}
+  newProfileData.name = nameInput.value
+  newProfileData.description = descriptionInput.value
+  profileInfo.setUserInfo(newProfileData)
+  popupEdit.close()
+})
+const handleProfileEditorSubmit = () => {
+  let newProfileData = {}
+  newProfileData.name = nameInput.value
+  newProfileData.description = descriptionInput.value
+  profileInfo.setUserInfo(newProfileData)
+  popupEdit.close()
 }
 // Наполняет попап с превью данными (название, ссылку) и открывает его
 const handleCardClick = (name, link) => {
@@ -126,11 +129,8 @@ const handleCardClick = (name, link) => {
 const createCard = item => {
   return new Card(item, '#template', handleCardClick).renderCard()
 }
-
 new Section({ items: initialCards, renderer: createCard }, '.cards').renderItems()
-
 // Включает валидацию для формы добавления карточек
 new FormValidator(settings, profileEditorForm).enableValidation()
 new FormValidator(settings, cardRenderForm).enableValidation()
 handleCardRenderForm()
-handleProfileEditorForm()
