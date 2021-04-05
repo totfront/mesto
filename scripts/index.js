@@ -1,3 +1,4 @@
+import '../pages/index.css'
 import { FormValidator } from './FormValidator.js'
 import { Card } from './Card.js'
 import { Popup } from './Popup.js'

@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./pages/index.css">
     <title>Mesto</title>
 </head>
 <body class="page">
     <header class="header">
-        <img src="./images/header/header__logo.svg" alt="Логотип Места" class="header__logo">
+        <img src="<%=require('./images/header/header__logo.svg')%>" alt="Логотип Места" class="header__logo">
     </header>
     <main>
         <section class="profile">
-            <img src="./images/profile/profile__avatar.jpg" alt="Аватар профиля" class="profile__avatar">
+            <img src="<%=require('./images/profile/profile__avatar.jpg')%>" alt="Аватар профиля" class="profile__avatar">
             <div class="profile__info">
                 <h1 class="profile__name">Жак-Ив Кусто</h1>
                 <button type="button" class="profile__edit-btn">
-                    <img class="profile__edit-pic" src="./images/profile/profile__edit-btn.svg" alt="Редактировать">
+                    <img class="profile__edit-pic" src="<%=require('./images/profile/profile__edit-btn.svg')%>" alt="Редактировать">
                 </button>
                 <p class="profile__description">Исследователь океана</p>
             </div>
@@ -53,7 +52,7 @@
                 </div>
                 <button name="submitBtn" class="popup__save-btn" type="submit">Сохранить</button>
             </form>
-            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
+            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="<%=require('./images/popup/close-btn.svg')%>" alt="Кнопка закрыть"></button>
         </div>
     </div>
     <div class="popup appearance" id="card-popup">
@@ -70,17 +69,17 @@
                 </div>
                 <button class="popup__save-btn" name="submitBtn" type="submit">Сохранить</button>
             </form>
-            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
+            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="<%=require('./images/popup/close-btn.svg')%>" alt="Кнопка закрыть"></button>
         </div>
     </div>
     <div class="popup overview appearance">
         <div class="overview__container">
-            <img class="overview__pic" src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="Фото пейзажа">
+            <img class="overview__pic" src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg')%>" alt="Фото пейзажа">
             <figcaption class="overview__caption"></figcaption>
-            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="./images/popup/close-btn.svg" alt="Кнопка закрыть"></button>
+            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="<%=require('./images/popup/close-btn.svg')%>" alt="Кнопка закрыть"></button>
         </div>
     </div>
 
-    <script type="module" src="./scripts/index.js"></script>
+    <script type="module" src="<%=require('./scripts/index.js"></script>
 </body>
 </html>
