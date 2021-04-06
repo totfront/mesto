@@ -9,6 +9,7 @@ import { PopupWithForm } from './PopupWithForm.js'
 
 const popupEdit = new Popup('#profile-popup')
 const popupAdd = new Popup('#card-popup')
+const popupOverview = new Popup('.overview')
 const editForm = popupEdit.getPopup().querySelector('.popup__form')
 const cardRenderForm = document.querySelector('#card-renderer')
 const profileEditorForm = document.querySelector('#profile-editor')
@@ -80,9 +81,7 @@ popups.forEach(popup => {
     if (event.target.classList.contains('popup')) {
       popupAdd.close()
       popupEdit.close()
-    }
-    if (event.target.classList.contains('popup__close-pic')) {
-      popupAdd.close()
+      popupOverview.close()
     }
   })
 })

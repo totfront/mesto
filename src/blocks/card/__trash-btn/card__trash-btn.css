@@ -9,9 +9,9 @@
   cursor: pointer;
 
   border: none;
-  background: center/100% no-repeat url('https://totmir.github.io/mesto/images/cards/card__btn-trash.svg');
+  background: center/100% no-repeat url('/src/images/cards/card__btn-trash.svg');
 }
 
 .card__trash-btn:hover {
-  opacity: 0.5;
+  opacity: .5;
 }
