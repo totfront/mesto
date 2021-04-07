@@ -1,10 +1,11 @@
 import { Popup } from './Popup.js'
 
 export class PopupWithForm extends Popup {
-  constructor(popupSelector, handleSubmitForm) {
+  constructor(popupSelector, handleSubmitForm, resetForm) {
     super()
     this._popup = document.querySelector(popupSelector)
     this._handleSubmitForm = handleSubmitForm
+    this._resetForm = resetForm
   }
   _getInputValues = () => {
     const popup = this._popup
@@ -14,6 +15,7 @@ export class PopupWithForm extends Popup {
   setEventListeners = () => {
     this._popup.querySelector('.popup__close-pic').addEventListener('click', event => {
       this.close(event)
+      this._resetForm(this._popup.querySelector('.popup__form'))
     })
     this._popup.querySelector('.popup__form').addEventListener('submit', this._handleSubmitForm)
   }

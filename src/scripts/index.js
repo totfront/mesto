@@ -70,7 +70,6 @@ editBtn.addEventListener('click', () => {
   popupEdit.open()
   popupEdit.setEventListeners()
   fillProfileForm()
-  new PopupWithForm('#profile-popup', handleProfileEditorSubmit).setEventListeners()
 })
 addBtn.addEventListener('click', () => {
   popupAdd.open()
@@ -80,9 +79,13 @@ addBtn.addEventListener('click', () => {
 popups.forEach(popup => {
   popup.addEventListener('click', event => {
     if (event.target.classList.contains('popup')) {
-      popupAdd.close()
+      new PopupWithForm('#card-popup').close()
       popupEdit.close()
       popupOverview.close()
+      const currentForm = popup.querySelector('.popup__form')
+      if (currentForm) {
+        resetForm(currentForm)
+      }
     }
   })
 })
@@ -107,7 +110,7 @@ const renderCard = () => {
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
 }
-// Изменяет данные профиля и закрывает попап
+// Изменяет данные профиля и закрывает попап по клику на submit
 editForm.addEventListener('submit', evt => {
   let newProfileData = {}
   newProfileData.name = nameInput.value
@@ -119,7 +122,6 @@ const handleProfileEditorSubmit = () => {
   let newProfileData = {}
   newProfileData.name = nameInput.value
   newProfileData.description = descriptionInput.value
-  profileInfo.setUserInfo(newProfileData)
   popupEdit.close()
 }
 // Наполняет попап с превью данными (название, ссылку) и открывает его
@@ -136,3 +138,10 @@ new Section({ items: initialCards, renderer: createCard }, '.cards').renderItems
 new FormValidator(settings, profileEditorForm).enableValidation()
 new FormValidator(settings, cardRenderForm).enableValidation()
 handleCardRenderForm()
+// Сбрасывает поля форм и скрывает ошибки
+const resetForm = currentForm => {
+  new FormValidator(settings, currentForm).resetValidation()
+}
+// Добавляет обработчик событий, который сбрасывает формы
+new PopupWithForm('#profile-popup', handleProfileEditorSubmit, resetForm).setEventListeners()
+new PopupWithForm('#card-popup', handleProfileEditorSubmit, resetForm).setEventListeners()
