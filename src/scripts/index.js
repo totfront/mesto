@@ -68,6 +68,7 @@ overviewCloseBtn.addEventListener('click', () => {
 })
 editBtn.addEventListener('click', () => {
   popupEdit.open()
+  popupEdit.setEventListeners()
   fillProfileForm()
   new PopupWithForm('#profile-popup', handleProfileEditorSubmit).setEventListeners()
 })
@@ -123,6 +124,7 @@ const handleProfileEditorSubmit = () => {
 }
 // Наполняет попап с превью данными (название, ссылку) и открывает его
 const handleCardClick = (name, link) => {
+  new PopupWithImage('overview').setEventListeners()
   new PopupWithImage('overview').open(name, link)
 }
 // Рендерит заполненную карточку

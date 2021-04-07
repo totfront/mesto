@@ -12,18 +12,16 @@ export class PopupWithForm extends Popup {
     return inputList
   }
   setEventListeners = () => {
-    document.addEventListener('keydown', this._handleEscClose)
     this._popup.querySelector('.popup__close-pic').addEventListener('click', event => {
       this.close(event)
     })
     this._popup.querySelector('.popup__form').addEventListener('submit', this._handleSubmitForm)
   }
   close = event => {
-    if (event.target.classList.contains('popup__close-pic')) {
+    if (event && event.target.classList.contains('popup__close-pic')) {
       this._popup.classList.remove(this._openedPopupSelector)
       return
     }
-    console.log(123)
     this._popup.classList.remove(this._openedPopupSelector)
     document.removeEventListener('keydown', this._handleEscClose)
     this._getInputValues().forEach(input => {
