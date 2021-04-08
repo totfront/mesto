@@ -6,6 +6,7 @@ import { Section } from './Section.js'
 import { PopupWithImage } from './PopupWithImage.js'
 import { UserInfo } from './UserInfo.js'
 import { PopupWithForm } from './PopupWithForm.js'
+import { initialCards } from './initial-cards.js'
 
 const popupEdit = new Popup('#profile-popup')
 const popupAdd = new Popup('#card-popup')
@@ -30,32 +31,7 @@ const addBtn = document.querySelector('.profile__add-btn')
 const overview = document.querySelector('.overview')
 const overviewCloseBtn = overview.querySelector('.popup__close-btn')
 const popups = Array.from(document.querySelectorAll('.popup'))
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-]
+
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
