@@ -11,5 +11,6 @@ export class PopupWithImage extends Popup {
     overviewCaption.textContent = name
     overviewPic.src = link
     this._popup.classList.add(this._openedPopupSelector)
+    document.addEventListener('keydown', this._handleEscClose)
   }
 }

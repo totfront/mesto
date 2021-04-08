@@ -12,12 +12,12 @@ export class Popup {
     return this._popup
   }
   setEventListeners = () => {
-    document.addEventListener('keydown', this._handleEscClose)
     this._popup.querySelector('.popup__close-pic').addEventListener('click', this.close)
   }
   // Открывает попап
   open = () => {
     this._popup.classList.add(this._openedPopupSelector)
+    document.addEventListener('keydown', this._handleEscClose)
   }
   // Закрывает попап
   close = () => {
