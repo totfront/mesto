@@ -6,15 +6,13 @@ export class UserInfo {
     this._userDescription = document.querySelector(this._userDescriptionSelector).textContent
   }
   getUserInfo = () => {
-    let currentUser = {}
+    const currentUser = {}
     currentUser.name = this._userName
     currentUser.description = this._userDescription
     return currentUser
   }
   setUserInfo = newProfileData => {
-    const currentUserName = document.querySelector(this._userNameSelector)
-    const currentUserDescription = document.querySelector(this._userDescriptionSelector)
-    currentUserName.textContent = newProfileData.name
-    currentUserDescription.textContent = newProfileData.description
+    this._userName = newProfileData.name
+    this._userDescription = newProfileData.description
   }
 }

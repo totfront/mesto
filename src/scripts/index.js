@@ -7,10 +7,12 @@ import { PopupWithImage } from './PopupWithImage.js'
 import { UserInfo } from './UserInfo.js'
 import { PopupWithForm } from './PopupWithForm.js'
 import { initialCards } from './initial-cards.js'
+import { addCardFormValidator } from './addCardFormValidator.js'
+import { editProfileFormValidator } from './editProfileFormValidator.js'
 
 const popupEdit = new Popup('#profile-popup')
-const popupAdd = new Popup('#card-popup')
-const popupOverview = new Popup('.overview')
+const popupAdd = new PopupWithForm('#card-popup')
+const popupOverview = new PopupWithImage('.overview')
 const editForm = popupEdit.getPopup().querySelector('.popup__form')
 const cardRenderForm = document.querySelector('#card-renderer')
 const profileEditorForm = document.querySelector('#profile-editor')
@@ -28,8 +30,7 @@ const descriptionInput = document.querySelector('.popup__input_data_description'
 const profileNameSelector = '.profile__name'
 const profileDescriptionSelector = '.profile__description'
 const addBtn = document.querySelector('.profile__add-btn')
-const overview = document.querySelector('.overview')
-const overviewCloseBtn = overview.querySelector('.popup__close-btn')
+const overviewCloseBtn = document.querySelector('.overview').querySelector('.popup__close-btn')
 const popups = Array.from(document.querySelectorAll('.popup'))
 
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
@@ -40,11 +41,10 @@ const fillProfileForm = () => {
 }
 // Добавляет обработчики:
 overviewCloseBtn.addEventListener('click', () => {
-  new PopupWithImage('overview').close()
+  popupOverview.close()
 })
 editBtn.addEventListener('click', () => {
   new PopupWithForm('#profile-popup', handleProfileEditorSubmit).open()
-  // popupEdit.open()
   popupEdit.setEventListeners()
   fillProfileForm()
 })
@@ -56,7 +56,7 @@ addBtn.addEventListener('click', () => {
 popups.forEach(popup => {
   popup.addEventListener('click', event => {
     if (event.target.classList.contains('popup')) {
-      new PopupWithForm('#card-popup').close()
+      popupAdd.close()
       popupEdit.close()
       popupOverview.close()
       const currentForm = popup.querySelector('.popup__form')
@@ -84,6 +84,7 @@ const renderCard = () => {
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
   new Section({ items: [newCard], renderer: createCard }, '.cards').renderItems()
+  new Section({ items: [newCard], renderer: createCard }, '.cards').addItem()
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
 }
@@ -103,8 +104,8 @@ const handleProfileEditorSubmit = () => {
 }
 // Наполняет попап с превью данными (название, ссылку) и открывает его
 const handleCardClick = (name, link) => {
-  new PopupWithImage('overview').setEventListeners()
-  new PopupWithImage('overview').open(name, link)
+  popupOverview.setEventListeners()
+  popupOverview.open(name, link)
 }
 // Рендерит заполненную карточку
 const createCard = item => {
@@ -112,8 +113,8 @@ const createCard = item => {
 }
 new Section({ items: initialCards, renderer: createCard }, '.cards').renderItems()
 // Включает валидацию для формы добавления карточек
-new FormValidator(settings, profileEditorForm).enableValidation()
-new FormValidator(settings, cardRenderForm).enableValidation()
+new addCardFormValidator(settings, profileEditorForm).enableValidation()
+new editProfileFormValidator(settings, cardRenderForm).enableValidation()
 handleCardRenderForm()
 // Сбрасывает поля форм и скрывает ошибки
 const resetForm = currentForm => {
