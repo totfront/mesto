@@ -30,4 +30,11 @@ export class PopupWithForm extends Popup {
       input.value = ''
     })
   }
+  open = () => {
+    this._popup.classList.add(this._openedPopupSelector)
+    if (this._popup.id == 'profile-popup') {
+      this._popup.querySelector('.popup__input_data_name').value = document.querySelector('.profile__name').textContent
+      this._popup.querySelector('.popup__input_data_description').value = document.querySelector('.profile__description').textContent
+    }
+  }
 }

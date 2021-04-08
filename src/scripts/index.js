@@ -67,7 +67,8 @@ overviewCloseBtn.addEventListener('click', () => {
   new PopupWithImage('overview').close()
 })
 editBtn.addEventListener('click', () => {
-  popupEdit.open()
+  new PopupWithForm('#profile-popup', handleProfileEditorSubmit).open()
+  // popupEdit.open()
   popupEdit.setEventListeners()
   fillProfileForm()
 })
