@@ -89,14 +89,14 @@ const renderCard = () => {
 }
 // Изменяет данные профиля и закрывает попап по клику на submit
 editForm.addEventListener('submit', evt => {
-  let newProfileData = {}
+  const newProfileData = {}
   newProfileData.name = nameInput.value
   newProfileData.description = descriptionInput.value
   profileInfo.setUserInfo(newProfileData)
   popupEdit.close()
 })
 const handleProfileEditorSubmit = () => {
-  let newProfileData = {}
+  const newProfileData = {}
   newProfileData.name = nameInput.value
   newProfileData.description = descriptionInput.value
   popupEdit.close()
