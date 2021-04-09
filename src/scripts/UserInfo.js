@@ -2,17 +2,17 @@ export class UserInfo {
   constructor(data) {
     this._userNameSelector = data.nameSelector
     this._userDescriptionSelector = data.descriptionSelector
-    this._userName = document.querySelector(this._userNameSelector).textContent
-    this._userDescription = document.querySelector(this._userDescriptionSelector).textContent
+    this._userName = document.querySelector(this._userNameSelector)
+    this._userDescription = document.querySelector(this._userDescriptionSelector)
   }
   getUserInfo = () => {
     const currentUser = {}
-    currentUser.name = this._userName
-    currentUser.description = this._userDescription
+    currentUser.name = this._userName.textContent
+    currentUser.description = this._userDescription.textContent
     return currentUser
   }
   setUserInfo = newProfileData => {
-    this._userName = newProfileData.name
-    this._userDescription = newProfileData.description
+    this._userName.textContent = newProfileData.name
+    this._userDescription.textContent = newProfileData.description
   }
 }

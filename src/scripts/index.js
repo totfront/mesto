@@ -10,7 +10,7 @@ import { initialCards } from './initial-cards.js'
 import { addCardFormValidator } from './addCardFormValidator.js'
 import { editProfileFormValidator } from './editProfileFormValidator.js'
 
-const popupEdit = new Popup('#profile-popup')
+const popupEdit = new PopupWithForm('#profile-popup')
 const popupAdd = new PopupWithForm('#card-popup')
 const popupOverview = new PopupWithImage('.overview')
 const resetEditForm = new PopupWithForm('#profile-popup', handleProfileEditorSubmit, resetForm)
@@ -86,7 +86,7 @@ const renderCard = () => {
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
   new Section({ items: [newCard], renderer: createCard }, '.cards').renderItems()
-  console.log(console.log([newCard]))
+  // console.log([newCard])
   new Section({ items: [newCard], renderer: createCard }, '.cards').addItem()
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
@@ -96,14 +96,14 @@ editForm.addEventListener('submit', evt => {
   const newProfileData = {}
   newProfileData.name = nameInput.value
   newProfileData.description = descriptionInput.value
-  profileInfo.setUserInfo(newProfileData)
+  // console.log(popupEdit._getInputValues())
+  profileInfo.setUserInfo(popupEdit._getInputValues())
   popupEdit.close()
 })
 const handleProfileEditorSubmit = () => {
   const newProfileData = {}
   newProfileData.name = nameInput.value
   newProfileData.description = descriptionInput.value
-  popupEdit.close()
 }
 // Наполняет попап с превью данными (название, ссылку) и открывает его
 const handleCardClick = (name, link) => {
