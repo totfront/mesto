@@ -6,8 +6,9 @@ export class PopupWithForm extends Popup {
     this._popup = document.querySelector(popupSelector)
     this._handleSubmitForm = handleSubmitForm
     this._resetForm = resetForm
+    this._currentForm = this._popup.querySelector('.popup__form')
   }
-  // Формирует объект с текущими значениями input
+  // Возвращает объект с текущими значениями input
   _getInputValues = () => {
     const inputValues = {}
     inputValues.name = this._popup.querySelector('.popup__input_data_name').value
@@ -19,9 +20,11 @@ export class PopupWithForm extends Popup {
     this._popup.querySelector('.popup__close-pic').addEventListener('click', event => {
       this.close(event)
     })
+    this._popup.querySelector('.popup__close-pic').addEventListener('click', () => {
+      this._resetForm(this._currentForm)
+    })
+    this._popup.querySelector('.popup__form').addEventListener('submit', this._handleSubmitForm(this._getInputValues()))
     super.setEventListeners()
-    this._popup.querySelector('.popup__close-pic').addEventListener('click', this._resetForm(this._popup.querySelector('.popup__form')))
-    // this._popup.querySelector('.popup__form').addEventListener('submit', this._handleSubmitForm)
   }
   // Открывает попап
   open = () => {

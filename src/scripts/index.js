@@ -86,8 +86,6 @@ const renderCard = () => {
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
   new Section({ items: [newCard], renderer: createCard }, '.cards').renderItems()
-  // console.log([newCard])
-  new Section({ items: [newCard], renderer: createCard }, '.cards').addItem()
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
 }
@@ -96,12 +94,10 @@ editForm.addEventListener('submit', evt => {
   const newProfileData = {}
   newProfileData.name = nameInput.value
   newProfileData.description = descriptionInput.value
-  // console.log(popupEdit._getInputValues())
   profileInfo.setUserInfo(popupEdit._getInputValues())
   popupEdit.close()
 })
-const handleProfileEditorSubmit = () => {
-  const newProfileData = {}
+const handleProfileEditorSubmit = newProfileData => {
   newProfileData.name = nameInput.value
   newProfileData.description = descriptionInput.value
 }

@@ -9,7 +9,6 @@ export class Section {
     this._items.forEach(item => {
       const newItem = this._renderer(item)
       this.addItem(newItem)
-      // return newItem
     })
   }
 
