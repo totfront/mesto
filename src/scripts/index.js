@@ -13,6 +13,8 @@ import { editProfileFormValidator } from './editProfileFormValidator.js'
 const popupEdit = new Popup('#profile-popup')
 const popupAdd = new PopupWithForm('#card-popup')
 const popupOverview = new PopupWithImage('.overview')
+const resetEditForm = new PopupWithForm('#profile-popup', handleProfileEditorSubmit, resetForm)
+const resetAddForm = new PopupWithForm('#card-popup', handleProfileEditorSubmit, resetForm)
 const editForm = popupEdit.getPopup().querySelector('.popup__form')
 const cardRenderForm = document.querySelector('#card-renderer')
 const profileEditorForm = document.querySelector('#profile-editor')
@@ -84,6 +86,7 @@ const renderCard = () => {
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
   new Section({ items: [newCard], renderer: createCard }, '.cards').renderItems()
+  console.log(console.log([newCard]))
   new Section({ items: [newCard], renderer: createCard }, '.cards').addItem()
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
@@ -121,5 +124,5 @@ const resetForm = currentForm => {
   new FormValidator(settings, currentForm).resetValidation()
 }
 // Добавляет обработчик событий, который сбрасывает формы
-new PopupWithForm('#profile-popup', handleProfileEditorSubmit, resetForm).setEventListeners()
-new PopupWithForm('#card-popup', handleProfileEditorSubmit, resetForm).setEventListeners()
+resetEditForm.setEventListeners()
+resetAddForm.setEventListeners()

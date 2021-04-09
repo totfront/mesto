@@ -10,7 +10,6 @@ class Card {
   _createCard() {
     const newCard = document.querySelector(this._selector).content.querySelector('.card').cloneNode(true)
     const cardPic = newCard.querySelector('.card__pic')
-    console.log(this._image)
     cardPic.style.backgroundImage = `url("${this._image}")`
     newCard.querySelector('.card__heading').textContent = this._heading
     this._handleEventListeners(cardPic, newCard)

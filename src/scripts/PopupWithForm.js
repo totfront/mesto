@@ -12,20 +12,23 @@ export class PopupWithForm extends Popup {
     const inputList = Array.from(popup.getElementsByTagName('input'))
     return inputList
   }
-  setEventListeners = () => {
+  setEventListeners() {
     this._popup.querySelector('.popup__close-pic').addEventListener('click', event => {
       this.close(event)
-      this._resetForm(this._popup.querySelector('.popup__form'))
     })
+    super.setEventListeners()
+    this._popup.querySelector('.popup__close-pic').addEventListener('click', this._resetForm(this._popup.querySelector('.popup__form')))
     this._popup.querySelector('.popup__form').addEventListener('submit', this._handleSubmitForm)
   }
-  close = event => {
+  close(event) {
     if (event && event.target.classList.contains('popup__close-pic')) {
       this._popup.classList.remove(this._openedPopupSelector)
       return
     }
-    this._popup.classList.remove(this._openedPopupSelector)
-    document.removeEventListener('keydown', this._handleEscClose)
+    super.close()
+    this._reset()
+  }
+  _reset() {
     this._getInputValues().forEach(input => {
       input.value = ''
     })
