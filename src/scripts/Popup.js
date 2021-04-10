@@ -1,3 +1,9 @@
+// Контроллер-родитель всех попапов:
+// 1. Получает любой попап
+// 2. Открывает любой попап
+// 3. Закрывает любой попап
+// 4. Добавляет слушатели на попап и детей
+
 export class Popup {
   constructor(popupSelector) {
     this._popup = document.querySelector(popupSelector)
@@ -8,19 +14,19 @@ export class Popup {
       this.close()
     }
   }
-  getPopup = () => {
+  getPopup() {
     return this._popup
   }
-  setEventListeners = () => {
+  setEventListeners() {
     this._popup.querySelector('.popup__close-pic').addEventListener('click', this.close)
   }
   // Открывает попап
-  open = () => {
+  open() {
     this._popup.classList.add(this._openedPopupSelector)
     document.addEventListener('keydown', this._handleEscClose)
   }
   // Закрывает попап
-  close = () => {
+  close() {
     this._popup.classList.remove(this._openedPopupSelector)
     document.removeEventListener('keydown', this._handleEscClose)
   }

@@ -1,3 +1,9 @@
+// Конструктор и контроллер карточек:
+// 1. Подготавливает карточку к публикации (создает и наполняет данными)
+// 2. Изменяет состояние кнопки "лайк"
+// 3. Добавляет слушатели на кнопку "лайк", кнопку "корзина", картинку
+// 4. Добавляет карточку в DOM
+
 const cardsContainer = document.querySelector('.cards')
 class Card {
   constructor(data, selector, handleCardClick) {
@@ -31,7 +37,7 @@ class Card {
       this._switchLikeBtn(newLikeBtn)
     })
   }
-  // Изменяет вид кнопки "лайк"
+  // Изменяет состояние кнопки "лайк"
   _switchLikeBtn(newLikeBtn) {
     newLikeBtn.classList.toggle('card__like-btn_active')
   }

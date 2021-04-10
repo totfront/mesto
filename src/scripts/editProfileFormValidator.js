@@ -1,3 +1,6 @@
+// Валидиратор формы редактирования профиля:
+// Не понимаю, зачем он нужен (ревьюер попросил добавить).
+
 import { FormValidator } from './FormValidator'
 
 export class editProfileFormValidator extends FormValidator {

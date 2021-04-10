@@ -1,3 +1,7 @@
+// Контроллер-ребенок попапа с картинкой:
+// 1. Наполняет попап данными
+// 2. Открывает попап
+
 import { Popup } from './Popup.js'
 
 export class PopupWithImage extends Popup {

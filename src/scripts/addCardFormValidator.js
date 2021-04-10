@@ -1,3 +1,6 @@
+// Валидиратор формы добавления карточек:
+// Не понимаю, зачем он нужен (ревьюер попросил добавить).
+
 import { FormValidator } from './FormValidator'
 
 export class addCardFormValidator extends FormValidator {

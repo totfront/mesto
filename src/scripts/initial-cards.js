@@ -1,3 +1,5 @@
+// Данные для стартовых карточек
+
 export const initialCards = [
   {
     name: 'Архыз',

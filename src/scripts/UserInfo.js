@@ -1,3 +1,7 @@
+// Управляет информацией профиля:
+// 1. Получает информацию о текущем пользователе
+// 2. Меняет её на новую
+
 export class UserInfo {
   constructor(data) {
     this._userNameSelector = data.nameSelector
