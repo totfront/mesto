@@ -8,54 +8,49 @@
 import { Popup } from './Popup.js'
 
 export class PopupWithForm extends Popup {
-  constructor(popupSelector, handleSubmitForm, resetForm) {
-    super()
+  constructor(popupSelector, handleSubmitForm) {
+    super(popupSelector)
     this._popup = document.querySelector(popupSelector)
     this._handleSubmitForm = handleSubmitForm
-    this._resetForm = resetForm
-    this._currentForm = this._popup.querySelector('.popup__form')
+    this._formElement = this._popup.querySelector('.popup__form')
   }
   // Возвращает объект с текущими значениями input
   _getInputValues = () => {
-    const inputValues = {}
-    inputValues.name = this._popup.querySelector('.popup__input_data_name').value
-    inputValues.description = this._popup.querySelector('.popup__input_data_description').value
-    return inputValues
+    // Слепок текущего состояния формы
+    const formState = Array.from(this._formElement.getElementsByTagName('input')).map(inputElement => {
+      return { name: inputElement.name, value: inputElement.value }
+    })
+    let currentFormValues = {}
+    for (let index = 0; index < formState.length; index++) {
+      currentFormValues = { ...currentFormValues, [formState[index].name]: formState[index].value }
+    }
+    return currentFormValues
   }
   // Добавляет обработичики
   setEventListeners() {
-    console.log(123)
-    this._popup.querySelector('.popup__close-pic').addEventListener('click', event => {
-      this.close(event)
+    this._formElement.addEventListener('submit', () => {
+      this._handleSubmitForm()
     })
-    this._popup.querySelector('.popup__close-pic').addEventListener('click', () => {
-      this._resetForm(this._currentForm)
-      console.log(123)
-    })
-    this._popup.querySelector('.popup__form').addEventListener('submit', this._handleSubmitForm(this._getInputValues()))
     super.setEventListeners()
   }
-  // Открывает попап
-  open = () => {
-    document.addEventListener('keydown', this._handleEscClose)
-    this._popup.classList.add(this._openedPopupSelector)
-    if (this._popup.id == 'profile-popup') {
-      this._popup.querySelector('.popup__input_data_name').value = document.querySelector('.profile__name').textContent
-      this._popup.querySelector('.popup__input_data_description').value = document.querySelector('.profile__description').textContent
-    }
-  }
-  // Закрывает попап
-  close(event) {
-    if (event && event.target.classList.contains('popup__close-pic')) {
-      this._popup.classList.remove(this._openedPopupSelector)
-      return
-    }
-    this._reset()
+  // Закрывает попап и сбрасывает форму
+  close() {
+    this.reset()
     super.close()
   }
   // Обнуляет inputs
-  _reset() {
+  reset() {
     this._getInputValues().name = ''
     this._getInputValues().description = ''
   }
+  //Обрабытывает кнопку submit в форме добавления карточек
+  // const handleCardRenderForm = () => {
+  //   popupAdd
+  //     .getPopup()
+  //     .querySelector('.popup__form')
+  //     .addEventListener('submit', () => {
+  //       popupAdd.close()
+  //       renderCard()
+  //     })
+  // }
 }

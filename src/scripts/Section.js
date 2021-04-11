@@ -9,15 +9,13 @@ export class Section {
     this._container = document.querySelector(containerSelector)
   }
   renderItems = () => {
-    // рендерит элементы
     this._items.forEach(item => {
       const newItem = this._renderer(item)
-      this.addItem(newItem)
+      this._container.prepend(newItem)
     })
   }
 
   addItem = item => {
-    // принимает DOM-элемент и добавляет его в контейнер.
     this._container.prepend(item)
   }
 }

@@ -17,7 +17,21 @@ export class Popup {
   getPopup() {
     return this._popup
   }
+  // Скывает попапы по клику на затемнение
+  onEmptyZoneClose() {
+    this._popup.addEventListener('click', event => {
+      if (event.target.classList.contains('popup_opened')) {
+        this.close()
+        const currentForm = popup.querySelector('.popup__form')
+        if (currentForm) {
+          resetForm(currentForm)
+        }
+      }
+    })
+  }
   setEventListeners() {
+    console.log('.popup__close-pic============')
+    console.log(this._popup.querySelector('.popup__close-pic'))
     this._popup.querySelector('.popup__close-pic').addEventListener('click', this.close)
   }
   // Открывает попап
