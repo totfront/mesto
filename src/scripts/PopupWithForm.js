@@ -35,7 +35,7 @@ export class PopupWithForm extends Popup {
   }
   // Закрывает попап и сбрасывает форму
   close() {
-    this.reset()
+    // this.reset()
     super.close()
   }
   // Обнуляет inputs

@@ -8,6 +8,7 @@ export class Popup {
   constructor(popupSelector) {
     this._popup = document.querySelector(popupSelector)
     this._openedPopupSelector = 'popup_opened'
+    this._closePicBtnSelector = '.popup__close-pic'
   }
   _handleEscClose = evt => {
     if (evt.key === 'Escape') {
@@ -30,9 +31,9 @@ export class Popup {
     })
   }
   setEventListeners() {
-    console.log('.popup__close-pic============')
-    console.log(this._popup.querySelector('.popup__close-pic'))
-    this._popup.querySelector('.popup__close-pic').addEventListener('click', this.close)
+    console.log('this._popup============')
+    console.log(this._popup)
+    this._popup.addEventListener('click', this.close)
   }
   // Открывает попап
   open() {
@@ -40,7 +41,7 @@ export class Popup {
     document.addEventListener('keydown', this._handleEscClose)
   }
   // Закрывает попап
-  close() {
+  close = () => {
     this._popup.classList.remove(this._openedPopupSelector)
     document.removeEventListener('keydown', this._handleEscClose)
   }

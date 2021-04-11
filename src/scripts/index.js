@@ -33,11 +33,13 @@ const popups = Array.from(document.querySelectorAll('.popup'))
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
 // Изменяет данные профиля и закрывает попап по клику на submit
 const handleSubmitForm = () => {
-  profileInfo.setUserInfo(opupEdit._getInputValues())
+  profileInfo.setUserInfo(popupEdit._getInputValues())
 }
 const popupEdit = new PopupWithForm('#profile-popup', handleSubmitForm)
 const popupAdd = new PopupWithForm('#card-popup', handleSubmitForm)
 const popupOverview = new PopupWithImage('#overview', handleSubmitForm)
+const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
+const addCardFormValidator = new FormValidator(settings, cardRenderForm)
 const cardTemplateSelector = '#template'
 const cardContainerSelector = '.cards'
 // const Section = new Section({ items: [newCard], renderer: createCard }, cardContainerSelector)
@@ -63,12 +65,12 @@ addBtn.addEventListener('click', () => {
 })
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = () => {
-  const newCard = {}
+  const newCards = {}
   const popupAddCardDescription = popupAdd.getPopup().querySelector(descriptionInputSelector)
   const popupAddCardName = popupAdd.getPopup().querySelector(nameInputSelector)
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
-  new Section({ items: [newCard], renderer: createCard }, cardContainerSelector).renderItems()
+  new Section({ items: [newCards], renderer: createCard }, cardContainerSelector).renderItems()
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
 }
@@ -85,8 +87,8 @@ const createCard = item => {
 // Рендерим стартовые карточки
 new Section({ items: initialCards, renderer: createCard }, cardContainerSelector).renderItems()
 // Включает валидацию для формы добавления карточек
-new FormValidator(settings, profileEditorForm).enableValidation()
-new FormValidator(settings, cardRenderForm).enableValidation()
+profileEditFormValidator.enableValidation()
+addCardFormValidator.enableValidation()
 // // Сбрасывает поля форм и скрывает ошибки
 // const resetForm = currentForm => {
 //   new FormValidator(settings, currentForm).resetValidation()
