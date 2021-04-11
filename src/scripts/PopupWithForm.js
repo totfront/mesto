@@ -26,16 +26,27 @@ export class PopupWithForm extends Popup {
     }
     return currentFormValues
   }
+  // Скрывает попапы и вызывает сброс по клику на затемнение
+  onEmptyZoneClose() {
+    super.onEmptyZoneClose()
+    if (this._popup.id === 'profile-popup') {
+      this.reset()
+    }
+  }
   // Добавляет обработичики
   setEventListeners() {
     this._formElement.addEventListener('submit', () => {
-      this._handleSubmitForm()
+      this._handleSubmitForm(this._popup)
     })
-    super.setEventListeners()
+    this._popup.querySelector(this._closePicBtnSelector).addEventListener('click', this.close)
+  }
+  test() {
+    console.log('123============')
+    console.log(123)
   }
   // Закрывает попап и сбрасывает форму
   close() {
-    // this.reset()
+    this.reset()
     super.close()
   }
   // Обнуляет inputs
@@ -43,14 +54,4 @@ export class PopupWithForm extends Popup {
     this._getInputValues().name = ''
     this._getInputValues().description = ''
   }
-  //Обрабытывает кнопку submit в форме добавления карточек
-  // const handleCardRenderForm = () => {
-  //   popupAdd
-  //     .getPopup()
-  //     .querySelector('.popup__form')
-  //     .addEventListener('submit', () => {
-  //       popupAdd.close()
-  //       renderCard()
-  //     })
-  // }
 }

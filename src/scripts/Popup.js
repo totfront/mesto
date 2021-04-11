@@ -23,17 +23,11 @@ export class Popup {
     this._popup.addEventListener('click', event => {
       if (event.target.classList.contains('popup_opened')) {
         this.close()
-        const currentForm = popup.querySelector('.popup__form')
-        if (currentForm) {
-          resetForm(currentForm)
-        }
       }
     })
   }
   setEventListeners() {
-    console.log('this._popup============')
-    console.log(this._popup)
-    this._popup.addEventListener('click', this.close)
+    this._popup.querySelector(this._closePicBtnSelector).addEventListener('click', this.close)
   }
   // Открывает попап
   open() {
@@ -41,7 +35,8 @@ export class Popup {
     document.addEventListener('keydown', this._handleEscClose)
   }
   // Закрывает попап
-  close = () => {
+  close() {
+    const test = close.bind(globalThis)
     this._popup.classList.remove(this._openedPopupSelector)
     document.removeEventListener('keydown', this._handleEscClose)
   }

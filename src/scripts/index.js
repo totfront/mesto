@@ -9,7 +9,6 @@ import { UserInfo } from './UserInfo.js'
 import { PopupWithForm } from './PopupWithForm.js'
 import { initialCards } from './initial-cards.js'
 
-// const editForm = popupEdit.getPopup().querySelector('.popup__form')
 const cardRenderForm = document.querySelector('#card-renderer')
 const profileEditorForm = document.querySelector('#profile-editor')
 const settings = {
@@ -29,11 +28,32 @@ const profileNameSelector = '.profile__name'
 const profileDescriptionSelector = '.profile__description'
 const addBtn = document.querySelector('.profile__add-btn')
 const overviewCloseBtn = document.querySelector('.overview').querySelector('.popup__close-btn')
-const popups = Array.from(document.querySelectorAll('.popup'))
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
 // Изменяет данные профиля и закрывает попап по клику на submit
-const handleSubmitForm = () => {
-  profileInfo.setUserInfo(popupEdit._getInputValues())
+const handleSubmitForm = popup => {
+  if (popup.id === 'profile-popup') {
+    profileInfo.setUserInfo(popupEdit._getInputValues())
+    popupEdit.reset()
+    popupEdit.close()
+    return
+  }
+  if (popup.id === 'card-popup') {
+    console.log('Попап добавления карточек============')
+    console.log('Попап добавления карточек')
+    popupAdd.close()
+    renderCard()
+    return
+  }
+}
+//Обрабытывает кнопку submit в форме добавления карточек
+const handleCardRenderForm = () => {
+  popupAdd
+    .getPopup()
+    .querySelector('.popup__form')
+    .addEventListener('submit', () => {
+      popupAdd.close()
+      renderCard()
+    })
 }
 const popupEdit = new PopupWithForm('#profile-popup', handleSubmitForm)
 const popupAdd = new PopupWithForm('#card-popup', handleSubmitForm)
@@ -65,12 +85,12 @@ addBtn.addEventListener('click', () => {
 })
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = () => {
-  const newCards = {}
+  const newCard = {}
   const popupAddCardDescription = popupAdd.getPopup().querySelector(descriptionInputSelector)
   const popupAddCardName = popupAdd.getPopup().querySelector(nameInputSelector)
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
-  new Section({ items: [newCards], renderer: createCard }, cardContainerSelector).renderItems()
+  new Section({ items: [newCard], renderer: createCard }, cardContainerSelector).renderItems()
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
 }
