@@ -19,6 +19,7 @@ const settings = {
   inputErrorClass: '.popup__input-error',
   errorClass: 'popup__input-error_active'
 }
+const popupFormSelector = '.popup__form'
 const editBtn = document.querySelector('.profile__edit-btn')
 const nameInputSelector = '.popup__input_data_name'
 const nameInput = document.querySelector(nameInputSelector)
@@ -38,22 +39,10 @@ const handleSubmitForm = popup => {
     return
   }
   if (popup.id === 'card-popup') {
-    console.log('Попап добавления карточек============')
-    console.log('Попап добавления карточек')
     popupAdd.close()
     renderCard()
     return
   }
-}
-//Обрабытывает кнопку submit в форме добавления карточек
-const handleCardRenderForm = () => {
-  popupAdd
-    .getPopup()
-    .querySelector('.popup__form')
-    .addEventListener('submit', () => {
-      popupAdd.close()
-      renderCard()
-    })
 }
 const popupEdit = new PopupWithForm('#profile-popup', handleSubmitForm)
 const popupAdd = new PopupWithForm('#card-popup', handleSubmitForm)
@@ -62,26 +51,28 @@ const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
 const addCardFormValidator = new FormValidator(settings, cardRenderForm)
 const cardTemplateSelector = '#template'
 const cardContainerSelector = '.cards'
-// const Section = new Section({ items: [newCard], renderer: createCard }, cardContainerSelector)
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
-  nameInput.setAttribute('value', profileInfo.getUserInfo().name)
-  descriptionInput.setAttribute('value', profileInfo.getUserInfo().description)
+  nameInput.value = profileInfo.getUserInfo().name
+  descriptionInput.value = profileInfo.getUserInfo().description
 }
 // Добавляет обработчики:
 overviewCloseBtn.addEventListener('click', () => {
   popupOverview.close()
 })
+popupEdit.setEventListeners()
+popupEdit.onEmptyZoneClose()
 editBtn.addEventListener('click', () => {
+  profileEditFormValidator.resetValidation()
   popupEdit.open()
-  popupEdit.onEmptyZoneClose()
-  popupEdit.setEventListeners()
   fillProfileForm()
 })
+popupAdd.onEmptyZoneClose()
+popupAdd.setEventListeners()
 addBtn.addEventListener('click', () => {
+  addCardFormValidator.resetValidation()
+  popupAdd.reset()
   popupAdd.open()
-  popupAdd.onEmptyZoneClose()
-  popupAdd.setEventListeners()
 })
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = () => {
@@ -90,7 +81,12 @@ const renderCard = () => {
   const popupAddCardName = popupAdd.getPopup().querySelector(nameInputSelector)
   newCard.name = popupAddCardName.value
   newCard.link = popupAddCardDescription.value
-  new Section({ items: [newCard], renderer: createCard }, cardContainerSelector).renderItems()
+  const sectionData = {
+    items: [newCard],
+    renderer: createCard
+  }
+  const newSection = new Section(sectionData, cardContainerSelector)
+  newSection.renderItems()
   popupAddCardName.value = ''
   popupAddCardDescription.value = ''
 }
@@ -104,12 +100,11 @@ const handleCardClick = (name, link) => {
 const createCard = item => {
   return new Card(item, cardTemplateSelector, handleCardClick).renderCard()
 }
+const initalSectionData = { items: initialCards, renderer: createCard }
 // Рендерим стартовые карточки
-new Section({ items: initialCards, renderer: createCard }, cardContainerSelector).renderItems()
+const initialSection = new Section(initalSectionData, cardContainerSelector)
+initialSection.renderItems()
 // Включает валидацию для формы добавления карточек
 profileEditFormValidator.enableValidation()
 addCardFormValidator.enableValidation()
-// // Сбрасывает поля форм и скрывает ошибки
-// const resetForm = currentForm => {
-//   new FormValidator(settings, currentForm).resetValidation()
-// }
+// Сбрасывает поля форм и скрывает ошибки

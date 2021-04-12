@@ -15,6 +15,7 @@ export class FormValidator {
     this._inputErrorClass = settings.inputErrorClass
     this._errorClass = settings.errorClass
     this._formElement = formElement
+    this.resetValidation = this.resetValidation.bind(this)
   }
   // Показывает ошибку ввода
   _showInputError = (inputElement, errorMessage) => {

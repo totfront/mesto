@@ -13,6 +13,7 @@ export class PopupWithForm extends Popup {
     this._popup = document.querySelector(popupSelector)
     this._handleSubmitForm = handleSubmitForm
     this._formElement = this._popup.querySelector('.popup__form')
+    this.close = this.close.bind(this)
   }
   // Возвращает объект с текущими значениями input
   _getInputValues = () => {
@@ -40,14 +41,13 @@ export class PopupWithForm extends Popup {
     })
     this._popup.querySelector(this._closePicBtnSelector).addEventListener('click', this.close)
   }
-  test() {
-    console.log('123============')
-    console.log(123)
-  }
   // Закрывает попап и сбрасывает форму
   close() {
-    this.reset()
     super.close()
+    this.reset()
+    this._formElement.removeEventListener('submit', () => {
+      this._handleSubmitForm(this._popup)
+    })
   }
   // Обнуляет inputs
   reset() {
