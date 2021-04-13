@@ -19,39 +19,31 @@ export class PopupWithForm extends Popup {
   _getInputValues = () => {
     // Слепок текущего состояния формы
     const formState = Array.from(this._formElement.getElementsByTagName('input')).map(inputElement => {
-      return { name: inputElement.name, value: inputElement.value }
+      return { name: inputElement.name, link: inputElement.value }
     })
     let currentFormValues = {}
     for (let index = 0; index < formState.length; index++) {
-      currentFormValues = { ...currentFormValues, [formState[index].name]: formState[index].value }
+      currentFormValues = { ...currentFormValues, [formState[index].name]: formState[index].link }
     }
     return currentFormValues
   }
-  // Скрывает попапы и вызывает сброс по клику на затемнение
-  onEmptyZoneClose() {
-    super.onEmptyZoneClose()
-    if (this._popup.id === 'profile-popup') {
-      this.reset()
-    }
-  }
-  // Добавляет обработичики
+
+  // Добавляет обработичики событий
   setEventListeners() {
     this._formElement.addEventListener('submit', () => {
-      this._handleSubmitForm(this._popup)
+      this._handleSubmitForm(this._getInputValues())
+      this.close()
     })
-    this._popup.querySelector(this._closePicBtnSelector).addEventListener('click', this.close)
+    super.setEventListeners()
   }
   // Закрывает попап и сбрасывает форму
   close() {
     super.close()
-    this.reset()
-    this._formElement.removeEventListener('submit', () => {
-      this._handleSubmitForm(this._popup)
-    })
+    this._formElement.reset()
   }
   // Обнуляет inputs
-  reset() {
-    this._getInputValues().name = ''
-    this._getInputValues().description = ''
-  }
+  // reset() {
+  //   this._getInputValues().name = ''
+  //   this._getInputValues().description = ''
+  // }
 }

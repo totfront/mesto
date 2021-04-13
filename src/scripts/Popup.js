@@ -19,15 +19,17 @@ export class Popup {
     return this._popup
   }
   // Скывает попапы по клику на затемнение
-  onEmptyZoneClose() {
+  _handleOverlayClick() {
     this._popup.addEventListener('click', event => {
       if (event.target.classList.contains('popup_opened')) {
         this.close()
       }
     })
   }
+  // Добавляет обработчики событий
   setEventListeners() {
     this._popup.querySelector(this._closePicBtnSelector).addEventListener('click', this.close)
+    this._handleOverlayClick()
   }
   // Открывает попап
   open() {
@@ -36,7 +38,6 @@ export class Popup {
   }
   // Закрывает попап
   close() {
-    const test = close.bind(globalThis)
     this._popup.classList.remove(this._openedPopupSelector)
     document.removeEventListener('keydown', this._handleEscClose)
   }

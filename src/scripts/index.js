@@ -7,10 +7,9 @@ import { Section } from './Section.js'
 import { PopupWithImage } from './PopupWithImage.js'
 import { UserInfo } from './UserInfo.js'
 import { PopupWithForm } from './PopupWithForm.js'
-import { initialCards } from './initial-cards.js'
-
-const cardRenderForm = document.querySelector('#card-renderer')
-const profileEditorForm = document.querySelector('#profile-editor')
+import { cardList } from './initial-cards.js'
+const popupAddCardSelector = '#card-renderer'
+const popupProfileEditorSelecor = '#profile-editor'
 const settings = {
   formSelector: 'form',
   inputSelector: '.popup__input',
@@ -19,38 +18,40 @@ const settings = {
   inputErrorClass: '.popup__input-error',
   errorClass: 'popup__input-error_active'
 }
-const popupFormSelector = '.popup__form'
-const editBtn = document.querySelector('.profile__edit-btn')
+const editBtnSelector = '.profile__edit-btn'
 const nameInputSelector = '.popup__input_data_name'
-const nameInput = document.querySelector(nameInputSelector)
 const descriptionInputSelector = '.popup__input_data_description'
-const descriptionInput = document.querySelector(descriptionInputSelector)
 const profileNameSelector = '.profile__name'
 const profileDescriptionSelector = '.profile__description'
-const addBtn = document.querySelector('.profile__add-btn')
-const overviewCloseBtn = document.querySelector('.overview').querySelector('.popup__close-btn')
-const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
-// Изменяет данные профиля и закрывает попап по клику на submit
-const handleSubmitForm = popup => {
-  if (popup.id === 'profile-popup') {
-    profileInfo.setUserInfo(popupEdit._getInputValues())
-    popupEdit.reset()
-    popupEdit.close()
-    return
-  }
-  if (popup.id === 'card-popup') {
-    popupAdd.close()
-    renderCard()
-    return
-  }
-}
-const popupEdit = new PopupWithForm('#profile-popup', handleSubmitForm)
-const popupAdd = new PopupWithForm('#card-popup', handleSubmitForm)
-const popupOverview = new PopupWithImage('#overview', handleSubmitForm)
-const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
-const addCardFormValidator = new FormValidator(settings, cardRenderForm)
+const profileEditorPopupSelector = '#profile-popup'
+const addCardPopupSelector = '#card-popup'
+const overviewPopupSelector = '#overview'
 const cardTemplateSelector = '#template'
 const cardContainerSelector = '.cards'
+const popupCloseBtnSelector = '.popup__close-btn'
+const popupAddBtnSelector = '.profile__add-btn'
+const editBtn = document.querySelector(editBtnSelector)
+const cardRenderForm = document.querySelector(popupAddCardSelector)
+const profileEditorForm = document.querySelector(popupProfileEditorSelecor)
+const descriptionInput = document.querySelector(descriptionInputSelector)
+const nameInput = document.querySelector(nameInputSelector)
+const addBtn = document.querySelector(popupAddBtnSelector)
+const overviewCloseBtn = document.querySelector(overviewPopupSelector).querySelector(popupCloseBtnSelector)
+const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
+// Изменяет данные профиля и закрывает попап по клику на submit
+const handleAddCardSubmit = newCardData => {
+  renderCard(newCardData)
+}
+const handleEditProfileSubmit = inputValues => {
+  profileInfo.setUserInfo(inputValues)
+}
+const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
+const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
+const popupOverview = new PopupWithImage(overviewPopupSelector)
+const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
+const addCardFormValidator = new FormValidator(settings, cardRenderForm)
+const popupAddCardDescription = popupAdd.getPopup().querySelector(descriptionInputSelector)
+const popupAddCardName = popupAdd.getPopup().querySelector(nameInputSelector)
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
   nameInput.value = profileInfo.getUserInfo().name
@@ -61,49 +62,45 @@ overviewCloseBtn.addEventListener('click', () => {
   popupOverview.close()
 })
 popupEdit.setEventListeners()
-popupEdit.onEmptyZoneClose()
+// popupEdit.onEmptyZoneClose()
 editBtn.addEventListener('click', () => {
   profileEditFormValidator.resetValidation()
   popupEdit.open()
   fillProfileForm()
 })
-popupAdd.onEmptyZoneClose()
+// popupAdd.onEmptyZoneClose()
 popupAdd.setEventListeners()
 addBtn.addEventListener('click', () => {
   addCardFormValidator.resetValidation()
-  popupAdd.reset()
+  // popupAdd.reset()
   popupAdd.open()
 })
-//Создает и наполняет новую карточку из формы, затем очищает форму
-const renderCard = () => {
-  const newCard = {}
-  const popupAddCardDescription = popupAdd.getPopup().querySelector(descriptionInputSelector)
-  const popupAddCardName = popupAdd.getPopup().querySelector(nameInputSelector)
-  newCard.name = popupAddCardName.value
-  newCard.link = popupAddCardDescription.value
-  const sectionData = {
-    items: [newCard],
-    renderer: createCard
-  }
-  const newSection = new Section(sectionData, cardContainerSelector)
-  newSection.renderItems()
-  popupAddCardName.value = ''
-  popupAddCardDescription.value = ''
-}
 // Наполняет попап с превью данными (название, ссылку) и открывает его
 const handleCardClick = (name, link) => {
   popupOverview.setEventListeners()
-  popupOverview.onEmptyZoneClose()
+  // popupOverview.onEmptyZoneClose()
   popupOverview.open(name, link)
 }
 // Рендерит заполненную карточку
 const createCard = item => {
   return new Card(item, cardTemplateSelector, handleCardClick).renderCard()
 }
-const initalSectionData = { items: initialCards, renderer: createCard }
+const initalSectionData = { items: cardList, renderer: createCard }
 // Рендерим стартовые карточки
 const initialSection = new Section(initalSectionData, cardContainerSelector)
 initialSection.renderItems()
+//Создает и наполняет новую карточку из формы, затем очищает форму
+const renderCard = newCardData => {
+  const newCard = {}
+  newCard.name = newCardData.name
+  newCard.link = newCardData.url
+  const sectionData = {
+    items: [newCard],
+    renderer: createCard
+  }
+  const newSection = new Section(sectionData, cardContainerSelector)
+  newSection.renderItems()
+}
 // Включает валидацию для формы добавления карточек
 profileEditFormValidator.enableValidation()
 addCardFormValidator.enableValidation()

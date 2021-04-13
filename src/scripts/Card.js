@@ -4,7 +4,6 @@
 // 3. Добавляет слушатели на кнопку "лайк", кнопку "корзина", картинку
 // 4. Добавляет карточку в DOM
 
-const cardsContainer = document.querySelector('.cards')
 class Card {
   constructor(data, selector, handleCardClick) {
     this._heading = data.name
