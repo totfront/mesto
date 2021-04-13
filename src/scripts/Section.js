@@ -14,8 +14,8 @@ export class Section {
       this._container.prepend(newItem)
     })
   }
-
   addItem = item => {
-    this._container.prepend(item)
+    const newItem = this._renderer(item)
+    this._container.prepend(newItem)
   }
 }

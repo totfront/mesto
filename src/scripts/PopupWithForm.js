@@ -41,9 +41,4 @@ export class PopupWithForm extends Popup {
     super.close()
     this._formElement.reset()
   }
-  // Обнуляет inputs
-  // reset() {
-  //   this._getInputValues().name = ''
-  //   this._getInputValues().description = ''
-  // }
 }

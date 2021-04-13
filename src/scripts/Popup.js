@@ -9,6 +9,7 @@ export class Popup {
     this._popup = document.querySelector(popupSelector)
     this._openedPopupSelector = 'popup_opened'
     this._closePicBtnSelector = '.popup__close-pic'
+    this.close = this.close.bind(this)
   }
   _handleEscClose = evt => {
     if (evt.key === 'Escape') {
