@@ -41,8 +41,8 @@ class Card {
     newLikeBtn.classList.toggle('card__like-btn_active')
   }
   // Добавляет карточку
-  renderCard(item) {
-    const newCard = this._createCard(item)
+  renderCard() {
+    const newCard = this._createCard()
     return newCard
   }
 }

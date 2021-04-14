@@ -8,7 +8,7 @@ export class Section {
     this._items = items
     this._renderer = newCardData => {
       const newCard = renderer(newCardData)
-      this._container.prepend(newCard)
+      this.addItem(newCard)
     }
   }
   renderItems = () => {

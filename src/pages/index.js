@@ -1,12 +1,12 @@
 // Контроллер приложения
 
-import '../pages/index.css'
-import { FormValidator } from './FormValidator.js'
-import { Card } from './Card.js'
-import { Section } from './Section.js'
-import { PopupWithImage } from './PopupWithImage.js'
-import { UserInfo } from './UserInfo.js'
-import { PopupWithForm } from './PopupWithForm.js'
+import './index.css'
+import { FormValidator } from '../scripts/FormValidator.js'
+import { Card } from '../scripts/Card.js'
+import { Section } from '../scripts/Section.js'
+import { PopupWithImage } from '../scripts/PopupWithImage.js'
+import { UserInfo } from '../scripts/UserInfo.js'
+import { PopupWithForm } from '../scripts/PopupWithForm.js'
 import { cardList } from '../utils/initial-cards.js'
 const popupAddCardSelector = '#card-renderer'
 const popupProfileEditorSelecor = '#profile-editor'
@@ -70,15 +70,15 @@ const handleCardClick = (name, link) => {
   popupOverview.setEventListeners()
   popupOverview.open(name, link)
 }
-// Рендерит заполненную карточку
+// Собирает заполненную карточку
 const createCard = item => {
   return new Card(item, cardTemplateSelector, handleCardClick).renderCard()
 }
 const initalSectionData = { items: cardList, renderer: createCard }
-let section = null
 // Рендерим стартовые карточки
-section = new Section(initalSectionData, cardContainerSelector)
+let section = new Section(initalSectionData, cardContainerSelector)
 section.renderItems()
+
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = newCardData => {
   const newCard = {}
