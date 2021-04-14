@@ -84,7 +84,7 @@ const renderCard = newCardData => {
   const newCard = {}
   newCard.name = newCardData.name
   newCard.link = newCardData.url
-  section.addItem(newCard)
+  section.addItem(createCard(newCard))
 }
 // Включает валидацию для формы добавления карточек
 profileEditFormValidator.enableValidation()
