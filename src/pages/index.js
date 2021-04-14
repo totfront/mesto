@@ -7,7 +7,7 @@ import { Section } from '../scripts/Section.js'
 import { PopupWithImage } from '../scripts/PopupWithImage.js'
 import { UserInfo } from '../scripts/UserInfo.js'
 import { PopupWithForm } from '../scripts/PopupWithForm.js'
-import { cardList } from '../utils/initial-cards.js'
+// import { cardList } from '../utils/initial-cards.js'
 const popupAddCardSelector = '#card-renderer'
 const popupProfileEditorSelecor = '#profile-editor'
 const settings = {
@@ -74,11 +74,28 @@ const handleCardClick = (name, link) => {
 const createCard = item => {
   return new Card(item, cardTemplateSelector, handleCardClick).renderCard()
 }
-const initalSectionData = { items: cardList, renderer: createCard }
-// Рендерим стартовые карточки
-let section = new Section(initalSectionData, cardContainerSelector)
-section.renderItems()
+// let initalSectionData = []
 
+fetch('https://mesto.nomoreparties.co/v1/cohort-22/cards', {
+  headers: {
+    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
+  }
+})
+  .then(res => res.json())
+  .then(result => {
+    let cardList = []
+    result.forEach(newCardData => {
+      cardList = [...cardList, { name: newCardData.name, link: newCardData.link }]
+    })
+    return cardList
+  })
+  .then(cardList => {
+    const initalSectionData = { items: cardList, renderer: createCard }
+
+    // Рендерим стартовые карточки
+    let section = new Section(initalSectionData, cardContainerSelector)
+    section.renderItems()
+  })
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = newCardData => {
   const newCard = {}
