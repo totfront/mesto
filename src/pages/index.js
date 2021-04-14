@@ -36,6 +36,9 @@ const descriptionInput = document.querySelector(descriptionInputSelector)
 const nameInput = document.querySelector(nameInputSelector)
 const addBtn = document.querySelector(popupAddBtnSelector)
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
+// Обновляет данные пользователя с сервера
+profileInfo.setUserInfo()
+
 // Изменяет данные профиля и закрывает попап по клику на submit
 const handleAddCardSubmit = newCardData => {
   renderCard(newCardData)
@@ -74,8 +77,6 @@ const handleCardClick = (name, link) => {
 const createCard = item => {
   return new Card(item, cardTemplateSelector, handleCardClick).renderCard()
 }
-// let initalSectionData = []
-
 fetch('https://mesto.nomoreparties.co/v1/cohort-22/cards', {
   headers: {
     authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
