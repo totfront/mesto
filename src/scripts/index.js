@@ -7,7 +7,7 @@ import { Section } from './Section.js'
 import { PopupWithImage } from './PopupWithImage.js'
 import { UserInfo } from './UserInfo.js'
 import { PopupWithForm } from './PopupWithForm.js'
-import { cardList } from './initial-cards.js'
+import { cardList } from '../utils/initial-cards.js'
 const popupAddCardSelector = '#card-renderer'
 const popupProfileEditorSelecor = '#profile-editor'
 const settings = {
