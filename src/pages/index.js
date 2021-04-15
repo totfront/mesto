@@ -25,6 +25,7 @@ const profileNameSelector = '.profile__name'
 const profileDescriptionSelector = '.profile__description'
 const profileEditorPopupSelector = '#profile-popup'
 const addCardPopupSelector = '#card-popup'
+const certitudePopupSelector = '#certitude'
 const overviewPopupSelector = '#overview'
 const cardTemplateSelector = '#template'
 const cardContainerSelector = '.cards'
@@ -60,9 +61,15 @@ const handleEditProfileSubmit = inputValues => {
   profileInfo.setUserInfo(inputValues)
   userInfoApi.updateProfileInfo({ profileNameElement: document.querySelector(profileNameSelector), profileDescriptionElement: document.querySelector(profileDescriptionSelector) }, inputValues)
 }
+// Закрывает попап и удаляет карточку (пока не удаляет)
+const handleCertitudeSubmit = () => {
+  console.log('123============')
+  console.log(123)
+}
 const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
 const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
 const popupOverview = new PopupWithImage(overviewPopupSelector)
+const popupCertitude = new PopupWithForm(certitudePopupSelector, handleCertitudeSubmit)
 const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
 const addCardFormValidator = new FormValidator(settings, cardRenderForm)
 // Обновляем данные на странице данными с сервера
@@ -89,9 +96,13 @@ const handleCardClick = (name, link) => {
   popupOverview.setEventListeners()
   popupOverview.open(name, link)
 }
+const handleDeleteBtnClick = () => {
+  popupCertitude.setEventListeners()
+  popupCertitude.open()
+}
 // Собирает заполненную карточку
 const createCard = item => {
-  return new Card(item, cardTemplateSelector, handleCardClick).renderCard()
+  return new Card(item, cardTemplateSelector, handleCardClick, handleDeleteBtnClick).renderCard()
 }
 // Запрос на стартовые карточки
 let section

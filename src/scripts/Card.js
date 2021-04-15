@@ -5,10 +5,11 @@
 // 4. Добавляет карточку в DOM
 
 class Card {
-  constructor(data, selector, handleCardClick) {
+  constructor(data, selector, handleCardClick, handleDeleteBtnClick) {
     this._heading = data.name
     this._image = data.link
     this._selector = selector
+    this._handleDeleteBtnClick = handleDeleteBtnClick
     this._handleCardClick = handleCardClick
     this._likesCounter = data.likes.length
   }
@@ -32,7 +33,8 @@ class Card {
     })
     // Добавляем кнопке "удалить" листнер на удаление карточек
     newDeleteBtn.addEventListener('click', () => {
-      newCard.remove()
+      // newCard.remove()
+      this._handleDeleteBtnClick()
     })
     // Добавляем кнопке "лайк" листнер на лайк карточек
     newLikeBtn.addEventListener('click', () => {
