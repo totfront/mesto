@@ -29,7 +29,7 @@ export class Api {
     })
   }
   updateProfileInfo(profileElements, newProfileData) {
-    // Первичное заполнение данных пользователя с сервера
+    // Первичное заполнение данных профиля с сервера
     if (!newProfileData) {
       fetch(this._serverUrl, {
         headers: {
@@ -48,7 +48,7 @@ export class Api {
         })
       return
     }
-    // Отправили новые данные профиля на сервер
+    // Обновляет данные профиля на сервере
     fetch(this._serverUrl, {
       method: 'PATCH',
       headers: {

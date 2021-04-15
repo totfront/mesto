@@ -10,13 +10,16 @@ class Card {
     this._image = data.link
     this._selector = selector
     this._handleCardClick = handleCardClick
+    this._likesCounter = data.likes.length
   }
   // Подготавливает карточку к публикации
   _createCard() {
     const newCard = document.querySelector(this._selector).content.querySelector('.card').cloneNode(true)
     const cardPic = newCard.querySelector('.card__pic')
+    const cardLikes = newCard.querySelector('.card__like-counter')
     cardPic.style.backgroundImage = `url("${this._image}")`
     newCard.querySelector('.card__heading').textContent = this._heading
+    cardLikes.textContent = this._likesCounter
     this._handleEventListeners(cardPic, newCard)
     return newCard
   }
@@ -34,12 +37,20 @@ class Card {
     // Добавляем кнопке "лайк" листнер на лайк карточек
     newLikeBtn.addEventListener('click', () => {
       this._switchLikeBtn(newLikeBtn)
+      this._switchLikeCounter(newCard)
     })
   }
   // Изменяет состояние кнопки "лайк"
   _switchLikeBtn(newLikeBtn) {
     newLikeBtn.classList.toggle('card__like-btn_active')
   }
+  // Счетчик лайков
+  // _switchLikeCounter(newCard) {
+  //   this._counter++
+  //   const newLikeBtn = newCard.querySelector('.card__like-counter')
+  //   console.log('x============')
+  //   console.log(this._counter)
+  // }
   // Добавляет карточку
   renderCard() {
     const newCard = this._createCard()

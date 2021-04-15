@@ -95,20 +95,25 @@ const createCard = item => {
 }
 // Запрос на стартовые карточки
 let section
+let counter = 0
 cardsApi
   .getInitialCards()
   .then(result => {
     let cardList = []
     result.forEach(newCardData => {
-      cardList = [...cardList, { name: newCardData.name, link: newCardData.link }]
+      cardList = [...cardList, { name: newCardData.name, link: newCardData.link, likes: newCardData.likes }]
     })
     return cardList
   })
   .then(cardList => {
-    const initalSectionData = { items: cardList, renderer: createCard }
     // Рендерим стартовые карточки
+    const initalSectionData = { items: cardList, renderer: createCard }
     section = new Section(initalSectionData, cardContainerSelector)
     section.renderItems()
+    // Отображаем лайки
+    cardList.forEach(el => {
+      const likeCounter = document.querySelector('.card__like-counter')
+    })
   })
   .catch(err => {
     console.log(err)
