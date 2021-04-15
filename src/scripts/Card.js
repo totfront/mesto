@@ -11,11 +11,31 @@ class Card {
     this._selector = selector
     this._handleDeleteBtnClick = handleDeleteBtnClick
     this._handleCardClick = handleCardClick
-    this._likesCounter = data.likes.length
+    this._personalId = '5e7c90c2d461fc6a9589e831'
+    this._trashBtnTemplate = '<button class="card__trash-btn"></button>'
+    // Записываем создателя карточки с сервера
+    if (data.owner) {
+      this._cardOwner = data.owner
+    } else {
+      // Если нет, пишем себя
+      this._cardOwner = {
+        _id: this._personalId
+      }
+    }
+    // Лайки добавляются только старым карточкам
+    if (data.likes) {
+      this._likesCounter = data.likes.length
+    }
   }
   // Подготавливает карточку к публикации
   _createCard() {
-    const newCard = document.querySelector(this._selector).content.querySelector('.card').cloneNode(true)
+    const cardTemplate = document.querySelector(this._selector).content.querySelector('.card')
+    let newCard = cardTemplate.cloneNode(true)
+    // Удаляем кнопку удалить карточку у не моих карточек
+    if (this._cardOwner._id === this._personalId) {
+      // newCard = newCard.innerHTML(this._trashBtnTemplate)
+      newCard.querySelector('.card__trash-btn').remove()
+    }
     const cardPic = newCard.querySelector('.card__pic')
     const cardLikes = newCard.querySelector('.card__like-counter')
     cardPic.style.backgroundImage = `url("${this._image}")`
@@ -32,10 +52,12 @@ class Card {
       this._handleCardClick(this._heading, this._image)
     })
     // Добавляем кнопке "удалить" листнер на удаление карточек
-    newDeleteBtn.addEventListener('click', () => {
-      // newCard.remove()
-      this._handleDeleteBtnClick()
-    })
+    if (this._cardOwner._id !== this._personalId) {
+      newDeleteBtn.addEventListener('click', () => {
+        // newCard.remove()
+        this._handleDeleteBtnClick()
+      })
+    }
     // Добавляем кнопке "лайк" листнер на лайк карточек
     newLikeBtn.addEventListener('click', () => {
       this._switchLikeBtn(newLikeBtn)

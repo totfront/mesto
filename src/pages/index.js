@@ -74,6 +74,8 @@ const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
 const addCardFormValidator = new FormValidator(settings, cardRenderForm)
 // Обновляем данные на странице данными с сервера
 userInfoApi.updateProfileInfo({ profileNameElement: document.querySelector(profileNameSelector), profileDescriptionElement: document.querySelector(profileDescriptionSelector) })
+// console.log('============')
+// console.log()
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
   nameInput.value = profileInfo.getUserInfo().name
@@ -106,13 +108,12 @@ const createCard = item => {
 }
 // Запрос на стартовые карточки
 let section
-let counter = 0
 cardsApi
   .getInitialCards()
   .then(result => {
     let cardList = []
     result.forEach(newCardData => {
-      cardList = [...cardList, { name: newCardData.name, link: newCardData.link, likes: newCardData.likes }]
+      cardList = [...cardList, { name: newCardData.name, link: newCardData.link, likes: newCardData.likes, owner: newCardData.owner }]
     })
     return cardList
   })
@@ -121,10 +122,6 @@ cardsApi
     const initalSectionData = { items: cardList, renderer: createCard }
     section = new Section(initalSectionData, cardContainerSelector)
     section.renderItems()
-    // Отображаем лайки
-    cardList.forEach(el => {
-      const likeCounter = document.querySelector('.card__like-counter')
-    })
   })
   .catch(err => {
     console.log(err)

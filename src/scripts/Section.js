@@ -1,7 +1,6 @@
 // Контроллер рендера новых карточек
 // 1. Рендерит все стартовые карточки
 // 2. Добавляет поштучно новые
-
 export class Section {
   constructor({ items, renderer }, containerSelector) {
     this._container = document.querySelector(containerSelector)

@@ -45,6 +45,8 @@ export class Api {
         .then(profileData => {
           profileElements.profileNameElement.textContent = profileData.name
           profileElements.profileDescriptionElement.textContent = profileData.about
+          console.log('profileData============')
+          console.log(profileData)
         })
       return
     }
@@ -74,12 +76,7 @@ export class Api {
         }
         return Promise.reject(`Ошибка: ${res.status}`)
       })
-      .then(res => {
-        console.log('До вставки============')
-        console.log(res)
-        console.log('newCardData============')
-        console.log(newCardData)
-      })
+      .then(res => {})
     return fetch(this._serverUrl, {
       method: 'POST',
       headers: {
@@ -92,10 +89,6 @@ export class Api {
       })
     }).then(res => {
       if (res.ok) {
-        console.log('res============')
-        console.log(res)
-        console.log('newCardData============')
-        console.log(newCardData)
         return res.json()
       }
       // если ошибка, отклоняем промис
