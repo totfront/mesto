@@ -20,7 +20,6 @@
 @import url(../blocks/card/card.css);
 @import url(../blocks/card/__pic/card__pic.css);
 @import url(../blocks/card/__inner/card__inner.css);
-@import url(../blocks/card/__like/card__like.css);
 @import url(../blocks/card/__heading/card__heading.css);
 @import url(../blocks/card/__trash-btn/card__trash-btn.css);
 @import url(../blocks/card/__like-btn/card__like-btn.css);
