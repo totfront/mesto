@@ -8,8 +8,7 @@ import { PopupWithImage } from '../scripts/PopupWithImage.js'
 import { UserInfo } from '../scripts/UserInfo.js'
 import { PopupWithForm } from '../scripts/PopupWithForm.js'
 import { Api } from '../scripts/Api.js'
-const popupAddCardSelector = '#card-renderer'
-const popupProfileEditorSelecor = '#profile-editor'
+
 const settings = {
   formSelector: 'form',
   inputSelector: '.popup__input',
@@ -28,14 +27,20 @@ const profileEditorPopupSelector = '#profile-popup'
 const addCardPopupSelector = '#card-popup'
 const certitudePopupSelector = '#certitude'
 const avatarUpdPopupSelector = '#avatar-upd'
+const avatarUpdFormSelector = '#avatar-upd-form'
 const overviewPopupSelector = '#overview'
 const cardTemplateSelector = '#template'
+const popupAddCardSelector = '#card-renderer'
+const popupProfileEditorSelecor = '#profile-editor'
 const cardContainerSelector = '.cards'
 const popupAddBtnSelector = '.profile__add-btn'
+const profileDescriptionElement = document.querySelector(profileDescriptionSelector)
+const profileNameElement = document.querySelector(profileNameSelector)
 const profileAvatarBtnElement = document.querySelector(profileAvatarBtnSelector)
 const editBtn = document.querySelector(editBtnSelector)
 const cardRenderForm = document.querySelector(popupAddCardSelector)
 const profileEditorForm = document.querySelector(popupProfileEditorSelecor)
+const avatarUpdFormElement = document.querySelector(avatarUpdFormSelector)
 const descriptionInput = document.querySelector(descriptionInputSelector)
 const nameInput = document.querySelector(nameInputSelector)
 const addBtn = document.querySelector(popupAddBtnSelector)
@@ -54,6 +59,13 @@ const userInfoApi = new Api({
     'Content-Type': 'application/json'
   }
 })
+const avatarApi = new Api({
+  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/users/me/avatar',
+  headers: {
+    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691',
+    'Content-Type': 'application/json'
+  }
+})
 // Добавляет новую карточку и закрывает попап по клику на submit
 const handleAddCardSubmit = newCardData => {
   renderCard(newCardData)
@@ -62,18 +74,18 @@ const handleAddCardSubmit = newCardData => {
 // Изменяет данные профиля и закрывает попап по клику на submit
 const handleEditProfileSubmit = inputValues => {
   profileInfo.setUserInfo(inputValues)
-  userInfoApi.updateProfileInfo({ profileNameElement: document.querySelector(profileNameSelector), profileDescriptionElement: document.querySelector(profileDescriptionSelector) }, inputValues)
+  userInfoApi.updateProfileInfo({ profileNameElement: profileNameElement, profileDescriptionElement: profileDescriptionElement }, inputValues)
 }
 // Закрывает попап и удаляет карточку (пока не удаляет)
 const handleCertitudeSubmit = newCard => {
-  console.log('card============')
-  console.log(newCard)
+  // console.log('card============')
+  // console.log(newCard)
   cardsApi.deleteCard
-  // card.remove()
 }
-const handleAvatarUpdSubmit = () => {
-  console.log('123============')
-  console.log(123)
+// Обновляет аватар, отправляет новый на сервер
+const handleAvatarUpdSubmit = newAvatarUrl => {
+  avatarApi.updateAvatarImage(newAvatarUrl.url)
+  profileAvatarBtnElement.style.backgroundImage = `url("${newAvatarUrl.url}")`
 }
 const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
 const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
@@ -82,8 +94,9 @@ const popupCertitude = new PopupWithForm(certitudePopupSelector, handleCertitude
 const popupAvatarUpd = new PopupWithForm(avatarUpdPopupSelector, handleAvatarUpdSubmit)
 const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
 const addCardFormValidator = new FormValidator(settings, cardRenderForm)
+const profileAvatorFormFalidator = new FormValidator(settings, avatarUpdFormElement)
 // Обновляем данные на странице данными с сервера
-userInfoApi.updateProfileInfo({ profileNameElement: document.querySelector(profileNameSelector), profileDescriptionElement: document.querySelector(profileDescriptionSelector) })
+userInfoApi.updateProfileInfo({ profileNameElement: profileNameElement, profileDescriptionElement: profileDescriptionElement, avatarElement: profileAvatarBtnElement })
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
   nameInput.value = profileInfo.getUserInfo().name
@@ -143,7 +156,6 @@ fetch('https://mesto.nomoreparties.co/v1/cohort-22/cards', {
     authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
   }
 })
-
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = newCardData => {
   const newCard = {}
@@ -154,3 +166,4 @@ const renderCard = newCardData => {
 // Включает валидацию для формы добавления карточек
 profileEditFormValidator.enableValidation()
 addCardFormValidator.enableValidation()
+profileAvatorFormFalidator.enableValidation()

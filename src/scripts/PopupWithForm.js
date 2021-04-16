@@ -25,20 +25,22 @@ export class PopupWithForm extends Popup {
     for (let index = 0; index < formState.length; index++) {
       currentFormValues = { ...currentFormValues, [formState[index].name]: formState[index].link }
     }
+
     return currentFormValues
   }
   // Добавляет обработичики событий
   setEventListeners() {
     this._formElement.addEventListener('submit', event => {
       event.preventDefault()
-      // Проверим, есть ли у нас инпуты
-      if (Object.keys(this._getInputValues()).length != 0) {
-        this._handleSubmitForm(this._getInputValues())
-      }
+      // Проверим, сколько инпутов в форме
       if (Object.keys(this._getInputValues()).length == 0) {
         this._handleSubmitForm()
-        console.log('"Есть инпуты"============')
-        console.log('Есть инпуты')
+      }
+      if (Object.keys(this._getInputValues()).length == 1) {
+        this._handleSubmitForm(this._getInputValues())
+      }
+      if (Object.keys(this._getInputValues()).length == 2) {
+        this._handleSubmitForm(this._getInputValues())
       }
       this.close()
     })

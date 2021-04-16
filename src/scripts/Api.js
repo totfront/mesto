@@ -45,6 +45,7 @@ export class Api {
         .then(profileData => {
           profileElements.profileNameElement.textContent = profileData.name
           profileElements.profileDescriptionElement.textContent = profileData.about
+          profileElements.avatarElement.style.backgroundImage = `url("${profileData.avatar}")`
         })
       return
     }
@@ -89,7 +90,6 @@ export class Api {
       if (res.ok) {
         return res.json()
       }
-      // если ошибка, отклоняем промис
       return Promise.reject(`Ошибка: ${res.status}`)
     })
   }
@@ -107,6 +107,18 @@ export class Api {
     }).then(res => {
       console.log('res============')
       console.log(res)
+    })
+  }
+  updateAvatarImage(url) {
+    fetch(this._serverUrl, {
+      method: 'PATCH',
+      headers: {
+        authorization: this._headers.authorization,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        avatar: url
+      })
     })
   }
 }
