@@ -1,0 +1,39 @@
+.profile__avatar-btn {
+  position: relative;
+
+  width: 120px;
+  height: 120px;
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+  background: no-repeat center/contain url('/src/images/profile/profile__avatar.jpg');
+
+  background-blend-mode: multiply;
+}
+.profile__avatar-btn:after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  display: none;
+
+  width: 26px;
+  height: 26px;
+
+  content: '';
+  transform: translate(-50%, -50%);
+
+  background: no-repeat center/contain url('/src/images/profile/profile__edit-avatar.svg');
+}
+.profile__avatar-btn:hover {
+  cursor: pointer;
+
+  background: no-repeat center/contain url('/src/images/profile/profile__avatar.jpg'), rgba(0, 0, 0, .8);
+}
+.profile__avatar-btn:hover:after {
+  display: block;
+}
+.profile__avatar-btn:focus {
+  outline: none;
+}

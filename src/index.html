@@ -11,7 +11,9 @@
     </header>
     <main>
         <section class="profile">
-            <img src="<%=require('./images/profile/profile__avatar.jpg')%>" alt="Аватар профиля" class="profile__avatar">
+            <button class="profile__avatar-btn">
+                <!-- <img src="<%=require('./images/profile/profile__avatar.jpg')%>" alt="Аватар профиля" class="profile__avatar"> -->
+            </button>
             <div class="profile__info">
                 <h1 class="profile__name"></h1>
                 <button type="button" class="profile__edit-btn">
@@ -86,6 +88,19 @@
             <h2 class="popup__title popup__title_margin_none">Вы уверены?</h2>
             <form class="popup__form" name="delete-card" action="#" method="post">
                 <button class="popup__save-btn popup__save-btn_margin-top" name="submit" type="submit">Да</button>
+            </form>
+            <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="<%=require('./images/popup/close-btn.svg')%>" alt="Кнопка закрыть"></button>
+        </div>
+    </div>
+    <div class="popup avatar-upd appearance" id="avatar-upd">
+        <div class="popup__container">
+            <h2 class="popup__title popup__title_margin_none">Обновить аватар</h2>
+            <form class="popup__form" name="delete-card" action="#" method="post">
+                <div class="popup__input-wrapper">
+                    <input class="popup__input popup__input_avatar popup__input_data_description" placeholder="Ссылка на картинку" id='url' type="url" name="url" autocomplete="on" required>
+                    <span class="popup__input-error" id='url-error'>Введите адрес картинки.</span>
+                </div>
+                <button class="popup__save-btn popup__save-btn_avatar" name="submit" type="submit">Сохранить</button>
             </form>
             <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="<%=require('./images/popup/close-btn.svg')%>" alt="Кнопка закрыть"></button>
         </div>

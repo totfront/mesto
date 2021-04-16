@@ -45,8 +45,6 @@ export class Api {
         .then(profileData => {
           profileElements.profileNameElement.textContent = profileData.name
           profileElements.profileDescriptionElement.textContent = profileData.about
-          console.log('profileData============')
-          console.log(profileData)
         })
       return
     }
@@ -92,8 +90,23 @@ export class Api {
         return res.json()
       }
       // если ошибка, отклоняем промис
-      return console.log(res)
-      //   Promise.reject(`Ошибка: ${res.status}`)
+      return Promise.reject(`Ошибка: ${res.status}`)
+    })
+  }
+  deleteCard(card) {
+    return fetch(this._serverUrl, {
+      method: 'DELETE',
+      headers: {
+        authorization: this._headers.authorization,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        // name: newCardData.name,
+        // link: newCardData.url
+      })
+    }).then(res => {
+      console.log('res============')
+      console.log(res)
     })
   }
 }

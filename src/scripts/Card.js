@@ -13,6 +13,7 @@ class Card {
     this._handleCardClick = handleCardClick
     this._personalId = '5e7c90c2d461fc6a9589e831'
     this._trashBtnTemplate = '<button class="card__trash-btn"></button>'
+    this.close = this._handleEventListeners.bind(this)
     // Записываем создателя карточки с сервера
     if (data.owner) {
       this._cardOwner = data.owner
@@ -32,7 +33,7 @@ class Card {
     const cardTemplate = document.querySelector(this._selector).content.querySelector('.card')
     let newCard = cardTemplate.cloneNode(true)
     // Удаляем кнопку удалить карточку у не моих карточек
-    if (this._cardOwner._id === this._personalId) {
+    if (this._cardOwner._id != this._personalId) {
       // newCard = newCard.innerHTML(this._trashBtnTemplate)
       newCard.querySelector('.card__trash-btn').remove()
     }
@@ -52,10 +53,11 @@ class Card {
       this._handleCardClick(this._heading, this._image)
     })
     // Добавляем кнопке "удалить" листнер на удаление карточек
-    if (this._cardOwner._id !== this._personalId) {
+    if (this._cardOwner._id == this._personalId) {
       newDeleteBtn.addEventListener('click', () => {
-        // newCard.remove()
-        this._handleDeleteBtnClick()
+        console.log('newCard============')
+        console.log(newCard)
+        this._handleDeleteBtnClick(newCard)
       })
     }
     // Добавляем кнопке "лайк" листнер на лайк карточек
