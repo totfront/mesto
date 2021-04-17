@@ -48,29 +48,26 @@ const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptio
 const cardsApi = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards',
   headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691',
-    'Content-Type': 'application/json'
+    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
   }
 })
 const userInfoApi = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/users/me',
   headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691',
-    'Content-Type': 'application/json'
+    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
   }
 })
 const avatarApi = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/users/me/avatar',
   headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691',
-    'Content-Type': 'application/json'
-  }
+    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
+  },
+  formSelector: avatarUpdFormSelector
 })
 const likesApi = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards/likes',
   headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691',
-    'Content-Type': 'application/json'
+    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
   }
 })
 // Добавляет новую карточку и закрывает попап по клику на submit
@@ -158,7 +155,7 @@ cardsApi
     section.renderItems()
   })
   .catch(err => {
-    console.log(err)
+    return Promise.reject(`Ошибка: ${err}`)
   })
 fetch('https://mesto.nomoreparties.co/v1/cohort-22/cards', {
   headers: {

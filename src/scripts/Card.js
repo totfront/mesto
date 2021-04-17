@@ -15,7 +15,6 @@ class Card {
     this._trashBtnTemplate = '<button class="card__trash-btn"></button>'
     this._cardId = data.cardId
     this._likeApi = likesApi
-    console.log('============')
     // Если карточка уже есть на сервере пишем её id
     if (data.cardId) {
       this._cardId = data.cardId

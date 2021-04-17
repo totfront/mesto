@@ -2,6 +2,9 @@ export class Api {
   constructor(options) {
     this._serverUrl = options.baseUrl
     this._headers = options.headers
+    if (options.formSelector) {
+      this._formSelector = options.formSelector
+    }
   }
   getInitialCards() {
     return fetch(this._serverUrl, {
@@ -122,6 +125,7 @@ export class Api {
       return Promise.reject(`Ошибка: ${res.status}`)
     })
   }
+  // Удаляет свою карточку на сервере
   deleteCard(cardId) {
     return fetch(`${this._serverUrl}/${cardId}`, {
       method: 'DELETE',
@@ -136,6 +140,7 @@ export class Api {
       return Promise.reject(`Ошибка: ${res.status}`)
     })
   }
+  // Обновляет аватар на сервере
   updateAvatarImage(url) {
     fetch(this._serverUrl, {
       method: 'PATCH',
@@ -147,5 +152,12 @@ export class Api {
         avatar: url
       })
     })
+      // Записать изменение кнопки здесь
+      .then(res => {
+        if (res.ok) {
+          return res.json()
+        }
+        return Promise.reject(`Ошибка: ${res.status}`)
+      })
   }
 }
