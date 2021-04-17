@@ -5,7 +5,7 @@
 // 4. Добавляет карточку в DOM
 
 class Card {
-  constructor(data, selector, handleCardClick, handleDeleteBtnClick) {
+  constructor(data, selector, handleCardClick, handleDeleteBtnClick, likesApi) {
     this._heading = data.name
     this._image = data.link
     this._selector = selector
@@ -13,7 +13,13 @@ class Card {
     this._handleCardClick = handleCardClick
     this._personalId = '5e7c90c2d461fc6a9589e831'
     this._trashBtnTemplate = '<button class="card__trash-btn"></button>'
-    this.close = this._handleEventListeners.bind(this)
+    this._cardId = data.cardId
+    this._likeApi = likesApi
+    console.log('============')
+    // Если карточка уже есть на сервере пишем её id
+    if (data.cardId) {
+      this._cardId = data.cardId
+    }
     // Записываем создателя карточки с сервера
     if (data.owner) {
       this._cardOwner = data.owner
@@ -34,7 +40,6 @@ class Card {
     let newCard = cardTemplate.cloneNode(true)
     // Удаляем кнопку удалить карточку у не моих карточек
     if (this._cardOwner._id != this._personalId) {
-      // newCard = newCard.innerHTML(this._trashBtnTemplate)
       newCard.querySelector('.card__trash-btn').remove()
     }
     const cardPic = newCard.querySelector('.card__pic')
@@ -52,31 +57,39 @@ class Card {
     cardPic.addEventListener('click', () => {
       this._handleCardClick(this._heading, this._image)
     })
-    // Добавляем кнопке "удалить" листнер на удаление карточек
+    // Добавляем кнопке "удалить" листнер на удаление карточек, если мы владельцы карты
     if (this._cardOwner._id == this._personalId) {
       newDeleteBtn.addEventListener('click', () => {
-        console.log('newCard============')
-        console.log(newCard)
-        this._handleDeleteBtnClick(newCard)
+        const newCardData = {
+          id: this._cardId,
+          owner: {
+            id: this._cardOwner._id
+          }
+        }
+        this._handleDeleteBtnClick(newCard, newCardData)
       })
     }
     // Добавляем кнопке "лайк" листнер на лайк карточек
     newLikeBtn.addEventListener('click', () => {
       this._switchLikeBtn(newLikeBtn)
-      this._switchLikeCounter(newCard)
+      this._countLike(newCard)
     })
   }
   // Изменяет состояние кнопки "лайк"
   _switchLikeBtn(newLikeBtn) {
     newLikeBtn.classList.toggle('card__like-btn_active')
   }
-  // Счетчик лайков
-  // _switchLikeCounter(newCard) {
-  //   this._counter++
-  //   const newLikeBtn = newCard.querySelector('.card__like-counter')
-  //   console.log('x============')
-  //   console.log(this._counter)
-  // }
+  // Увеличивает или уменьшает лайк на 1
+  _countLike(newCard) {
+    const cardLikes = newCard.querySelector('.card__like-counter')
+    if (cardLikes.textContent == this._likesCounter + 1) {
+      cardLikes.textContent = this._likesCounter
+      this._likeApi.deleteLike(this._cardId)
+      return
+    }
+    cardLikes.textContent = this._likesCounter + 1
+    this._likeApi.postLike(this._cardId)
+  }
   // Добавляет карточку
   renderCard() {
     const newCard = this._createCard()

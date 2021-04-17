@@ -62,6 +62,35 @@ export class Api {
       })
     })
   }
+  // Отправляет лайк на сервер
+  postLike(cardId) {
+    fetch(`${this._serverUrl}/${cardId}`, {
+      method: 'PUT',
+      headers: {
+        authorization: this._headers.authorization
+      },
+      'Content-Type': 'application/json'
+    }).then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка: ${res.status}`)
+    })
+  }
+  // Удаляет лайк на сервере
+  deleteLike(cardId) {
+    return fetch(`${this._serverUrl}/${cardId}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: this._headers.authorization
+      }
+    }).then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка: ${res.status}`)
+    })
+  }
   // Отправляет новую карточку на сервер
   postNewCard(newCardData) {
     fetch(this._serverUrl, {
@@ -93,20 +122,18 @@ export class Api {
       return Promise.reject(`Ошибка: ${res.status}`)
     })
   }
-  deleteCard(card) {
-    return fetch(this._serverUrl, {
+  deleteCard(cardId) {
+    return fetch(`${this._serverUrl}/${cardId}`, {
       method: 'DELETE',
       headers: {
         authorization: this._headers.authorization,
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        // name: newCardData.name,
-        // link: newCardData.url
-      })
+      }
     }).then(res => {
-      console.log('res============')
-      console.log(res)
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка: ${res.status}`)
     })
   }
   updateAvatarImage(url) {

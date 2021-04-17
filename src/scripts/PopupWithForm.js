@@ -25,19 +25,18 @@ export class PopupWithForm extends Popup {
     for (let index = 0; index < formState.length; index++) {
       currentFormValues = { ...currentFormValues, [formState[index].name]: formState[index].link }
     }
-
     return currentFormValues
   }
   // Добавляет обработичики событий
-  setEventListeners() {
+  setEventListeners(newCard, currentCardData) {
     this._formElement.addEventListener('submit', event => {
       event.preventDefault()
       // Проверим, сколько инпутов в форме
       if (Object.keys(this._getInputValues()).length == 0) {
-        this._handleSubmitForm()
+        this._handleSubmitForm(newCard, currentCardData)
       }
       if (Object.keys(this._getInputValues()).length == 1) {
-        this._handleSubmitForm(this._getInputValues())
+        this._handleSubmitForm()
       }
       if (Object.keys(this._getInputValues()).length == 2) {
         this._handleSubmitForm(this._getInputValues())

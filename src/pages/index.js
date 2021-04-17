@@ -66,6 +66,13 @@ const avatarApi = new Api({
     'Content-Type': 'application/json'
   }
 })
+const likesApi = new Api({
+  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards/likes',
+  headers: {
+    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691',
+    'Content-Type': 'application/json'
+  }
+})
 // Добавляет новую карточку и закрывает попап по клику на submit
 const handleAddCardSubmit = newCardData => {
   renderCard(newCardData)
@@ -76,11 +83,13 @@ const handleEditProfileSubmit = inputValues => {
   profileInfo.setUserInfo(inputValues)
   userInfoApi.updateProfileInfo({ profileNameElement: profileNameElement, profileDescriptionElement: profileDescriptionElement }, inputValues)
 }
-// Закрывает попап и удаляет карточку (пока не удаляет)
-const handleCertitudeSubmit = newCard => {
-  // console.log('card============')
-  // console.log(newCard)
-  cardsApi.deleteCard
+// Закрывает попап, удаляет карточку на странице и сервере
+const handleCertitudeSubmit = (newCard, currentCardData) => {
+  // Если у карточки есть id, удаляем её на сервере
+  if (currentCardData.id) {
+    cardsApi.deleteCard(currentCardData.id)
+  }
+  newCard.remove()
 }
 // Обновляет аватар, отправляет новый на сервер
 const handleAvatarUpdSubmit = newAvatarUrl => {
@@ -123,13 +132,13 @@ const handleCardClick = (name, link) => {
   popupOverview.setEventListeners()
   popupOverview.open(name, link)
 }
-const handleDeleteBtnClick = () => {
-  popupCertitude.setEventListeners()
+const handleDeleteBtnClick = (newCard, currentCardData) => {
+  popupCertitude.setEventListeners(newCard, currentCardData)
   popupCertitude.open()
 }
 // Собирает заполненную карточку
 const createCard = item => {
-  return new Card(item, cardTemplateSelector, handleCardClick, handleDeleteBtnClick).renderCard()
+  return new Card(item, cardTemplateSelector, handleCardClick, handleDeleteBtnClick, likesApi).renderCard()
 }
 // Запрос на стартовые карточки
 let section
@@ -138,7 +147,7 @@ cardsApi
   .then(result => {
     let cardList = []
     result.forEach(newCardData => {
-      cardList = [...cardList, { name: newCardData.name, link: newCardData.link, likes: newCardData.likes, owner: newCardData.owner }]
+      cardList = [...cardList, { name: newCardData.name, link: newCardData.link, likes: newCardData.likes, owner: newCardData.owner, cardId: newCardData._id }]
     })
     return cardList
   })
