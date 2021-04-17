@@ -123,6 +123,7 @@ addBtn.addEventListener('click', () => {
 popupAvatarUpd.setEventListeners()
 profileAvatarBtnElement.addEventListener('click', () => {
   popupAvatarUpd.open()
+  profileAvatorFormFalidator.resetValidation()
 })
 // Наполняет попап с превью данными (название, ссылку) и открывает его
 const handleCardClick = (name, link) => {

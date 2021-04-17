@@ -12,7 +12,6 @@
     <main>
         <section class="profile">
             <button class="profile__avatar-btn">
-                <!-- <img src="<%=require('./images/profile/profile__avatar.jpg')%>" alt="Аватар профиля" class="profile__avatar"> -->
             </button>
             <div class="profile__info">
                 <h1 class="profile__name"></h1>
@@ -69,7 +68,7 @@
                 </div>
                 <div class="popup__input-wrapper">
                     <input class="popup__input popup__input_data_description" placeholder="Ссылка на картинку" id='url' type="url" name="url" autocomplete="on" required>
-                    <span class="popup__input-error" id='url-error'>Введите адрес сайта.</span>
+                    <span class="popup__input-error popup__input-error_description">Введите адрес сайта.</span>
                 </div>
                 <button class="popup__save-btn" name="submitBtn" type="submit">Сохранить</button>
             </form>
@@ -98,9 +97,9 @@
             <form class="popup__form" id="avatar-upd-form" name="delete-card" action="#" method="post">
                 <div class="popup__input-wrapper">
                     <input class="popup__input popup__input_avatar popup__input_data_description" placeholder="Ссылка на картинку" id='url' type="url" name="url" autocomplete="on" required>
-                    <span class="popup__input-error popup__input-error_avatar" id='url-error'>Введите адрес картинки.</span>
+                    <span class="popup__input-error popup__input-error_description popup__input-error_avatar">Введите адрес картинки.</span>
                 </div>
-                <button class="popup__save-btn popup__save-btn_avatar" name="submit" type="submit">Сохранить</button>
+                <button class="popup__save-btn  popup__save-btn_avatar" name="submit" type="submit">Сохранить</button>
             </form>
             <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="<%=require('./images/popup/close-btn.svg')%>" alt="Кнопка закрыть"></button>
         </div>
