@@ -45,6 +45,12 @@ const descriptionInput = document.querySelector(descriptionInputSelector)
 const nameInput = document.querySelector(nameInputSelector)
 const addBtn = document.querySelector(popupAddBtnSelector)
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
+const cardsApiOptions = {
+  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards',
+  headers: {
+    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
+  }
+}
 const cardsApi = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards',
   headers: {
