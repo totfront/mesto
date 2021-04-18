@@ -40,8 +40,6 @@ export class PopupWithForm extends Popup {
       }
       if (Object.keys(this._getInputValues()).length == 2) {
         this._handleSubmitForm(this._getInputValues())
-        console.log('============')
-        console.log(document.querySelector('#profile-popup').querySelector('.popup__save-btn'))
       }
       setTimeout(() => {
         this.close(newCard, currentCardData)
