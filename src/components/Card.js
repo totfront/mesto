@@ -87,13 +87,11 @@ class Card {
       this._countLike(newCard, newLikeBtn)
     })
   }
-  // Изменяет состояние кнопки "лайк"
-  // _switchLikeBtn(newLikeBtn) {
-  //   newLikeBtn.classList.toggle('card__like-btn_active')
-  // }
+  // Удаляет заливку лайков
   _removeLikeBtnColor(newLikeBtn) {
     newLikeBtn.classList.remove('card__like-btn_active')
   }
+  // Добавляет заливку лайкам
   _fillLikeBtnColor(newLikeBtn) {
     newLikeBtn.classList.add('card__like-btn_active')
   }

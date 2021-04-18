@@ -36,12 +36,16 @@ export class PopupWithForm extends Popup {
         this._handleSubmitForm(newCard, currentCardData)
       }
       if (Object.keys(this._getInputValues()).length == 1) {
-        this._handleSubmitForm()
+        this._handleSubmitForm(this._getInputValues())
       }
       if (Object.keys(this._getInputValues()).length == 2) {
         this._handleSubmitForm(this._getInputValues())
+        console.log('============')
+        console.log(document.querySelector('#profile-popup').querySelector('.popup__save-btn'))
       }
-      this.close()
+      setTimeout(() => {
+        this.close(newCard, currentCardData)
+      }, 2500)
     })
     super.setEventListeners()
   }

@@ -8,7 +8,6 @@ import { PopupWithImage } from '../components/PopupWithImage.js'
 import { UserInfo } from '../components/UserInfo.js'
 import { PopupWithForm } from '../components/PopupWithForm.js'
 import { Api } from '../components/Api.js'
-
 const settings = {
   formSelector: 'form',
   inputSelector: '.popup__input',
@@ -45,12 +44,6 @@ const descriptionInput = document.querySelector(descriptionInputSelector)
 const nameInput = document.querySelector(nameInputSelector)
 const addBtn = document.querySelector(popupAddBtnSelector)
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
-const cardsApiOptions = {
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards',
-  headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
-  }
-}
 const cardsApi = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards',
   headers: {
@@ -136,6 +129,7 @@ const handleCardClick = (name, link) => {
   popupOverview.setEventListeners()
   popupOverview.open(name, link)
 }
+// Открывает попап с удалением карточки
 const handleDeleteBtnClick = (newCard, currentCardData) => {
   popupCertitude.setEventListeners(newCard, currentCardData)
   popupCertitude.open()

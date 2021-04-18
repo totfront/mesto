@@ -62,6 +62,12 @@ export class Api {
         name: profileElements.profileNameElement.textContent,
         about: profileElements.profileDescriptionElement.textContent
       })
+    }).then(res => {
+      document.querySelector('#profile-editor').querySelector('.popup__save-btn').textContent = 'Сохранение...'
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка: ${res.status}`)
     })
   }
   // Отправляет лайк на сервер
@@ -162,8 +168,6 @@ export class Api {
   }
   // Отправляет новую карточку на сервер
   postNewCard(newCardData) {
-    console.log('============')
-    console.log(newCardData)
     return fetch(this._serverUrl, {
       method: 'POST',
       headers: {
@@ -176,6 +180,7 @@ export class Api {
       })
     }).then(res => {
       if (res.ok) {
+        document.querySelector('#card-popup').querySelector('.popup__save-btn').textContent = 'Сохранение...'
         return res.json()
       }
       return Promise.reject(`Ошибка: ${res.status}`)
@@ -211,6 +216,7 @@ export class Api {
       // Записать изменение кнопки здесь
       .then(res => {
         if (res.ok) {
+          document.querySelector('#avatar-upd').querySelector('.popup__save-btn').textContent = 'Сохранение...'
           return res.json()
         }
         return Promise.reject(`Ошибка: ${res.status}`)
