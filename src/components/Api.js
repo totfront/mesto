@@ -15,7 +15,6 @@ export class Api {
       if (res.ok) {
         return res.json()
       }
-      // если ошибка, отклоняем промис
       return Promise.reject(`Ошибка: ${res.status}`)
     })
   }
@@ -66,7 +65,42 @@ export class Api {
     })
   }
   // Отправляет лайк на сервер
-  postLike(cardId) {
+  postLike(cardId, cardName, personalId) {
+    // Если карточка новая и у неё пока нет Id
+    if (!cardId) {
+      const cardApiUrl = this._serverUrl.slice(0, -6)
+      fetch(cardApiUrl, {
+        headers: {
+          authorization: this._headers.authorization
+        }
+      })
+        .then(res => {
+          if (res.ok) {
+            return res.json()
+          }
+          return Promise.reject(`Ошибка: ${res.status}`)
+        })
+        .then(res => {
+          res.forEach(rederedCard => {
+            if (rederedCard.name === cardName && rederedCard.owner._id === personalId) {
+              fetch(`${this._serverUrl}/${rederedCard._id}`, {
+                method: 'PUT',
+                headers: {
+                  authorization: this._headers.authorization
+                },
+                'Content-Type': 'application/json'
+              }).then(res => {
+                if (res.ok) {
+                  return res.json()
+                }
+                return Promise.reject(`Ошибка: ${res.status}`)
+              })
+              return
+            }
+          })
+        })
+      return
+    }
     fetch(`${this._serverUrl}/${cardId}`, {
       method: 'PUT',
       headers: {
@@ -81,7 +115,39 @@ export class Api {
     })
   }
   // Удаляет лайк на сервере
-  deleteLike(cardId) {
+  deleteLike(cardId, cardName, personalId) {
+    if (!cardId) {
+      const cardApiUrl = this._serverUrl.slice(0, -6)
+      fetch(cardApiUrl, {
+        headers: {
+          authorization: this._headers.authorization
+        }
+      })
+        .then(res => {
+          if (res.ok) {
+            return res.json()
+          }
+          return Promise.reject(`Ошибка: ${res.status}`)
+        })
+        .then(res => {
+          res.forEach(rederedCard => {
+            if (rederedCard.name === cardName && rederedCard.owner._id === personalId) {
+              return fetch(`${this._serverUrl}/${rederedCard._id}`, {
+                method: 'DELETE',
+                headers: {
+                  authorization: this._headers.authorization
+                }
+              }).then(res => {
+                if (res.ok) {
+                  return res.json()
+                }
+                return Promise.reject(`Ошибка: ${res.status}`)
+              })
+            }
+          })
+        })
+      return
+    }
     return fetch(`${this._serverUrl}/${cardId}`, {
       method: 'DELETE',
       headers: {
@@ -96,6 +162,8 @@ export class Api {
   }
   // Отправляет новую карточку на сервер
   postNewCard(newCardData) {
+    console.log('============')
+    console.log(newCardData)
     return fetch(this._serverUrl, {
       method: 'POST',
       headers: {

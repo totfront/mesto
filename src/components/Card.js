@@ -28,18 +28,31 @@ class Card {
         _id: this._personalId
       }
     }
-    // Лайки добавляются только старым карточкам
+    // Лайки добавляем лайки старым карточкам, а новым 0
     if (data.likes) {
+      this._likes = data.likes
       this._likesCounter = data.likes.length
+    } else {
+      this._likesCounter = 0
     }
   }
   // Подготавливает карточку к публикации
   _createCard() {
     const cardTemplate = document.querySelector(this._selector).content.querySelector('.card')
     let newCard = cardTemplate.cloneNode(true)
-    // Удаляем кнопку удалить карточку у не моих карточек
+    // Если карточка не моя
     if (this._cardOwner._id != this._personalId) {
+      // Удалить кнопку удаления карточки
       newCard.querySelector('.card__trash-btn').remove()
+    }
+    // Если у карточки есть лайки
+    if (this._likes) {
+      this._likes.forEach(like => {
+        // Если id лайка == личному id, закрашиваем лайк
+        if (like._id == this._personalId) {
+          this._fillLikeBtnColor(newCard.querySelector('.card__like-btn'))
+        }
+      })
     }
     const cardPic = newCard.querySelector('.card__pic')
     const cardLikes = newCard.querySelector('.card__like-counter')
@@ -70,24 +83,34 @@ class Card {
     }
     // Добавляем кнопке "лайк" листнер на лайк карточек
     newLikeBtn.addEventListener('click', () => {
-      this._switchLikeBtn(newLikeBtn)
-      this._countLike(newCard)
+      // this._switchLikeBtn(newLikeBtn)
+      this._countLike(newCard, newLikeBtn)
     })
   }
   // Изменяет состояние кнопки "лайк"
-  _switchLikeBtn(newLikeBtn) {
-    newLikeBtn.classList.toggle('card__like-btn_active')
+  // _switchLikeBtn(newLikeBtn) {
+  //   newLikeBtn.classList.toggle('card__like-btn_active')
+  // }
+  _removeLikeBtnColor(newLikeBtn) {
+    newLikeBtn.classList.remove('card__like-btn_active')
   }
-  // Увеличивает или уменьшает лайк на 1
-  _countLike(newCard) {
+  _fillLikeBtnColor(newLikeBtn) {
+    newLikeBtn.classList.add('card__like-btn_active')
+  }
+  // Увеличивает или уменьшает лайк на единицу
+  _countLike(newCard, newLikeBtn) {
     const cardLikes = newCard.querySelector('.card__like-counter')
-    if (cardLikes.textContent == this._likesCounter + 1) {
-      cardLikes.textContent = this._likesCounter
+    // Если мы уже лайкали, то
+    if (newLikeBtn.classList.contains('card__like-btn_active')) {
+      cardLikes.textContent = Number.parseInt(cardLikes.textContent) - 1
       this._likeApi.deleteLike(this._cardId)
+      this._removeLikeBtnColor(newLikeBtn)
       return
     }
-    cardLikes.textContent = this._likesCounter + 1
-    this._likeApi.postLike(this._cardId)
+    // Если не лайкали
+    cardLikes.textContent = Number.parseInt(cardLikes.textContent) + 1
+    this._fillLikeBtnColor(newLikeBtn)
+    this._likeApi.postLike(this._cardId, this._heading, this._personalId)
   }
   // Добавляет карточку
   renderCard() {
