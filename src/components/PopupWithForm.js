@@ -28,12 +28,12 @@ export class PopupWithForm extends Popup {
     return currentFormValues
   }
   // Добавляет обработичики событий
-  setEventListeners(newCard, currentCardData) {
+  setEventListeners() {
     this._formElement.addEventListener('submit', event => {
       event.preventDefault()
       // Проверим, сколько инпутов в форме
       if (Object.keys(this._getInputValues()).length == 0) {
-        this._handleSubmitForm(newCard, currentCardData)
+        this._handleSubmitForm()
       }
       if (Object.keys(this._getInputValues()).length == 1) {
         this._handleSubmitForm(this._getInputValues())
@@ -41,9 +41,7 @@ export class PopupWithForm extends Popup {
       if (Object.keys(this._getInputValues()).length == 2) {
         this._handleSubmitForm(this._getInputValues())
       }
-      setTimeout(() => {
-        this.close(newCard, currentCardData)
-      }, 2500)
+      this.close()
     })
     super.setEventListeners()
   }

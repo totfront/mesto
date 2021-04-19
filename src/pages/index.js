@@ -44,6 +44,7 @@ const descriptionInput = document.querySelector(descriptionInputSelector)
 const nameInput = document.querySelector(nameInputSelector)
 const addBtn = document.querySelector(popupAddBtnSelector)
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
+let lastClickedCard
 const cardsApi = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards',
   headers: {
@@ -80,12 +81,12 @@ const handleEditProfileSubmit = inputValues => {
   userInfoApi.updateProfileInfo({ profileNameElement: profileNameElement, profileDescriptionElement: profileDescriptionElement }, inputValues)
 }
 // Закрывает попап, удаляет карточку на странице и сервере
-const handleCertitudeSubmit = (newCard, currentCardData) => {
+const handleCertitudeSubmit = () => {
   // Если у карточки есть id, удаляем её на сервере
-  if (currentCardData.id) {
+  if (lastClickedCard.data.id) {
     cardsApi.deleteCard(currentCardData.id)
   }
-  newCard.remove()
+  lastClickedCard.card.remove()
 }
 // Обновляет аватар, отправляет новый на сервер
 const handleAvatarUpdSubmit = newAvatarUrl => {
@@ -96,6 +97,7 @@ const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfil
 const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
 const popupOverview = new PopupWithImage(overviewPopupSelector)
 const popupCertitude = new PopupWithForm(certitudePopupSelector, handleCertitudeSubmit)
+popupCertitude.setEventListeners()
 const popupAvatarUpd = new PopupWithForm(avatarUpdPopupSelector, handleAvatarUpdSubmit)
 const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
 const addCardFormValidator = new FormValidator(settings, cardRenderForm)
@@ -131,7 +133,10 @@ const handleCardClick = (name, link) => {
 }
 // Открывает попап с удалением карточки
 const handleDeleteBtnClick = (newCard, currentCardData) => {
-  popupCertitude.setEventListeners(newCard, currentCardData)
+  lastClickedCard = {
+    card: newCard,
+    data: currentCardData
+  }
   popupCertitude.open()
 }
 // Собирает заполненную карточку

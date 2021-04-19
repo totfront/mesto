@@ -18,6 +18,19 @@ export class Api {
       return Promise.reject(`Ошибка: ${res.status}`)
     })
   }
+  getCurrentCard() {
+    return fetch(this._serverUrl, {
+      headers: {
+        authorization: this._headers.authorization
+      }
+    }).then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Ошибка: ${res.status}`)
+    })
+  }
+
   getInitialProfileData() {
     return fetch(this._serverUrl, {
       headers: {
