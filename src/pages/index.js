@@ -83,8 +83,16 @@ const handleEditProfileSubmit = inputValues => {
 // Закрывает попап, удаляет карточку на странице и сервере
 const handleCertitudeSubmit = () => {
   // Если у карточки есть id, удаляем её на сервере
+  console.log('============')
+  console.log(cardsApi.getDeletingCard())
+  cardsApi.getCurrentCard
+  console.log('lastClickedCard============')
+  console.log(lastClickedCard)
   if (lastClickedCard.data.id) {
-    cardsApi.deleteCard(currentCardData.id)
+    console.log('=====Свежая======')
+  }
+  if (lastClickedCard.data.id) {
+    cardsApi.deleteCard(lastClickedCard.data.id)
   }
   lastClickedCard.card.remove()
 }
