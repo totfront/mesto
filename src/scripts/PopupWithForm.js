@@ -27,20 +27,11 @@ export class PopupWithForm extends Popup {
     }
     return currentFormValues
   }
+
   // Добавляет обработичики событий
   setEventListeners() {
-    this._formElement.addEventListener('submit', event => {
-      event.preventDefault()
-      // Проверим, сколько инпутов в форме
-      if (Object.keys(this._getInputValues()).length == 0) {
-        this._handleSubmitForm()
-      }
-      if (Object.keys(this._getInputValues()).length == 1) {
-        this._handleSubmitForm(this._getInputValues())
-      }
-      if (Object.keys(this._getInputValues()).length == 2) {
-        this._handleSubmitForm(this._getInputValues())
-      }
+    this._formElement.addEventListener('submit', () => {
+      this._handleSubmitForm(this._getInputValues())
       this.close()
     })
     super.setEventListeners()

@@ -34,10 +34,6 @@ export class Popup {
   }
   // Открывает попап
   open() {
-    // Переработать:
-    document.querySelector('#avatar-upd').querySelector('.popup__save-btn').textContent = 'Сохранить'
-    document.querySelector('#profile-popup').querySelector('.popup__save-btn').textContent = 'Сохранить'
-    document.querySelector('#card-popup').querySelector('.popup__save-btn').textContent = 'Сохранить'
     this._popup.classList.add(this._openedPopupSelector)
     document.addEventListener('keydown', this._handleEscClose)
   }

@@ -19,19 +19,14 @@ export class FormValidator {
   }
   // Показывает ошибку ввода
   _showInputError = (inputElement, errorMessage) => {
-    let errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
-    if (errorElement == null) {
-      errorElement = this._formElement.querySelector('.popup__input-error')
-    }
+    const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
+
     errorElement.textContent = errorMessage
     errorElement.classList.add(this._errorClass)
   }
   // Скрывает ошибку ввода
   _hideInputError = inputElement => {
-    let errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
-    if (errorElement == null) {
-      errorElement = this._formElement.querySelector('.popup__input-error')
-    }
+    const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
     errorElement.textContent = ''
     errorElement.classList.remove(this._errorClass)
   }

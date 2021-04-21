@@ -1,4 +1,16 @@
-.card__like {
-  display: flex;
-  flex-flow: column;
+.card__like-btn {
+  position: relative;
+  bottom: 0;
+
+  margin-left: auto;
+  padding: 0;
+
+  cursor: pointer;
+
+  border: none;
+  outline: none;
+  background: transparent;
+}
+.card__like-btn:hover {
+  opacity: .5;
 }
