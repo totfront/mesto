@@ -36,12 +36,14 @@ const descriptionInput = document.querySelector(descriptionInputSelector)
 const nameInput = document.querySelector(nameInputSelector)
 const addBtn = document.querySelector(popupAddBtnSelector)
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
-// Изменяет данные профиля и закрывает попап по клику на submit
+// Добавляет новую карточку по клику на submit
 const handleAddCardSubmit = newCardData => {
   renderCard(newCardData)
 }
+// Изменяет данные профиля и закрывает попап по клику на submit
 const handleEditProfileSubmit = inputValues => {
   profileInfo.setUserInfo(inputValues)
+  api.updUserData(inputValues)
 }
 const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
 const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
@@ -49,8 +51,6 @@ const popupOverview = new PopupWithImage(overviewPopupSelector)
 const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
 const addCardFormValidator = new FormValidator(settings, cardRenderForm)
 const api = new Api({
-  // TODO
-  // Check URL && token
   url: 'https://mesto.nomoreparties.co/v1/cohort-23',
   token: 'f470df2e-c67b-482b-ae5d-65b776a618c9'
 })
@@ -105,7 +105,7 @@ api
     let section = new Section(initalSectionData, cardContainerSelector)
     section.renderItems()
   })
-
+// Обновляем данные пользователя
 api.getUserData().then(res => {
   const newProfileData = {
     name: res.name,

@@ -49,10 +49,21 @@ export class Api {
       }
     }).then(response => (response.ok ? Promise.resolve(response.json()) : Promise.reject(`Ошибка ${response.status}`)))
   }
+  updUserData(profileData) {
+    return fetch(`${this._url}/users/me`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        name: profileData.name,
+        about: profileData.description
+      }),
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      }
+    }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+  }
   // TODO:
   // 1. Method to get like count
   // 2. Method to add new like
   // 3. Method to delete like
-  // 4. Method to get user data
-  // 5. Method to patch user data
 }
