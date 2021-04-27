@@ -7,7 +7,7 @@ import { Section } from '../scripts/Section.js'
 import { PopupWithImage } from '../scripts/PopupWithImage.js'
 import { UserInfo } from '../scripts/UserInfo.js'
 import { PopupWithForm } from '../scripts/PopupWithForm.js'
-// import { cardList } from '../utils/initial-cards.js'
+import { Api } from '../scripts/Api.js'
 const popupAddCardSelector = '#card-renderer'
 const popupProfileEditorSelecor = '#profile-editor'
 const settings = {
@@ -48,6 +48,12 @@ const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
 const popupOverview = new PopupWithImage(overviewPopupSelector)
 const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
 const addCardFormValidator = new FormValidator(settings, cardRenderForm)
+const api = new Api({
+  // TODO
+  // Check URL && token
+  url: 'https://mesto.nomoreparties.co/v1/cohort-23',
+  token: 'f470df2e-c67b-482b-ae5d-65b776a618c9'
+})
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
   nameInput.value = profileInfo.getUserInfo().name
@@ -74,28 +80,6 @@ const handleCardClick = (name, link) => {
 const createCard = item => {
   return new Card(item, cardTemplateSelector, handleCardClick).renderCard()
 }
-// let initalSectionData = []
-
-fetch('https://mesto.nomoreparties.co/v1/cohort-22/cards', {
-  headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
-  }
-})
-  .then(res => res.json())
-  .then(result => {
-    let cardList = []
-    result.forEach(newCardData => {
-      cardList = [...cardList, { name: newCardData.name, link: newCardData.link }]
-    })
-    return cardList
-  })
-  .then(cardList => {
-    const initalSectionData = { items: cardList, renderer: createCard }
-
-    // Рендерим стартовые карточки
-    let section = new Section(initalSectionData, cardContainerSelector)
-    section.renderItems()
-  })
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = newCardData => {
   const newCard = {}
@@ -106,3 +90,26 @@ const renderCard = newCardData => {
 // Включает валидацию для формы добавления карточек
 profileEditFormValidator.enableValidation()
 addCardFormValidator.enableValidation()
+// Рендерим стартовые карточки
+api
+  .getCards()
+  .then(result => {
+    let cardList = []
+    result.forEach(newCardData => {
+      cardList = [...cardList, { name: newCardData.name, link: newCardData.link }]
+    })
+    return cardList
+  })
+  .then(cardList => {
+    const initalSectionData = { items: cardList, renderer: createCard }
+    let section = new Section(initalSectionData, cardContainerSelector)
+    section.renderItems()
+  })
+
+api.getUserData().then(res => {
+  const newProfileData = {
+    name: res.name,
+    description: res.about
+  }
+  profileInfo.setUserInfo(newProfileData)
+})
