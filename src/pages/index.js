@@ -40,8 +40,6 @@ const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptio
 // Добавляет новую карточку по клику на submit
 const handleAddCardSubmit = newCardData => {
   renderCard(newCardData)
-  console.log('newCardData============')
-  console.log(newCardData)
   api.addCard(newCardData)
 }
 // Изменяет данные профиля и закрывает попап по клику на submit

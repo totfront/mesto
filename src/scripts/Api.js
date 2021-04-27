@@ -18,8 +18,6 @@ export class Api {
   }
   // Отправляет новую карточку на сервер
   addCard(card) {
-    console.log('card============')
-    console.log(card)
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: {
