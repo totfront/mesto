@@ -17,7 +17,9 @@ export class Api {
     })
   }
   // Отправляет новую карточку на сервер
-  addCard(data) {
+  addCard(card) {
+    console.log('card============')
+    console.log(card)
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: {
@@ -27,20 +29,20 @@ export class Api {
       // TODO:
       // Проверить имя ключа на сервере
       body: JSON.stringify({
-        user: data.name,
-        link: data.url
+        name: card.name,
+        link: card.url
       })
     }).then(response => (response.ok ? response.json() : Promise.reject(`Ошибка ${response.status}`)))
   }
   // Удаляет карточку с сервера
-  removeCard(id) {
-    return fetch(`${this._url}/messages/${id}`, {
-      method: 'DELETE',
-      headers: {
-        authorization: this._token
-      }
-    }).then(response => (response.ok ? Promise.resolve('success') : Promise.reject(`Ошибка ${response.status}`)))
-  }
+  // removeCard(id) {
+  //   return fetch(`${this._url}/messages/${id}`, {
+  //     method: 'DELETE',
+  //     headers: {
+  //       authorization: this._token
+  //     }
+  //   }).then(response => (response.ok ? Promise.resolve('success') : Promise.reject(`Ошибка ${response.status}`)))
+  // }
   getUserData() {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',

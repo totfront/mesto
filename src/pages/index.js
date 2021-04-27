@@ -8,6 +8,7 @@ import { PopupWithImage } from '../scripts/PopupWithImage.js'
 import { UserInfo } from '../scripts/UserInfo.js'
 import { PopupWithForm } from '../scripts/PopupWithForm.js'
 import { Api } from '../scripts/Api.js'
+let section
 const popupAddCardSelector = '#card-renderer'
 const popupProfileEditorSelecor = '#profile-editor'
 const settings = {
@@ -39,6 +40,9 @@ const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptio
 // Добавляет новую карточку по клику на submit
 const handleAddCardSubmit = newCardData => {
   renderCard(newCardData)
+  console.log('newCardData============')
+  console.log(newCardData)
+  api.addCard(newCardData)
 }
 // Изменяет данные профиля и закрывает попап по клику на submit
 const handleEditProfileSubmit = inputValues => {
@@ -102,7 +106,7 @@ api
   })
   .then(cardList => {
     const initalSectionData = { items: cardList, renderer: createCard }
-    let section = new Section(initalSectionData, cardContainerSelector)
+    section = new Section(initalSectionData, cardContainerSelector)
     section.renderItems()
   })
 // Обновляем данные пользователя
