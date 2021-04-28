@@ -6,6 +6,7 @@ export class Api {
   // Получает текущие карточки на сервере
   getCards() {
     return fetch(`${this._url}/cards`, {
+      method: 'GET',
       headers: {
         authorization: this._token
       }
@@ -15,6 +16,23 @@ export class Api {
       }
       return Promise.reject(`Ошибка ${response.status}`)
     })
+  }
+  // Получает данные профиля
+  getUserData() {
+    return fetch(`${this._url}/users/me`, {
+      method: 'GET',
+      headers: {
+        authorization: this._token
+      }
+    }).then(response => (response.ok ? Promise.resolve(response.json()) : Promise.reject(`Ошибка ${response.status}`)))
+  }
+  getLikes() {
+    return fetch(`${this._url}/cards`, {
+      method: 'GET',
+      headers: {
+        authorization: this._token
+      }
+    }).then(response => (response.ok ? Promise.resolve(response.json()) : Promise.reject(`Ошибка ${response.status}`)))
   }
   // Отправляет новую карточку на сервер
   addCard(card) {
@@ -41,14 +59,6 @@ export class Api {
   //     }
   //   }).then(response => (response.ok ? Promise.resolve('success') : Promise.reject(`Ошибка ${response.status}`)))
   // }
-  getUserData() {
-    return fetch(`${this._url}/users/me`, {
-      method: 'GET',
-      headers: {
-        authorization: this._token
-      }
-    }).then(response => (response.ok ? Promise.resolve(response.json()) : Promise.reject(`Ошибка ${response.status}`)))
-  }
   updUserData(profileData) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',

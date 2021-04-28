@@ -115,3 +115,21 @@ api.getUserData().then(res => {
   }
   profileInfo.setUserInfo(newProfileData)
 })
+// Получает стартовое количество лайков
+api
+  .getLikes()
+  // Собираем двумерные массив лайков
+  .then(cards => {
+    const likes = cards.map(card => {
+      return card.likes
+    })
+    return likes
+  })
+  // Распределяем лайки по карточкам
+  .then(likes => {
+    const cards = Array.from(document.querySelectorAll('.card'))
+    cards.forEach((card, index) => {
+      const counter = card.querySelector('.card__like-counter')
+      counter.textContent = likes[index].length
+    })
+  })
