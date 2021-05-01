@@ -68,7 +68,7 @@
                 </div>
                 <div class="popup__input-wrapper">
                     <input class="popup__input popup__input_data_description" placeholder="Ссылка на картинку" id='url' type="url" name="url" autocomplete="on" required>
-                    <span class="popup__input-error popup__input-error_description">Введите адрес сайта.</span>
+                    <span class="popup__input-error popup__input-error_description" id='url-error'>Введите адрес сайта.</span>
                 </div>
                 <button class="popup__save-btn" name="submitBtn" type="submit">Сохранить</button>
             </form>
@@ -82,7 +82,7 @@
             <button type="button" class="popup__close-btn"><img class="popup__close-pic" src="<%=require('./images/popup/close-btn.svg')%>" alt="Кнопка закрыть"></button>
         </div>
     </div>
-    <div class="popup certitude appearance" id="certitude">
+    <div class="popup certitude appearance" id="popup-delete-card">
         <div class="popup__container">
             <h2 class="popup__title popup__title_margin_none">Вы уверены?</h2>
             <form class="popup__form" name="delete-card" action="#" method="post">

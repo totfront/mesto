@@ -81,10 +81,10 @@ export class FormValidator {
   }
   // Включает валидацию и добавляет слушатели событий всем интерактивным элементам
   enableValidation = () => {
-    const handleFormSubmit = event => {
-      event.preventDefault()
-    }
-    this._formElement.addEventListener('submit', handleFormSubmit)
+    // const handleFormSubmit = event => {
+    //   event.preventDefault()
+    // }
+    // this._formElement.addEventListener('submit', handleFormSubmit)
     const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector))
     const submitBtn = this._formElement.querySelector(this._submitButtonSelector)
     const inputListIterator = inputElement => {

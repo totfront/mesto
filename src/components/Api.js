@@ -42,8 +42,6 @@ export class Api {
         authorization: this._token,
         'Content-type': 'application/json'
       },
-      // TODO:
-      // Проверить имя ключа на сервере
       body: JSON.stringify({
         name: card.name,
         link: card.url
@@ -72,8 +70,21 @@ export class Api {
       }
     }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
   }
+  putLike(cardId) {
+    return fetch(`${this._url}/cards/likes/${cardId}`, {
+      method: 'PUT',
+      // body: JSON.stringify({
+      //   name: profileData.name,
+      //   about: profileData.description
+      // }),
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      }
+    }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+  }
   // TODO:
   // 1. Method to get like count
-  // 2. Method to add new like
+  // 2. Method to put new like
   // 3. Method to delete like
 }
