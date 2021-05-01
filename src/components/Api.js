@@ -17,17 +17,18 @@ export class Api {
       return Promise.reject(`Ошибка ${response.status}`)
     })
   }
+  // getCard(cardId) {
+  //   return fetch(`${this._url}/cards/likes/${cardId}`, {
+  //     method: 'GET',
+  //     headers: {
+  //       authorization: this._token,
+  //       'Content-Type': 'application/json'
+  //     }
+  //   }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+  // }
   // Получает данные профиля
   getUserData() {
     return fetch(`${this._url}/users/me`, {
-      method: 'GET',
-      headers: {
-        authorization: this._token
-      }
-    }).then(response => (response.ok ? Promise.resolve(response.json()) : Promise.reject(`Ошибка ${response.status}`)))
-  }
-  getLikes() {
-    return fetch(`${this._url}/cards`, {
       method: 'GET',
       headers: {
         authorization: this._token
@@ -73,10 +74,15 @@ export class Api {
   putLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
       method: 'PUT',
-      // body: JSON.stringify({
-      //   name: profileData.name,
-      //   about: profileData.description
-      // }),
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      }
+    }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+  }
+  deleteLike(cardId) {
+    return fetch(`${this._url}/cards/likes/${cardId}`, {
+      method: 'DELETE',
       headers: {
         authorization: this._token,
         'Content-Type': 'application/json'
@@ -85,6 +91,5 @@ export class Api {
   }
   // TODO:
   // 1. Method to get like count
-  // 2. Method to put new like
   // 3. Method to delete like
 }

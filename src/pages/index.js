@@ -115,7 +115,7 @@ api
   .then(result => {
     let cardList = []
     result.forEach(newCardData => {
-      cardList = [...cardList, { name: newCardData.name, link: newCardData.link, _id: newCardData._id }]
+      cardList = [...cardList, newCardData]
     })
     return cardList
   })
@@ -127,7 +127,7 @@ api
   .then(() => {
     // Получает стартовое количество лайков
     api
-      .getLikes()
+      .getCards()
       // Собираем двумерный массив лайков
       .then(cards => {
         const likes = cards.map(card => {
