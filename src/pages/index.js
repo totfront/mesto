@@ -25,12 +25,17 @@ const descriptionInputSelector = '.popup__input_data_description'
 const profileNameSelector = '.profile__name'
 const profileDescriptionSelector = '.profile__description'
 const profileEditorPopupSelector = '#profile-popup'
+const changeAvatarPupupSelector = '#avatar-upd'
 const addCardPopupSelector = '#card-popup'
 const deleteCardPopupSelector = '#popup-delete-card'
 const overviewPopupSelector = '#overview'
 const cardTemplateSelector = '#template'
 const cardContainerSelector = '.cards'
 const popupAddBtnSelector = '.profile__add-btn'
+const avatarSelector = '.profile__avatar-btn'
+const avatarChangeFormSelector = '#avatar-upd-form'
+const avatarChangeFormElement = document.querySelector(avatarChangeFormSelector)
+const avatarElement = document.querySelector(avatarSelector)
 const editBtn = document.querySelector(editBtnSelector)
 const cardRenderForm = document.querySelector(popupAddCardSelector)
 const profileEditorForm = document.querySelector(popupProfileEditorSelecor)
@@ -52,9 +57,16 @@ const handleEditProfileSubmit = inputValues => {
 }
 // Подтверждает удаление карточки
 const handleDeleteCardSubmit = currentCard => {}
+// Подтверждает изменение аватара
+const handleChangeAvatarSubmit = newAvatar => {
+  avatarElement.style.backgroundImage = `url(${newAvatar.url})`
+  api.changeAvatar(newAvatar.url)
+}
 const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
 const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
 const popupDeleteCard = new PopupWithForm(deleteCardPopupSelector)
+const popupChangeAvatar = new PopupWithForm(changeAvatarPupupSelector, handleChangeAvatarSubmit)
+const changeAvatarFormValidator = new FormValidator(settings, avatarChangeFormElement)
 const popupOverview = new PopupWithImage(overviewPopupSelector)
 const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
 const addCardFormValidator = new FormValidator(settings, cardRenderForm)
@@ -78,6 +90,11 @@ popupAdd.setEventListeners()
 addBtn.addEventListener('click', () => {
   addCardFormValidator.resetValidation()
   popupAdd.open()
+})
+popupChangeAvatar.setEventListeners()
+avatarElement.addEventListener('click', () => {
+  changeAvatarFormValidator.resetValidation()
+  popupChangeAvatar.open()
 })
 // Наполняет попап с превью данными (название, ссылку) и открывает его
 const handleCardClick = (name, link) => {
@@ -106,9 +123,10 @@ const renderCard = newCardData => {
   newCard._id = newCardData._id
   section.addItem(createCard(newCard))
 }
-// Включает валидацию для формы добавления карточек
+// Включает валидацию для форм
 profileEditFormValidator.enableValidation()
 addCardFormValidator.enableValidation()
+changeAvatarFormValidator.enableValidation()
 // Рендерим стартовые карточки
 api
   .getCards()
@@ -145,10 +163,11 @@ api
       })
   })
 // Обновляем данные пользователя
-api.getUserData().then(res => {
+api.getUserData().then(userData => {
+  avatarElement.style.backgroundImage = `url(${userData.avatar})`
   const newProfileData = {
-    name: res.name,
-    description: res.about
+    name: userData.name,
+    description: userData.about
   }
   profileInfo.setUserInfo(newProfileData)
 })

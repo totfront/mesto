@@ -19,8 +19,9 @@ export class FormValidator {
   }
   // Показывает ошибку ввода
   _showInputError = (inputElement, errorMessage) => {
+    console.log('inputElement============')
+    console.log(inputElement)
     const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
-
     errorElement.textContent = errorMessage
     errorElement.classList.add(this._errorClass)
   }

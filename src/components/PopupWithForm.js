@@ -32,7 +32,6 @@ export class PopupWithForm extends Popup {
     this._formElement.addEventListener('submit', event => {
       event.preventDefault()
       this._handleSubmitForm(this._getInputValues())
-
       // TODO:
       // Использовать для удаления карточек.
       // if ('key' in this._getInputValues()) {

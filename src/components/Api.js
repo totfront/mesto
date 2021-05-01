@@ -89,7 +89,16 @@ export class Api {
       }
     }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
   }
-  // TODO:
-  // 1. Method to get like count
-  // 3. Method to delete like
+  changeAvatar(newAvatarUrl) {
+    return fetch(`${this._url}/users/me/avatar`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        avatar: newAvatarUrl
+      }),
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      }
+    }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+  }
 }
