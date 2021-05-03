@@ -5,61 +5,35 @@
 // 4. Добавляет карточку в DOM
 
 class Card {
-  constructor(data, selector, handleCardClick, handleDeleteBtnClick, likesApi) {
+  constructor(data, selector, handleCardClick, deleteCardHandler, api) {
+    this._deleteCardHandler = deleteCardHandler
     this._heading = data.name
     this._image = data.link
+    this._id = data._id
+    this._likes = data.likes
+    this._owner = data.owner
     this._selector = selector
-    this._handleDeleteBtnClick = handleDeleteBtnClick
     this._handleCardClick = handleCardClick
-    this._personalId = '5e7c90c2d461fc6a9589e831'
-    this._trashBtnTemplate = '<button class="card__trash-btn"></button>'
-    this._cardId = data.cardId
-    this._likeApi = likesApi
-    // Если карточка уже есть на сервере пишем её id
-    if (data.cardId) {
-      this._cardId = data.cardId
-    }
-    // Записываем создателя карточки с сервера
-    if (data.owner) {
-      this._cardOwner = data.owner
-    } else {
-      // Если нет, пишем себя
-      this._cardOwner = {
-        _id: this._personalId
-      }
-    }
-    // Лайки добавляем лайки старым карточкам, а новым 0
-    if (data.likes) {
-      this._likes = data.likes
-      this._likesCounter = data.likes.length
-    } else {
-      this._likesCounter = 0
-    }
+    this._api = api
+    this._personalId = '56f185c306d1d89bd43913e9'
   }
   // Подготавливает карточку к публикации
   _createCard() {
-    const cardTemplate = document.querySelector(this._selector).content.querySelector('.card')
-    let newCard = cardTemplate.cloneNode(true)
-    // Если карточка не моя
-    if (this._cardOwner._id != this._personalId) {
-      // Удалить кнопку удаления карточки
-      newCard.querySelector('.card__trash-btn').remove()
-    }
-    // Если у карточки есть лайки
-    if (this._likes) {
-      this._likes.forEach(like => {
-        // Если id лайка == личному id, закрашиваем лайк
-        if (like._id == this._personalId) {
-          this._fillLikeBtnColor(newCard.querySelector('.card__like-btn'))
-        }
-      })
-    }
+    const newCard = document.querySelector(this._selector).content.querySelector('.card').cloneNode(true)
     const cardPic = newCard.querySelector('.card__pic')
-    const cardLikes = newCard.querySelector('.card__like-counter')
+    const newLikeBtn = newCard.querySelector('.card__like-btn')
     cardPic.style.backgroundImage = `url("${this._image}")`
     newCard.querySelector('.card__heading').textContent = this._heading
-    cardLikes.textContent = this._likesCounter
     this._handleEventListeners(cardPic, newCard)
+    // Проверим, мои лайки у карточки, если она новая
+    if (this._findPersonalLike()) {
+      this._switchLikeBtn(newLikeBtn)
+    }
+    // Удалим кнопку удаления карточки, если она чужая
+    if (this._owner && this._personalId != this._owner._id) {
+      const newDeleteBtn = newCard.querySelector('.card__trash-btn')
+      newDeleteBtn.remove()
+    }
     return newCard
   }
   _handleEventListeners = (cardPic, newCard) => {
@@ -69,46 +43,39 @@ class Card {
     cardPic.addEventListener('click', () => {
       this._handleCardClick(this._heading, this._image)
     })
-    // Добавляем кнопке "удалить" листнер на удаление карточек, если мы владельцы карты
-    if (this._cardOwner._id == this._personalId) {
+    if (newDeleteBtn) {
       newDeleteBtn.addEventListener('click', () => {
-        const newCardData = {
-          id: this._cardId,
-          owner: {
-            id: this._cardOwner._id
-          }
-        }
-        this._handleDeleteBtnClick(newCard, newCardData)
+        this._deleteCardHandler(newCard, this._id)
       })
     }
+    // Добавляем кнопке "удалить" листнер на удаление карточек
+
     // Добавляем кнопке "лайк" листнер на лайк карточек
     newLikeBtn.addEventListener('click', () => {
-      // this._switchLikeBtn(newLikeBtn)
-      this._countLike(newCard, newLikeBtn)
+      this._switchLikeBtn(newLikeBtn)
+      this._changeLikeCount(newCard)
     })
   }
-  // Удаляет заливку лайков
-  _removeLikeBtnColor(newLikeBtn) {
-    newLikeBtn.classList.remove('card__like-btn_active')
+  // Ищет среди лайков персональный
+  _findPersonalLike() {
+    return this._likes.some(like => like._id === this._personalId)
   }
-  // Добавляет заливку лайкам
-  _fillLikeBtnColor(newLikeBtn) {
-    newLikeBtn.classList.add('card__like-btn_active')
+  // Изменяет состояние кнопки "лайк"
+  _switchLikeBtn(newLikeBtn) {
+    newLikeBtn.classList.toggle('card__like-btn_active')
   }
-  // Увеличивает или уменьшает лайк на единицу
-  _countLike(newCard, newLikeBtn) {
-    const cardLikes = newCard.querySelector('.card__like-counter')
-    // Если мы уже лайкали, то
-    if (newLikeBtn.classList.contains('card__like-btn_active')) {
-      cardLikes.textContent = Number.parseInt(cardLikes.textContent) - 1
-      this._likeApi.deleteLike(this._cardId)
-      this._removeLikeBtnColor(newLikeBtn)
+  _getInitialLikes() {}
+  // Изменяет количество лайков в DOM и на сервере
+  _changeLikeCount(newCard) {
+    const likeCounterElement = newCard.querySelector('.card__like-counter')
+    const count = likeCounterElement.textContent
+    if (count == this._likes.length && !this._findPersonalLike()) {
+      this._api.putLike(this._id)
+      likeCounterElement.textContent++
       return
     }
-    // Если не лайкали
-    cardLikes.textContent = Number.parseInt(cardLikes.textContent) + 1
-    this._fillLikeBtnColor(newLikeBtn)
-    this._likeApi.postLike(this._cardId, this._heading, this._personalId)
+    likeCounterElement.textContent--
+    this._api.deleteLike(this._id)
   }
   // Добавляет карточку
   renderCard() {

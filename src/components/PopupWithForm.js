@@ -31,17 +31,18 @@ export class PopupWithForm extends Popup {
   setEventListeners() {
     this._formElement.addEventListener('submit', event => {
       event.preventDefault()
-      // Проверим, сколько инпутов в форме
-      if (Object.keys(this._getInputValues()).length == 0) {
-        this._handleSubmitForm()
+      const isEmpty = obj => {
+        for (let key in obj) {
+          // если тело цикла начнет выполняться - значит в объекте есть свойства
+          return false
+        }
+        return true
       }
-      if (Object.keys(this._getInputValues()).length == 1) {
+      // Если у формы есть инпуты, то
+      if (!isEmpty(this._getInputValues())) {
         this._handleSubmitForm(this._getInputValues())
       }
-      if (Object.keys(this._getInputValues()).length == 2) {
-        this._handleSubmitForm(this._getInputValues())
-      }
-      this.close()
+      // this.close()
     })
     super.setEventListeners()
   }

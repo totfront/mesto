@@ -8,6 +8,9 @@ import { PopupWithImage } from '../components/PopupWithImage.js'
 import { UserInfo } from '../components/UserInfo.js'
 import { PopupWithForm } from '../components/PopupWithForm.js'
 import { Api } from '../components/Api.js'
+let section
+const popupAddCardSelector = '#card-renderer'
+const popupProfileEditorSelecor = '#profile-editor'
 const settings = {
   formSelector: 'form',
   inputSelector: '.popup__input',
@@ -18,92 +21,63 @@ const settings = {
 }
 const editBtnSelector = '.profile__edit-btn'
 const nameInputSelector = '.popup__input_data_name'
-const profileAvatarBtnSelector = '.profile__avatar-btn'
 const descriptionInputSelector = '.popup__input_data_description'
 const profileNameSelector = '.profile__name'
 const profileDescriptionSelector = '.profile__description'
 const profileEditorPopupSelector = '#profile-popup'
+const changeAvatarPupupSelector = '#avatar-upd'
 const addCardPopupSelector = '#card-popup'
-const certitudePopupSelector = '#certitude'
-const avatarUpdPopupSelector = '#avatar-upd'
-const avatarUpdFormSelector = '#avatar-upd-form'
+const deleteCardPopupSelector = '#popup-delete-card'
 const overviewPopupSelector = '#overview'
 const cardTemplateSelector = '#template'
-const popupAddCardSelector = '#card-renderer'
-const popupProfileEditorSelecor = '#profile-editor'
 const cardContainerSelector = '.cards'
 const popupAddBtnSelector = '.profile__add-btn'
-const profileDescriptionElement = document.querySelector(profileDescriptionSelector)
-const profileNameElement = document.querySelector(profileNameSelector)
-const profileAvatarBtnElement = document.querySelector(profileAvatarBtnSelector)
+const avatarSelector = '.profile__avatar-btn'
+const avatarChangeFormSelector = '#avatar-upd-form'
+const avatarElement = document.querySelector(avatarSelector)
 const editBtn = document.querySelector(editBtnSelector)
+const avatarChangeFormElement = document.querySelector(avatarChangeFormSelector)
 const cardRenderForm = document.querySelector(popupAddCardSelector)
 const profileEditorForm = document.querySelector(popupProfileEditorSelecor)
-const avatarUpdFormElement = document.querySelector(avatarUpdFormSelector)
 const descriptionInput = document.querySelector(descriptionInputSelector)
 const nameInput = document.querySelector(nameInputSelector)
 const addBtn = document.querySelector(popupAddBtnSelector)
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
-let lastClickedCard
-const cardsApi = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards',
-  headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
-  }
-})
-const userInfoApi = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/users/me',
-  headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
-  }
-})
-const avatarApi = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/users/me/avatar',
-  headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
-  },
-  formSelector: avatarUpdFormSelector
-})
-const likesApi = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22/cards/likes',
-  headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
-  }
-})
-// Добавляет новую карточку и закрывает попап по клику на submit
+// Добавляет новую карточку по клику на submit
 const handleAddCardSubmit = newCardData => {
-  renderCard(newCardData)
-  cardsApi.postNewCard(newCardData)
+  api.addCard(newCardData, cardRenderForm).then(res => {
+    newCardData._id = res._id
+    newCardData.likes = res.likes
+    renderCard(newCardData)
+    popupAdd.close()
+  })
 }
 // Изменяет данные профиля и закрывает попап по клику на submit
 const handleEditProfileSubmit = inputValues => {
   profileInfo.setUserInfo(inputValues)
-  userInfoApi.updateProfileInfo({ profileNameElement: profileNameElement, profileDescriptionElement: profileDescriptionElement }, inputValues)
+  api.updUserData(inputValues, profileEditorForm).then(() => {
+    popupEdit.close()
+  })
 }
-// Закрывает попап, удаляет карточку на странице и сервере
-const handleCertitudeSubmit = () => {
-  // Если у карточки есть id, удаляем её на сервере
-  if (lastClickedCard.data.id) {
-    cardsApi.deleteCard(currentCardData.id)
-  }
-  lastClickedCard.card.remove()
-}
-// Обновляет аватар, отправляет новый на сервер
-const handleAvatarUpdSubmit = newAvatarUrl => {
-  avatarApi.updateAvatarImage(newAvatarUrl.url)
-  profileAvatarBtnElement.style.backgroundImage = `url("${newAvatarUrl.url}")`
+// Подтверждает изменение аватара
+const handleChangeAvatarSubmit = newAvatar => {
+  api.changeAvatar(newAvatar.url, avatarChangeFormElement).then(() => {
+    avatarElement.style.backgroundImage = `url(${newAvatar.url})`
+    popupChangeAvatar.close()
+  })
 }
 const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
 const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
+const popupDeleteCard = new PopupWithForm(deleteCardPopupSelector, handleChangeAvatarSubmit)
+const popupChangeAvatar = new PopupWithForm(changeAvatarPupupSelector, handleChangeAvatarSubmit)
+const changeAvatarFormValidator = new FormValidator(settings, avatarChangeFormElement)
 const popupOverview = new PopupWithImage(overviewPopupSelector)
-const popupCertitude = new PopupWithForm(certitudePopupSelector, handleCertitudeSubmit)
-popupCertitude.setEventListeners()
-const popupAvatarUpd = new PopupWithForm(avatarUpdPopupSelector, handleAvatarUpdSubmit)
 const profileEditFormValidator = new FormValidator(settings, profileEditorForm)
 const addCardFormValidator = new FormValidator(settings, cardRenderForm)
-const profileAvatorFormFalidator = new FormValidator(settings, avatarUpdFormElement)
-// Обновляем данные на странице данными с сервера
-userInfoApi.updateProfileInfo({ profileNameElement: profileNameElement, profileDescriptionElement: profileDescriptionElement, avatarElement: profileAvatarBtnElement })
+const api = new Api({
+  url: 'https://mesto.nomoreparties.co/v1/cohort-23',
+  token: 'f470df2e-c67b-482b-ae5d-65b776a618c9'
+})
 // Заполняет поля формы данными со страницы
 const fillProfileForm = () => {
   nameInput.value = profileInfo.getUserInfo().name
@@ -121,61 +95,90 @@ addBtn.addEventListener('click', () => {
   addCardFormValidator.resetValidation()
   popupAdd.open()
 })
-popupAvatarUpd.setEventListeners()
-profileAvatarBtnElement.addEventListener('click', () => {
-  popupAvatarUpd.open()
-  profileAvatorFormFalidator.resetValidation()
+popupChangeAvatar.setEventListeners()
+avatarElement.addEventListener('click', () => {
+  changeAvatarFormValidator.resetValidation()
+  popupChangeAvatar.open()
 })
 // Наполняет попап с превью данными (название, ссылку) и открывает его
 const handleCardClick = (name, link) => {
   popupOverview.setEventListeners()
   popupOverview.open(name, link)
 }
-// Открывает попап с удалением карточки
-const handleDeleteBtnClick = (newCard, currentCardData) => {
-  lastClickedCard = {
-    card: newCard,
-    data: currentCardData
+// Управляет кнопкой удаления карточки
+const deleteCardHandler = (currentCard, cardId) => {
+  popupDeleteCard.open()
+  popupDeleteCard.setEventListeners()
+  const deleteCardFormSubmit = document.querySelector(deleteCardPopupSelector).querySelector('.popup__save-btn')
+  if (cardId) {
+    deleteCardFormSubmit.addEventListener('click', () => {
+      api.removeCard(cardId)
+      currentCard.remove()
+      popupDeleteCard.close()
+    })
   }
-  popupCertitude.open()
 }
+// Добавляет слушатели попапу удаления карточки
+// popupDeleteCard.setEventListeners()
 // Собирает заполненную карточку
 const createCard = item => {
-  return new Card(item, cardTemplateSelector, handleCardClick, handleDeleteBtnClick, likesApi).renderCard()
+  return new Card(item, cardTemplateSelector, handleCardClick, deleteCardHandler, api).renderCard()
 }
-// Запрос на стартовые карточки
-let section
-cardsApi
-  .getInitialCards()
-  .then(result => {
-    let cardList = []
-    result.forEach(newCardData => {
-      cardList = [...cardList, { name: newCardData.name, link: newCardData.link, likes: newCardData.likes, owner: newCardData.owner, cardId: newCardData._id }]
-    })
-    return cardList
-  })
-  .then(cardList => {
-    // Рендерим стартовые карточки
-    const initalSectionData = { items: cardList, renderer: createCard }
-    section = new Section(initalSectionData, cardContainerSelector)
-    section.renderItems()
-  })
-  .catch(err => {
-    return Promise.reject(`Ошибка: ${err}`)
-  })
-fetch('https://mesto.nomoreparties.co/v1/cohort-22/cards', {
-  headers: {
-    authorization: '72b79157-1952-43cd-9fd8-d3bec7029691'
-  }
-})
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = newCardData => {
   const newCard = {}
   newCard.name = newCardData.name
   newCard.link = newCardData.url
+  newCard._id = newCardData._id
+  newCard.likes = newCardData.likes
+  newCard.owner = newCardData.owner
   section.addItem(createCard(newCard))
 }
-// Включает валидацию для формы добавления карточек
+// Включает валидацию для форм
 profileEditFormValidator.enableValidation()
 addCardFormValidator.enableValidation()
-profileAvatorFormFalidator.enableValidation()
+changeAvatarFormValidator.enableValidation()
+// Рендерим стартовые карточки
+api
+  .getCards()
+  .then(result => {
+    let cardList = []
+    result.forEach(newCardData => {
+      cardList = [...cardList, newCardData]
+    })
+    return cardList
+  })
+  .then(cardList => {
+    const initalSectionData = { items: cardList, renderer: createCard }
+    section = new Section(initalSectionData, cardContainerSelector)
+    section.renderItems()
+  })
+  .then(() => {
+    // Получает стартовое количество лайков
+    api
+      .getCards()
+      // Собираем двумерный массив лайков
+      .then(cards => {
+        const likes = cards.map(card => {
+          return card.likes
+        })
+        return likes
+      })
+      // Распределяем лайки по карточкам
+      .then(likes => {
+        const cards = Array.from(document.querySelectorAll('.card')).reverse()
+        cards.forEach((card, index) => {
+          const counter = card.querySelector('.card__like-counter')
+          counter.textContent = likes[index].length
+        })
+      })
+  })
+// Обновляем данные пользователя
+api.getUserData().then(userData => {
+  avatarElement.style.backgroundImage = `url(${userData.avatar})`
+  const newProfileData = {
+    name: userData.name,
+    description: userData.about
+  }
+  profileInfo.setUserInfo(newProfileData)
+})

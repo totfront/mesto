@@ -19,19 +19,13 @@ export class FormValidator {
   }
   // Показывает ошибку ввода
   _showInputError = (inputElement, errorMessage) => {
-    let errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
-    if (errorElement == null) {
-      errorElement = this._formElement.querySelector('.popup__input-error')
-    }
+    const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
     errorElement.textContent = errorMessage
     errorElement.classList.add(this._errorClass)
   }
   // Скрывает ошибку ввода
   _hideInputError = inputElement => {
-    let errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
-    if (errorElement == null) {
-      errorElement = this._formElement.querySelector('.popup__input-error')
-    }
+    const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
     errorElement.textContent = ''
     errorElement.classList.remove(this._errorClass)
   }
@@ -86,10 +80,10 @@ export class FormValidator {
   }
   // Включает валидацию и добавляет слушатели событий всем интерактивным элементам
   enableValidation = () => {
-    const handleFormSubmit = event => {
-      event.preventDefault()
-    }
-    this._formElement.addEventListener('submit', handleFormSubmit)
+    // const handleFormSubmit = event => {
+    //   event.preventDefault()
+    // }
+    // this._formElement.addEventListener('submit', handleFormSubmit)
     const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector))
     const submitBtn = this._formElement.querySelector(this._submitButtonSelector)
     const inputListIterator = inputElement => {

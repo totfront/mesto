@@ -7,6 +7,8 @@
 
   border: none;
   border-radius: 50%;
+
+/* background-image: url('/src/images/profile/profile__default-avatar.png'); */
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

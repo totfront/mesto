@@ -1,238 +1,146 @@
 export class Api {
-  constructor(options) {
-    this._serverUrl = options.baseUrl
-    this._headers = options.headers
-    if (options.formSelector) {
-      this._formSelector = options.formSelector
-    }
+  constructor(data) {
+    this._url = data.url
+    this._token = data.token
   }
-  getInitialCards() {
-    return fetch(this._serverUrl, {
+  getCards() {
+    return fetch(`${this._url}/cards`, {
+      method: 'GET',
       headers: {
-        authorization: this._headers.authorization
+        authorization: this._token
       }
-    }).then(res => {
-      if (res.ok) {
-        return res.json()
-      }
-      return Promise.reject(`Ошибка: ${res.status}`)
     })
-  }
-  getCurrentCard() {
-    return fetch(this._serverUrl, {
-      headers: {
-        authorization: this._headers.authorization
-      }
-    }).then(res => {
-      if (res.ok) {
-        return res.json()
-      }
-      return Promise.reject(`Ошибка: ${res.status}`)
-    })
-  }
-
-  getInitialProfileData() {
-    return fetch(this._serverUrl, {
-      headers: {
-        authorization: this._headers.authorization
-      }
-    }).then(res => {
-      if (res.ok) {
-        return res.json()
-      }
-      return Promise.reject(`Ошибка: ${res.status}`)
-    })
-  }
-  updateProfileInfo(profileElements, newProfileData) {
-    // Первичное заполнение данных профиля с сервера
-    if (!newProfileData) {
-      fetch(this._serverUrl, {
-        headers: {
-          authorization: this._headers.authorization
+      .then(response => {
+        if (response.ok) {
+          return response.json()
         }
+        return Promise.reject(`Ошибка ${response.status}`)
       })
-        .then(res => {
-          if (res.ok) {
-            return res.json()
-          }
-          return Promise.reject(`Ошибка: ${res.status}`)
-        })
-        .then(profileData => {
-          profileElements.profileNameElement.textContent = profileData.name
-          profileElements.profileDescriptionElement.textContent = profileData.about
-          profileElements.avatarElement.style.backgroundImage = `url("${profileData.avatar}")`
-        })
-      return
-    }
-    // Обновляет данные профиля на сервере
-    fetch(this._serverUrl, {
-      method: 'PATCH',
-      headers: {
-        authorization: this._headers.authorization,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: profileElements.profileNameElement.textContent,
-        about: profileElements.profileDescriptionElement.textContent
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при получении карточек')
       })
-    }).then(res => {
-      document.querySelector('#profile-editor').querySelector('.popup__save-btn').textContent = 'Сохранение...'
-      if (res.ok) {
-        return res.json()
-      }
-      return Promise.reject(`Ошибка: ${res.status}`)
-    })
   }
-  // Отправляет лайк на сервер
-  postLike(cardId, cardName, personalId) {
-    // Если карточка новая и у неё пока нет Id
-    if (!cardId) {
-      const cardApiUrl = this._serverUrl.slice(0, -6)
-      fetch(cardApiUrl, {
-        headers: {
-          authorization: this._headers.authorization
-        }
-      })
-        .then(res => {
-          if (res.ok) {
-            return res.json()
-          }
-          return Promise.reject(`Ошибка: ${res.status}`)
-        })
-        .then(res => {
-          res.forEach(rederedCard => {
-            if (rederedCard.name === cardName && rederedCard.owner._id === personalId) {
-              fetch(`${this._serverUrl}/${rederedCard._id}`, {
-                method: 'PUT',
-                headers: {
-                  authorization: this._headers.authorization
-                },
-                'Content-Type': 'application/json'
-              }).then(res => {
-                if (res.ok) {
-                  return res.json()
-                }
-                return Promise.reject(`Ошибка: ${res.status}`)
-              })
-              return
-            }
-          })
-        })
-      return
-    }
-    fetch(`${this._serverUrl}/${cardId}`, {
-      method: 'PUT',
+  getUserData() {
+    return fetch(`${this._url}/users/me`, {
+      method: 'GET',
       headers: {
-        authorization: this._headers.authorization
-      },
-      'Content-Type': 'application/json'
-    }).then(res => {
-      if (res.ok) {
-        return res.json()
+        authorization: this._token
       }
-      return Promise.reject(`Ошибка: ${res.status}`)
     })
-  }
-  // Удаляет лайк на сервере
-  deleteLike(cardId, cardName, personalId) {
-    if (!cardId) {
-      const cardApiUrl = this._serverUrl.slice(0, -6)
-      fetch(cardApiUrl, {
-        headers: {
-          authorization: this._headers.authorization
-        }
+      .then(response => (response.ok ? Promise.resolve(response.json()) : Promise.reject(`Ошибка ${response.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при получении данных пользователя')
       })
-        .then(res => {
-          if (res.ok) {
-            return res.json()
-          }
-          return Promise.reject(`Ошибка: ${res.status}`)
-        })
-        .then(res => {
-          res.forEach(rederedCard => {
-            if (rederedCard.name === cardName && rederedCard.owner._id === personalId) {
-              return fetch(`${this._serverUrl}/${rederedCard._id}`, {
-                method: 'DELETE',
-                headers: {
-                  authorization: this._headers.authorization
-                }
-              }).then(res => {
-                if (res.ok) {
-                  return res.json()
-                }
-                return Promise.reject(`Ошибка: ${res.status}`)
-              })
-            }
-          })
-        })
-      return
-    }
-    return fetch(`${this._serverUrl}/${cardId}`, {
-      method: 'DELETE',
-      headers: {
-        authorization: this._headers.authorization
-      }
-    }).then(res => {
-      if (res.ok) {
-        return res.json()
-      }
-      return Promise.reject(`Ошибка: ${res.status}`)
-    })
   }
-  // Отправляет новую карточку на сервер
-  postNewCard(newCardData) {
-    return fetch(this._serverUrl, {
+  addCard(card, cardRenderForm) {
+    this._changeSubmitBtnText(cardRenderForm)
+    return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: {
-        authorization: this._headers.authorization,
-        'Content-Type': 'application/json'
+        authorization: this._token,
+        'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        name: newCardData.name,
-        link: newCardData.url
+        name: card.name,
+        link: card.url
       })
-    }).then(res => {
-      if (res.ok) {
-        document.querySelector('#card-popup').querySelector('.popup__save-btn').textContent = 'Сохранение...'
-        return res.json()
-      }
-      return Promise.reject(`Ошибка: ${res.status}`)
     })
+      .then(responce => {
+        this._changeSubmitBtnText(cardRenderForm)
+        return responce
+      })
+      .then(response => (response.ok ? response.json() : Promise.reject(`Ошибка ${response.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при добавлении карточки')
+      })
   }
-  // Удаляет свою карточку на сервере
-  deleteCard(cardId) {
-    return fetch(`${this._serverUrl}/${cardId}`, {
+  removeCard(id) {
+    return fetch(`${this._url}/cards/${id}`, {
       method: 'DELETE',
       headers: {
-        authorization: this._headers.authorization,
-        'Content-Type': 'application/json'
+        authorization: this._token
       }
-    }).then(res => {
-      if (res.ok) {
-        return res.json()
-      }
-      return Promise.reject(`Ошибка: ${res.status}`)
     })
+      .then(response => (response.ok ? Promise.resolve('success') : Promise.reject(`Ошибка ${response.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при удалении карточки')
+      })
   }
-  // Обновляет аватар на сервере
-  updateAvatarImage(url) {
-    fetch(this._serverUrl, {
+  updUserData(profileData, profileEditorForm) {
+    this._changeSubmitBtnText(profileEditorForm)
+    return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
-      headers: {
-        authorization: this._headers.authorization,
-        'Content-Type': 'application/json'
-      },
       body: JSON.stringify({
-        avatar: url
-      })
+        name: profileData.name,
+        about: profileData.description
+      }),
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      }
     })
-      // Записать изменение кнопки здесь
-      .then(res => {
-        if (res.ok) {
-          document.querySelector('#avatar-upd').querySelector('.popup__save-btn').textContent = 'Сохранение...'
-          return res.json()
-        }
-        return Promise.reject(`Ошибка: ${res.status}`)
+      .then(responce => {
+        this._changeSubmitBtnText(profileEditorForm)
+        return responce
       })
+      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при обновлении данных пользователя')
+      })
+  }
+  putLike(cardId) {
+    return fetch(`${this._url}/cards/likes/${cardId}`, {
+      method: 'PUT',
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при добавлении лайка')
+      })
+  }
+  deleteLike(cardId) {
+    return fetch(`${this._url}/cards/likes/${cardId}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при удалении лайка')
+      })
+  }
+  changeAvatar(newAvatarUrl, changeAvatarForm) {
+    this._changeSubmitBtnText(changeAvatarForm)
+    return fetch(`${this._url}/users/me/avatar`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        avatar: newAvatarUrl
+      }),
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(responce => {
+        this._changeSubmitBtnText(changeAvatarForm)
+        return responce
+      })
+      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при смене аватара')
+      })
+  }
+  _changeSubmitBtnText = formElement => {
+    const submitBtnElement = formElement.querySelector('.popup__save-btn')
+    if (submitBtnElement.textContent == 'Сохранение...') {
+      submitBtnElement.textContent = 'Сохранить'
+    } else {
+      submitBtnElement.textContent = 'Сохранение...'
+    }
   }
 }
