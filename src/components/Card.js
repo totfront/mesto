@@ -11,6 +11,7 @@ class Card {
     this._image = data.link
     this._id = data._id
     this._likes = data.likes
+    this._owner = data.owner
     this._selector = selector
     this._handleCardClick = handleCardClick
     this._api = api
@@ -24,9 +25,14 @@ class Card {
     cardPic.style.backgroundImage = `url("${this._image}")`
     newCard.querySelector('.card__heading').textContent = this._heading
     this._handleEventListeners(cardPic, newCard)
-    // Проверим, мои лайки у карточки
+    // Проверим, мои лайки у карточки, если она новая
     if (this._findPersonalLike()) {
       this._switchLikeBtn(newLikeBtn)
+    }
+    // Удалим кнопку удаления карточки, если она чужая
+    if (this._owner && this._personalId != this._owner._id) {
+      const newDeleteBtn = newCard.querySelector('.card__trash-btn')
+      newDeleteBtn.remove()
     }
     return newCard
   }
@@ -37,10 +43,13 @@ class Card {
     cardPic.addEventListener('click', () => {
       this._handleCardClick(this._heading, this._image)
     })
+    if (newDeleteBtn) {
+      newDeleteBtn.addEventListener('click', () => {
+        this._deleteCardHandler(newCard, this._id)
+      })
+    }
     // Добавляем кнопке "удалить" листнер на удаление карточек
-    newDeleteBtn.addEventListener('click', () => {
-      this._deleteCardHandler(newCard)
-    })
+
     // Добавляем кнопке "лайк" листнер на лайк карточек
     newLikeBtn.addEventListener('click', () => {
       this._switchLikeBtn(newLikeBtn)

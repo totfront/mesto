@@ -34,9 +34,9 @@ const cardContainerSelector = '.cards'
 const popupAddBtnSelector = '.profile__add-btn'
 const avatarSelector = '.profile__avatar-btn'
 const avatarChangeFormSelector = '#avatar-upd-form'
-const avatarChangeFormElement = document.querySelector(avatarChangeFormSelector)
 const avatarElement = document.querySelector(avatarSelector)
 const editBtn = document.querySelector(editBtnSelector)
+const avatarChangeFormElement = document.querySelector(avatarChangeFormSelector)
 const cardRenderForm = document.querySelector(popupAddCardSelector)
 const profileEditorForm = document.querySelector(popupProfileEditorSelecor)
 const descriptionInput = document.querySelector(descriptionInputSelector)
@@ -45,26 +45,30 @@ const addBtn = document.querySelector(popupAddBtnSelector)
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
 // Добавляет новую карточку по клику на submit
 const handleAddCardSubmit = newCardData => {
-  api.addCard(newCardData).then(res => {
+  api.addCard(newCardData, cardRenderForm).then(res => {
     newCardData._id = res._id
+    newCardData.likes = res.likes
     renderCard(newCardData)
+    popupAdd.close()
   })
 }
 // Изменяет данные профиля и закрывает попап по клику на submit
 const handleEditProfileSubmit = inputValues => {
   profileInfo.setUserInfo(inputValues)
-  api.updUserData(inputValues)
+  api.updUserData(inputValues, profileEditorForm).then(() => {
+    popupEdit.close()
+  })
 }
-// Подтверждает удаление карточки
-const handleDeleteCardSubmit = currentCard => {}
 // Подтверждает изменение аватара
 const handleChangeAvatarSubmit = newAvatar => {
-  avatarElement.style.backgroundImage = `url(${newAvatar.url})`
-  api.changeAvatar(newAvatar.url)
+  api.changeAvatar(newAvatar.url, avatarChangeFormElement).then(() => {
+    avatarElement.style.backgroundImage = `url(${newAvatar.url})`
+    popupChangeAvatar.close()
+  })
 }
 const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
 const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
-const popupDeleteCard = new PopupWithForm(deleteCardPopupSelector)
+const popupDeleteCard = new PopupWithForm(deleteCardPopupSelector, handleChangeAvatarSubmit)
 const popupChangeAvatar = new PopupWithForm(changeAvatarPupupSelector, handleChangeAvatarSubmit)
 const changeAvatarFormValidator = new FormValidator(settings, avatarChangeFormElement)
 const popupOverview = new PopupWithImage(overviewPopupSelector)
@@ -102,16 +106,21 @@ const handleCardClick = (name, link) => {
   popupOverview.open(name, link)
 }
 // Управляет кнопкой удаления карточки
-const deleteCardHandler = currentCard => {
+const deleteCardHandler = (currentCard, cardId) => {
   popupDeleteCard.open()
-  popupDeleteCard.setEventListeners(() => {
-    currentCard.remove()
-  })
+  popupDeleteCard.setEventListeners()
+  const deleteCardFormSubmit = document.querySelector(deleteCardPopupSelector).querySelector('.popup__save-btn')
+  if (cardId) {
+    deleteCardFormSubmit.addEventListener('click', () => {
+      api.removeCard(cardId)
+      currentCard.remove()
+      popupDeleteCard.close()
+    })
+  }
 }
 // Добавляет слушатели попапу удаления карточки
 // popupDeleteCard.setEventListeners()
 // Собирает заполненную карточку
-const deleteLike = () => {}
 const createCard = item => {
   return new Card(item, cardTemplateSelector, handleCardClick, deleteCardHandler, api).renderCard()
 }
@@ -121,6 +130,8 @@ const renderCard = newCardData => {
   newCard.name = newCardData.name
   newCard.link = newCardData.url
   newCard._id = newCardData._id
+  newCard.likes = newCardData.likes
+  newCard.owner = newCardData.owner
   section.addItem(createCard(newCard))
 }
 // Включает валидацию для форм

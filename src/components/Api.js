@@ -3,40 +3,37 @@ export class Api {
     this._url = data.url
     this._token = data.token
   }
-  // Получает текущие карточки на сервере
   getCards() {
     return fetch(`${this._url}/cards`, {
       method: 'GET',
       headers: {
         authorization: this._token
       }
-    }).then(response => {
-      if (response.ok) {
-        return response.json()
-      }
-      return Promise.reject(`Ошибка ${response.status}`)
     })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        }
+        return Promise.reject(`Ошибка ${response.status}`)
+      })
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при получении карточек')
+      })
   }
-  // getCard(cardId) {
-  //   return fetch(`${this._url}/cards/likes/${cardId}`, {
-  //     method: 'GET',
-  //     headers: {
-  //       authorization: this._token,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
-  // }
-  // Получает данные профиля
   getUserData() {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
       headers: {
         authorization: this._token
       }
-    }).then(response => (response.ok ? Promise.resolve(response.json()) : Promise.reject(`Ошибка ${response.status}`)))
+    })
+      .then(response => (response.ok ? Promise.resolve(response.json()) : Promise.reject(`Ошибка ${response.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при получении данных пользователя')
+      })
   }
-  // Отправляет новую карточку на сервер
-  addCard(card) {
+  addCard(card, cardRenderForm) {
+    this._changeSubmitBtnText(cardRenderForm)
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: {
@@ -47,18 +44,30 @@ export class Api {
         name: card.name,
         link: card.url
       })
-    }).then(response => (response.ok ? response.json() : Promise.reject(`Ошибка ${response.status}`)))
+    })
+      .then(responce => {
+        this._changeSubmitBtnText(cardRenderForm)
+        return responce
+      })
+      .then(response => (response.ok ? response.json() : Promise.reject(`Ошибка ${response.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при добавлении карточки')
+      })
   }
-  // Удаляет карточку с сервера
-  // removeCard(id) {
-  //   return fetch(`${this._url}/messages/${id}`, {
-  //     method: 'DELETE',
-  //     headers: {
-  //       authorization: this._token
-  //     }
-  //   }).then(response => (response.ok ? Promise.resolve('success') : Promise.reject(`Ошибка ${response.status}`)))
-  // }
-  updUserData(profileData) {
+  removeCard(id) {
+    return fetch(`${this._url}/cards/${id}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: this._token
+      }
+    })
+      .then(response => (response.ok ? Promise.resolve('success') : Promise.reject(`Ошибка ${response.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при удалении карточки')
+      })
+  }
+  updUserData(profileData, profileEditorForm) {
+    this._changeSubmitBtnText(profileEditorForm)
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       body: JSON.stringify({
@@ -69,7 +78,15 @@ export class Api {
         authorization: this._token,
         'Content-Type': 'application/json'
       }
-    }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+    })
+      .then(responce => {
+        this._changeSubmitBtnText(profileEditorForm)
+        return responce
+      })
+      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при обновлении данных пользователя')
+      })
   }
   putLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
@@ -78,7 +95,11 @@ export class Api {
         authorization: this._token,
         'Content-Type': 'application/json'
       }
-    }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+    })
+      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при добавлении лайка')
+      })
   }
   deleteLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
@@ -87,9 +108,14 @@ export class Api {
         authorization: this._token,
         'Content-Type': 'application/json'
       }
-    }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+    })
+      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при удалении лайка')
+      })
   }
-  changeAvatar(newAvatarUrl) {
+  changeAvatar(newAvatarUrl, changeAvatarForm) {
+    this._changeSubmitBtnText(changeAvatarForm)
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
       body: JSON.stringify({
@@ -99,6 +125,22 @@ export class Api {
         authorization: this._token,
         'Content-Type': 'application/json'
       }
-    }).then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+    })
+      .then(responce => {
+        this._changeSubmitBtnText(changeAvatarForm)
+        return responce
+      })
+      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
+      .catch(err => {
+        console.log(err + ':' + 'Ошибка при смене аватара')
+      })
+  }
+  _changeSubmitBtnText = formElement => {
+    const submitBtnElement = formElement.querySelector('.popup__save-btn')
+    if (submitBtnElement.textContent == 'Сохранение...') {
+      submitBtnElement.textContent = 'Сохранить'
+    } else {
+      submitBtnElement.textContent = 'Сохранение...'
+    }
   }
 }

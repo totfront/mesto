@@ -28,18 +28,21 @@ export class PopupWithForm extends Popup {
     return currentFormValues
   }
   // Добавляет обработичики событий
-  setEventListeners(deleteCard) {
+  setEventListeners() {
     this._formElement.addEventListener('submit', event => {
       event.preventDefault()
-      this._handleSubmitForm(this._getInputValues())
-      // TODO:
-      // Использовать для удаления карточек.
-      // if ('key' in this._getInputValues()) {
-      //   // this._handleSubmitForm(this._getInputValues())
-      // } else {
-      //   // deleteCard()
-      // }
-      this.close()
+      const isEmpty = obj => {
+        for (let key in obj) {
+          // если тело цикла начнет выполняться - значит в объекте есть свойства
+          return false
+        }
+        return true
+      }
+      // Если у формы есть инпуты, то
+      if (!isEmpty(this._getInputValues())) {
+        this._handleSubmitForm(this._getInputValues())
+      }
+      // this.close()
     })
     super.setEventListeners()
   }
