@@ -115,7 +115,7 @@ export class Api {
     if (response.ok) {
       return response.json()
     } else {
-      Promise.reject(`Ошибка ${response.status}`)
+      return `Ошибка ${response.status}`
     }
   }
 }

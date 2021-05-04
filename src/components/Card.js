@@ -5,7 +5,7 @@
 // 4. Добавляет карточку в DOM
 
 class Card {
-  constructor(data, selector, handleCardClick, deleteCardHandler, api) {
+  constructor(data, selector, handleCardClick, deleteCardHandler, api, personalId) {
     this._deleteCardHandler = deleteCardHandler
     this._heading = data.name
     this._image = data.link
@@ -15,7 +15,7 @@ class Card {
     this._selector = selector
     this._handleCardClick = handleCardClick
     this._api = api
-    this._personalId = '56f185c306d1d89bd43913e9'
+    this._personalId = personalId
   }
   // Подготавливает карточку к публикации
   _createCard() {

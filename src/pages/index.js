@@ -42,7 +42,7 @@ const profileEditorForm = document.querySelector(popupProfileEditorSelecor)
 const descriptionInput = document.querySelector(descriptionInputSelector)
 const nameInput = document.querySelector(nameInputSelector)
 const addBtn = document.querySelector(popupAddBtnSelector)
-const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
+const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector, avatarSelector: avatarSelector })
 // Добавляет новую карточку по клику на submit
 const handleAddCardSubmit = newCardData => {
   api
@@ -142,8 +142,11 @@ const deleteCardHandler = (currentCard, cardId) => {
 // Добавляет слушатели попапу удаления карточки
 // popupDeleteCard.setEventListeners()
 // Собирает заполненную карточку
+const personalId = api.getUserData().then(userData => {
+  return userData._id
+})
 const createCard = item => {
-  return new Card(item, cardTemplateSelector, handleCardClick, deleteCardHandler, api).renderCard()
+  return new Card(item, cardTemplateSelector, handleCardClick, deleteCardHandler, api, personalId).renderCard()
 }
 //Создает и наполняет новую карточку из формы, затем очищает форму
 const renderCard = newCardData => {
@@ -160,39 +163,36 @@ profileEditFormValidator.enableValidation()
 addCardFormValidator.enableValidation()
 changeAvatarFormValidator.enableValidation()
 // Рендерим стартовые карточки
+let initialCards = []
 api
   .getCards()
   .then(result => {
-    let cardList = []
     result.forEach(newCardData => {
-      cardList = [...cardList, newCardData]
+      initialCards = [...initialCards, newCardData]
     })
-    return cardList
+    return initialCards
   })
-  .then(cardList => {
-    const initalSectionData = { items: cardList, renderer: createCard }
+  .then(initialCards => {
+    const initalSectionData = { items: initialCards, renderer: createCard }
     section = new Section(initalSectionData, cardContainerSelector)
     section.renderItems()
+    return initialCards
   })
-  .then(() => {
-    // Получает стартовое количество лайков
-    api
-      .getCards()
-      // Собираем двумерный массив лайков
-      .then(cards => {
-        const likes = cards.map(card => {
-          return card.likes
-        })
-        return likes
-      })
-      // Распределяем лайки по карточкам
-      .then(likes => {
-        const cards = Array.from(document.querySelectorAll('.card')).reverse()
-        cards.forEach((card, index) => {
-          const counter = card.querySelector('.card__like-counter')
-          counter.textContent = likes[index].length
-        })
-      })
+  // Получает стартовое количество лайков
+  .then(initialCards => {
+    // Собираем двумерный массив лайков
+    const likes = initialCards.map(card => {
+      return card.likes
+    })
+    return likes
+  })
+  // Распределяем лайки по карточкам
+  .then(likes => {
+    const cards = Array.from(document.querySelectorAll('.card')).reverse()
+    cards.forEach((card, index) => {
+      const counter = card.querySelector('.card__like-counter')
+      counter.textContent = likes[index].length
+    })
   })
   .catch(err => {
     console.log(err + ' && ' + 'Ошибка при получении карточек')
@@ -201,12 +201,7 @@ api
 api
   .getUserData()
   .then(userData => {
-    avatarElement.style.backgroundImage = `url(${userData.avatar})`
-    const newProfileData = {
-      name: userData.name,
-      description: userData.about
-    }
-    profileInfo.setUserInfo(newProfileData)
+    profileInfo.setUserAvatar(userData)
   })
   .catch(err => {
     console.log(err + ' && ' + 'Ошибка при получении данных пользователя')
