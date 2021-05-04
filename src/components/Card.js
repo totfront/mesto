@@ -70,12 +70,24 @@ class Card {
     const likeCounterElement = newCard.querySelector('.card__like-counter')
     const count = likeCounterElement.textContent
     if (count == this._likes.length && !this._findPersonalLike()) {
-      this._api.putLike(this._id)
-      likeCounterElement.textContent++
+      this._api
+        .putLike(this._id)
+        .then(() => {
+          likeCounterElement.textContent++
+        })
+        .catch(err => {
+          console.log(err + ' && ' + 'Ошибка при добавлении лайка')
+        })
       return
     }
-    likeCounterElement.textContent--
-    this._api.deleteLike(this._id)
+    this._api
+      .deleteLike(this._id)
+      .then(() => {
+        likeCounterElement.textContent--
+      })
+      .catch(err => {
+        console.log(err + ' && ' + 'Ошибка при удалении лайка')
+      })
   }
   // Добавляет карточку
   renderCard() {

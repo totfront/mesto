@@ -9,16 +9,9 @@ export class Api {
       headers: {
         authorization: this._token
       }
+    }).then(response => {
+      return this._checkResponce(response)
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-        return Promise.reject(`Ошибка ${response.status}`)
-      })
-      .catch(err => {
-        console.log(err + ':' + 'Ошибка при получении карточек')
-      })
   }
   getUserData() {
     return fetch(`${this._url}/users/me`, {
@@ -26,11 +19,7 @@ export class Api {
       headers: {
         authorization: this._token
       }
-    })
-      .then(response => (response.ok ? Promise.resolve(response.json()) : Promise.reject(`Ошибка ${response.status}`)))
-      .catch(err => {
-        console.log(err + ':' + 'Ошибка при получении данных пользователя')
-      })
+    }).then(response => this._checkResponce(response))
   }
   addCard(card, cardRenderForm) {
     this._changeSubmitBtnText(cardRenderForm)
@@ -45,14 +34,11 @@ export class Api {
         link: card.url
       })
     })
-      .then(responce => {
+      .then(response => {
         this._changeSubmitBtnText(cardRenderForm)
-        return responce
+        return response
       })
-      .then(response => (response.ok ? response.json() : Promise.reject(`Ошибка ${response.status}`)))
-      .catch(err => {
-        console.log(err + ':' + 'Ошибка при добавлении карточки')
-      })
+      .then(response => this._checkResponce(response))
   }
   removeCard(id) {
     return fetch(`${this._url}/cards/${id}`, {
@@ -60,11 +46,7 @@ export class Api {
       headers: {
         authorization: this._token
       }
-    })
-      .then(response => (response.ok ? Promise.resolve('success') : Promise.reject(`Ошибка ${response.status}`)))
-      .catch(err => {
-        console.log(err + ':' + 'Ошибка при удалении карточки')
-      })
+    }).then(response => this._checkResponce(response))
   }
   updUserData(profileData, profileEditorForm) {
     this._changeSubmitBtnText(profileEditorForm)
@@ -79,14 +61,11 @@ export class Api {
         'Content-Type': 'application/json'
       }
     })
-      .then(responce => {
+      .then(response => {
         this._changeSubmitBtnText(profileEditorForm)
-        return responce
+        return response
       })
-      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
-      .catch(err => {
-        console.log(err + ':' + 'Ошибка при обновлении данных пользователя')
-      })
+      .then(response => this._checkResponce(response))
   }
   putLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
@@ -95,11 +74,7 @@ export class Api {
         authorization: this._token,
         'Content-Type': 'application/json'
       }
-    })
-      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
-      .catch(err => {
-        console.log(err + ':' + 'Ошибка при добавлении лайка')
-      })
+    }).then(response => this._checkResponce(response))
   }
   deleteLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
@@ -108,11 +83,7 @@ export class Api {
         authorization: this._token,
         'Content-Type': 'application/json'
       }
-    })
-      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
-      .catch(err => {
-        console.log(err + ':' + 'Ошибка при удалении лайка')
-      })
+    }).then(response => this._checkResponce(response))
   }
   changeAvatar(newAvatarUrl, changeAvatarForm) {
     this._changeSubmitBtnText(changeAvatarForm)
@@ -126,14 +97,11 @@ export class Api {
         'Content-Type': 'application/json'
       }
     })
-      .then(responce => {
+      .then(response => {
         this._changeSubmitBtnText(changeAvatarForm)
-        return responce
+        return response
       })
-      .then(responce => (responce.ok ? Promise.resolve(responce) : Promise.reject(`Ошибка ${responce.status}`)))
-      .catch(err => {
-        console.log(err + ':' + 'Ошибка при смене аватара')
-      })
+      .then(response => this._checkResponce(response))
   }
   _changeSubmitBtnText = formElement => {
     const submitBtnElement = formElement.querySelector('.popup__save-btn')
@@ -141,6 +109,13 @@ export class Api {
       submitBtnElement.textContent = 'Сохранить'
     } else {
       submitBtnElement.textContent = 'Сохранение...'
+    }
+  }
+  _checkResponce = response => {
+    if (response.ok) {
+      return response.json()
+    } else {
+      Promise.reject(`Ошибка ${response.status}`)
     }
   }
 }

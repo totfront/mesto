@@ -45,26 +45,41 @@ const addBtn = document.querySelector(popupAddBtnSelector)
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector })
 // Добавляет новую карточку по клику на submit
 const handleAddCardSubmit = newCardData => {
-  api.addCard(newCardData, cardRenderForm).then(res => {
-    newCardData._id = res._id
-    newCardData.likes = res.likes
-    renderCard(newCardData)
-    popupAdd.close()
-  })
+  api
+    .addCard(newCardData, cardRenderForm)
+    .then(res => {
+      newCardData._id = res._id
+      newCardData.likes = res.likes
+      renderCard(newCardData)
+      popupAdd.close()
+    })
+    .catch(err => {
+      console.log(err + ' && ' + 'Ошибка при добавлении карточки')
+    })
 }
 // Изменяет данные профиля и закрывает попап по клику на submit
 const handleEditProfileSubmit = inputValues => {
   profileInfo.setUserInfo(inputValues)
-  api.updUserData(inputValues, profileEditorForm).then(() => {
-    popupEdit.close()
-  })
+  api
+    .updUserData(inputValues, profileEditorForm)
+    .then(() => {
+      popupEdit.close()
+    })
+    .catch(err => {
+      console.log(err + ' && ' + 'Ошибка при обновлении данных пользователя')
+    })
 }
 // Подтверждает изменение аватара
 const handleChangeAvatarSubmit = newAvatar => {
-  api.changeAvatar(newAvatar.url, avatarChangeFormElement).then(() => {
-    avatarElement.style.backgroundImage = `url(${newAvatar.url})`
-    popupChangeAvatar.close()
-  })
+  api
+    .changeAvatar(newAvatar.url, avatarChangeFormElement)
+    .then(() => {
+      avatarElement.style.backgroundImage = `url(${newAvatar.url})`
+      popupChangeAvatar.close()
+    })
+    .catch(err => {
+      console.log(err + ' && ' + 'Ошибка при смене аватара')
+    })
 }
 const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
 const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
@@ -112,9 +127,15 @@ const deleteCardHandler = (currentCard, cardId) => {
   const deleteCardFormSubmit = document.querySelector(deleteCardPopupSelector).querySelector('.popup__save-btn')
   if (cardId) {
     deleteCardFormSubmit.addEventListener('click', () => {
-      api.removeCard(cardId)
-      currentCard.remove()
-      popupDeleteCard.close()
+      api
+        .removeCard(cardId)
+        .then(() => {
+          currentCard.remove()
+          popupDeleteCard.close()
+        })
+        .catch(err => {
+          console.log(err + ' && ' + 'Ошибка при удалении карточки')
+        })
     })
   }
 }
@@ -173,12 +194,20 @@ api
         })
       })
   })
+  .catch(err => {
+    console.log(err + ' && ' + 'Ошибка при получении карточек')
+  })
 // Обновляем данные пользователя
-api.getUserData().then(userData => {
-  avatarElement.style.backgroundImage = `url(${userData.avatar})`
-  const newProfileData = {
-    name: userData.name,
-    description: userData.about
-  }
-  profileInfo.setUserInfo(newProfileData)
-})
+api
+  .getUserData()
+  .then(userData => {
+    avatarElement.style.backgroundImage = `url(${userData.avatar})`
+    const newProfileData = {
+      name: userData.name,
+      description: userData.about
+    }
+    profileInfo.setUserInfo(newProfileData)
+  })
+  .catch(err => {
+    console.log(err + ' && ' + 'Ошибка при получении данных пользователя')
+  })
