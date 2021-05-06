@@ -1,8 +1,10 @@
+// Контроллер запросов
 export class Api {
   constructor(data) {
     this._url = data.url
     this._token = data.token
   }
+  // 1. Получает карточки
   getCards() {
     return fetch(`${this._url}/cards`, {
       method: 'GET',
@@ -13,6 +15,7 @@ export class Api {
       return this._checkResponce(response)
     })
   }
+  // 2. Получает данные пользователя
   getUserData() {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
@@ -21,6 +24,7 @@ export class Api {
       }
     }).then(response => this._checkResponce(response))
   }
+  // 3. Отправляет новую карточку
   addCard(card) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
@@ -38,6 +42,7 @@ export class Api {
       })
       .then(response => this._checkResponce(response))
   }
+  // 4. Удаляет карточку
   removeCard(id) {
     return fetch(`${this._url}/cards/${id}`, {
       method: 'DELETE',
@@ -46,6 +51,7 @@ export class Api {
       }
     }).then(response => this._checkResponce(response))
   }
+  // 5. Обновляет данные пользователя
   updUserData(profileData) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
@@ -63,6 +69,7 @@ export class Api {
       })
       .then(response => this._checkResponce(response))
   }
+  // 6. Добавляет новый лайк
   putLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
       method: 'PUT',
@@ -72,6 +79,7 @@ export class Api {
       }
     }).then(response => this._checkResponce(response))
   }
+  // 6. Удаляет лайк
   deleteLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
       method: 'DELETE',
@@ -81,6 +89,7 @@ export class Api {
       }
     }).then(response => this._checkResponce(response))
   }
+  // 7. Меняет аватар на новый
   changeAvatar(newAvatarUrl) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
