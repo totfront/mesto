@@ -45,13 +45,19 @@ const addBtn = document.querySelector(popupAddBtnSelector)
 const profileInfo = new UserInfo({ nameSelector: profileNameSelector, descriptionSelector: profileDescriptionSelector, avatarSelector: avatarSelector })
 // Добавляет новую карточку по клику на submit
 const handleAddCardSubmit = newCardData => {
+  popupAdd.changeSubmitBtnText(cardRenderForm)
   api
     .addCard(newCardData, cardRenderForm)
     .then(res => {
       newCardData._id = res._id
       newCardData.likes = res.likes
       renderCard(newCardData)
+    })
+    .then(() => {
       popupAdd.close()
+    })
+    .finally(() => {
+      popupAdd.changeSubmitBtnText(cardRenderForm)
     })
     .catch(err => {
       console.log(err + ' && ' + 'Ошибка при добавлении карточки')
@@ -59,11 +65,17 @@ const handleAddCardSubmit = newCardData => {
 }
 // Изменяет данные профиля и закрывает попап по клику на submit
 const handleEditProfileSubmit = inputValues => {
-  profileInfo.setUserInfo(inputValues)
+  popupAdd.changeSubmitBtnText(profileEditorForm)
   api
     .updUserData(inputValues, profileEditorForm)
     .then(() => {
+      profileInfo.setUserInfo(inputValues)
+    })
+    .then(() => {
       popupEdit.close()
+    })
+    .finally(() => {
+      popupAdd.changeSubmitBtnText(profileEditorForm)
     })
     .catch(err => {
       console.log(err + ' && ' + 'Ошибка при обновлении данных пользователя')
@@ -71,11 +83,17 @@ const handleEditProfileSubmit = inputValues => {
 }
 // Подтверждает изменение аватара
 const handleChangeAvatarSubmit = newAvatar => {
+  popupAdd.changeSubmitBtnText(avatarChangeFormElement)
   api
     .changeAvatar(newAvatar.url, avatarChangeFormElement)
     .then(() => {
       avatarElement.style.backgroundImage = `url(${newAvatar.url})`
+    })
+    .then(() => {
       popupChangeAvatar.close()
+    })
+    .finally(() => {
+      popupAdd.changeSubmitBtnText(avatarChangeFormElement)
     })
     .catch(err => {
       console.log(err + ' && ' + 'Ошибка при смене аватара')
@@ -83,7 +101,6 @@ const handleChangeAvatarSubmit = newAvatar => {
 }
 const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
 const popupAdd = new PopupWithForm(addCardPopupSelector, handleAddCardSubmit)
-const popupDeleteCard = new PopupWithForm(deleteCardPopupSelector, handleChangeAvatarSubmit)
 const popupChangeAvatar = new PopupWithForm(changeAvatarPupupSelector, handleChangeAvatarSubmit)
 const changeAvatarFormValidator = new FormValidator(settings, avatarChangeFormElement)
 const popupOverview = new PopupWithImage(overviewPopupSelector)
@@ -120,17 +137,20 @@ const handleCardClick = (name, link) => {
   popupOverview.setEventListeners()
   popupOverview.open(name, link)
 }
-// Управляет кнопкой удаления карточки
-const deleteCardHandler = (currentCard, cardId) => {
-  popupDeleteCard.open()
-  popupDeleteCard.setEventListeners()
-  const deleteCardFormSubmit = document.querySelector(deleteCardPopupSelector).querySelector('.popup__save-btn')
-  if (cardId) {
-    deleteCardFormSubmit.addEventListener('click', () => {
+const popupDeleteCard = new PopupWithForm(deleteCardPopupSelector)
+popupDeleteCard.setEventListeners()
+// Собирает заполненную карточку
+const createCard = (item, personalId) => {
+  // Управляет кнопкой удаления карточки
+  const deleteCardHandler = (currentCard, cardId) => {
+    popupDeleteCard.open()
+    popupDeleteCard.setSubmitHandler(() => {
       api
         .removeCard(cardId)
         .then(() => {
           currentCard.remove()
+        })
+        .then(() => {
           popupDeleteCard.close()
         })
         .catch(err => {
@@ -138,14 +158,6 @@ const deleteCardHandler = (currentCard, cardId) => {
         })
     })
   }
-}
-// Добавляет слушатели попапу удаления карточки
-// popupDeleteCard.setEventListeners()
-// Собирает заполненную карточку
-const personalId = api.getUserData().then(userData => {
-  return userData._id
-})
-const createCard = item => {
   return new Card(item, cardTemplateSelector, handleCardClick, deleteCardHandler, api, personalId).renderCard()
 }
 //Создает и наполняет новую карточку из формы, затем очищает форму
@@ -156,7 +168,7 @@ const renderCard = newCardData => {
   newCard._id = newCardData._id
   newCard.likes = newCardData.likes
   newCard.owner = newCardData.owner
-  section.addItem(createCard(newCard))
+  section.addItem(createCard(newCard, personalId))
 }
 // Включает валидацию для форм
 profileEditFormValidator.enableValidation()
@@ -164,6 +176,7 @@ addCardFormValidator.enableValidation()
 changeAvatarFormValidator.enableValidation()
 // Рендерим стартовые карточки
 let initialCards = []
+let personalId
 api
   .getCards()
   .then(result => {
@@ -173,26 +186,18 @@ api
     return initialCards
   })
   .then(initialCards => {
-    const initalSectionData = { items: initialCards, renderer: createCard }
-    section = new Section(initalSectionData, cardContainerSelector)
-    section.renderItems()
+    api
+      .getUserData()
+      .then(userData => {
+        personalId = userData._id
+        return userData._id
+      })
+      .then(personalId => {
+        const initalSectionData = { items: initialCards, renderer: createCard, personalId: personalId }
+        section = new Section(initalSectionData, cardContainerSelector)
+        section.renderItems()
+      })
     return initialCards
-  })
-  // Получает стартовое количество лайков
-  .then(initialCards => {
-    // Собираем двумерный массив лайков
-    const likes = initialCards.map(card => {
-      return card.likes
-    })
-    return likes
-  })
-  // Распределяем лайки по карточкам
-  .then(likes => {
-    const cards = Array.from(document.querySelectorAll('.card')).reverse()
-    cards.forEach((card, index) => {
-      const counter = card.querySelector('.card__like-counter')
-      counter.textContent = likes[index].length
-    })
   })
   .catch(err => {
     console.log(err + ' && ' + 'Ошибка при получении карточек')

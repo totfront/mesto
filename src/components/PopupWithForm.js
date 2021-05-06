@@ -4,9 +4,7 @@
 // 3. Закрывает попап с формой
 // 4. Сбрасывает формы
 // 5. Добавляет слушатели на попап и детей
-
 import { Popup } from './Popup.js'
-
 export class PopupWithForm extends Popup {
   constructor(popupSelector, handleSubmitForm) {
     super(popupSelector)
@@ -14,6 +12,10 @@ export class PopupWithForm extends Popup {
     this._handleSubmitForm = handleSubmitForm
     this._formElement = this._popup.querySelector('.popup__form')
     this.close = this.close.bind(this)
+  }
+  // Динамически меняет функцию handleSubmitForm
+  setSubmitHandler(handleSubmitForm) {
+    this._handleSubmitForm = handleSubmitForm
   }
   // Возвращает объект с текущими значениями input
   _getInputValues = () => {
@@ -31,18 +33,7 @@ export class PopupWithForm extends Popup {
   setEventListeners() {
     this._formElement.addEventListener('submit', event => {
       event.preventDefault()
-      const isEmpty = obj => {
-        for (let key in obj) {
-          // если тело цикла начнет выполняться - значит в объекте есть свойства
-          return false
-        }
-        return true
-      }
-      // Если у формы есть инпуты, то
-      if (!isEmpty(this._getInputValues())) {
-        this._handleSubmitForm(this._getInputValues())
-      }
-      // this.close()
+      this._handleSubmitForm(this._getInputValues())
     })
     super.setEventListeners()
   }
@@ -50,5 +41,14 @@ export class PopupWithForm extends Popup {
   close() {
     super.close()
     this._formElement.reset()
+  }
+  // Меняет текст кнопки, пока нет ответа от сервера
+  changeSubmitBtnText = formElement => {
+    const submitBtnElement = formElement.querySelector('.popup__save-btn')
+    if (submitBtnElement.textContent == 'Сохранение...') {
+      submitBtnElement.textContent = 'Сохранить'
+    } else {
+      submitBtnElement.textContent = 'Сохранение...'
+    }
   }
 }

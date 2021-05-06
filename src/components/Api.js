@@ -21,8 +21,7 @@ export class Api {
       }
     }).then(response => this._checkResponce(response))
   }
-  addCard(card, cardRenderForm) {
-    this._changeSubmitBtnText(cardRenderForm)
+  addCard(card) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: {
@@ -35,7 +34,6 @@ export class Api {
       })
     })
       .then(response => {
-        this._changeSubmitBtnText(cardRenderForm)
         return response
       })
       .then(response => this._checkResponce(response))
@@ -48,8 +46,7 @@ export class Api {
       }
     }).then(response => this._checkResponce(response))
   }
-  updUserData(profileData, profileEditorForm) {
-    this._changeSubmitBtnText(profileEditorForm)
+  updUserData(profileData) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       body: JSON.stringify({
@@ -62,7 +59,6 @@ export class Api {
       }
     })
       .then(response => {
-        this._changeSubmitBtnText(profileEditorForm)
         return response
       })
       .then(response => this._checkResponce(response))
@@ -85,8 +81,7 @@ export class Api {
       }
     }).then(response => this._checkResponce(response))
   }
-  changeAvatar(newAvatarUrl, changeAvatarForm) {
-    this._changeSubmitBtnText(changeAvatarForm)
+  changeAvatar(newAvatarUrl) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
       body: JSON.stringify({
@@ -98,18 +93,9 @@ export class Api {
       }
     })
       .then(response => {
-        this._changeSubmitBtnText(changeAvatarForm)
         return response
       })
       .then(response => this._checkResponce(response))
-  }
-  _changeSubmitBtnText = formElement => {
-    const submitBtnElement = formElement.querySelector('.popup__save-btn')
-    if (submitBtnElement.textContent == 'Сохранение...') {
-      submitBtnElement.textContent = 'Сохранить'
-    } else {
-      submitBtnElement.textContent = 'Сохранение...'
-    }
   }
   _checkResponce = response => {
     if (response.ok) {
