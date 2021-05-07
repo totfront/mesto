@@ -1,8 +1,0 @@
-.popup__close-pic {
-  width: 100%;
-  cursor: pointer;
-}
-.popup__close-pic:focus {
-  border: none;
-  outline: none;
-}
