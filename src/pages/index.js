@@ -55,11 +55,11 @@ const handleAddCardSubmit = newCardData => {
     .then(() => {
       popupAdd.close()
     })
-    .finally(() => {
-      popupAdd.changeSubmitBtnText(cardRenderForm)
-    })
     .catch(err => {
       console.log(err + ' && ' + 'Ошибка при добавлении карточки')
+    })
+    .finally(() => {
+      popupAdd.changeSubmitBtnText(cardRenderForm)
     })
 }
 // Изменяет данные профиля и закрывает попап по клику на submit
@@ -73,11 +73,11 @@ const handleEditProfileSubmit = inputValues => {
     .then(() => {
       popupEdit.close()
     })
-    .finally(() => {
-      popupAdd.changeSubmitBtnText(profileEditorForm)
-    })
     .catch(err => {
       console.log(err + ' && ' + 'Ошибка при обновлении данных пользователя')
+    })
+    .finally(() => {
+      popupAdd.changeSubmitBtnText(profileEditorForm)
     })
 }
 // Подтверждает изменение аватара
@@ -91,11 +91,11 @@ const handleChangeAvatarSubmit = newAvatar => {
     .then(() => {
       popupChangeAvatar.close()
     })
-    .finally(() => {
-      popupAdd.changeSubmitBtnText(avatarChangeFormElement)
-    })
     .catch(err => {
       console.log(err + ' && ' + 'Ошибка при смене аватара')
+    })
+    .finally(() => {
+      popupAdd.changeSubmitBtnText(avatarChangeFormElement)
     })
 }
 const popupEdit = new PopupWithForm(profileEditorPopupSelector, handleEditProfileSubmit)
@@ -149,11 +149,11 @@ const createCard = (item, personalId) => {
         .then(() => {
           currentCard.remove()
         })
-        .then(() => {
-          popupDeleteCard.close()
-        })
         .catch(err => {
           console.log(err + ' && ' + 'Ошибка при удалении карточки')
+        })
+        .then(() => {
+          popupDeleteCard.close()
         })
     })
   }
@@ -174,39 +174,27 @@ profileEditFormValidator.enableValidation()
 addCardFormValidator.enableValidation()
 changeAvatarFormValidator.enableValidation()
 // Рендерим стартовые карточки
-let initialCards = []
 let personalId
-api
-  .getCards()
-  .then(result => {
-    result.forEach(newCardData => {
-      initialCards = [...initialCards, newCardData]
-    })
-    return initialCards
-  })
-  .then(initialCards => {
-    api
-      .getUserData()
-      .then(userData => {
-        personalId = userData._id
-        return userData._id
-      })
-      .then(personalId => {
-        const initalSectionData = { items: initialCards, renderer: createCard, personalId: personalId }
-        section = new Section(initalSectionData, cardContainerSelector)
-        section.renderItems()
-      })
-    return initialCards
-  })
+Promise.all([api.getCards(), api.getUserData()])
   .catch(err => {
     console.log(err + ' && ' + 'Ошибка при получении карточек')
+  })
+  .then(([[...initialCards], userData]) => {
+    const personalId = userData._id
+    const initalSectionData = {
+      items: initialCards,
+      renderer: createCard,
+      personalId: personalId
+    }
+    section = new Section(initalSectionData, cardContainerSelector)
+    section.renderItems()
   })
 // Обновляем данные пользователя
 api
   .getUserData()
-  .then(userData => {
-    profileInfo.setUserAvatar(userData)
-  })
   .catch(err => {
     console.log(err + ' && ' + 'Ошибка при получении данных пользователя')
+  })
+  .then(userData => {
+    profileInfo.setUserAvatar(userData)
   })

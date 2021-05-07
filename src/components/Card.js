@@ -4,14 +4,14 @@
 // 3. Добавляет слушатели на кнопку "лайк", кнопку "корзина", картинку
 // 4. Добавляет карточку в DOM
 class Card {
-  constructor(data, selector, handleCardClick, deleteCardHandler, api, personalId) {
+  constructor(data, templateSelector, handleCardClick, deleteCardHandler, api, personalId) {
     this._deleteCardHandler = deleteCardHandler
     this._heading = data.name
     this._image = data.link
     this._id = data._id
     this._likes = data.likes
     this._owner = data.owner
-    this._selector = selector
+    this._templateSelector = templateSelector
     this._handleCardClick = handleCardClick
     this._api = api
     this._personalId = personalId
@@ -19,7 +19,7 @@ class Card {
   }
   // Подготавливает карточку к публикации
   _createCard() {
-    const newCard = document.querySelector(this._selector).content.querySelector('.card').cloneNode(true)
+    const newCard = document.querySelector(this._templateSelector).content.querySelector('.card').cloneNode(true)
     const cardPic = newCard.querySelector('.card__pic')
     const newLikeBtn = newCard.querySelector('.card__like-btn')
     const newLikeCounter = newCard.querySelector('.card__like-counter')
