@@ -175,20 +175,6 @@ addCardFormValidator.enableValidation()
 changeAvatarFormValidator.enableValidation()
 // Рендерим стартовые карточки
 let personalId
-Promise.all([api.getCards(), api.getUserData()])
-  .catch(err => {
-    console.log(err + ' && ' + 'Ошибка при получении карточек')
-  })
-  .then(([[...initialCards], userData]) => {
-    const personalId = userData._id
-    const initalSectionData = {
-      items: initialCards,
-      renderer: createCard,
-      personalId: personalId
-    }
-    section = new Section(initalSectionData, cardContainerSelector)
-    section.renderItems()
-  })
 // Обновляем данные пользователя
 api
   .getUserData()
@@ -197,4 +183,18 @@ api
   })
   .then(userData => {
     profileInfo.setUserAvatar(userData)
+    personalId = userData._id
+  })
+Promise.all([api.getCards()])
+  .catch(err => {
+    console.log(err + ' && ' + 'Ошибка при получении карточек')
+  })
+  .then(([[...initialCards]]) => {
+    const initalSectionData = {
+      items: initialCards,
+      renderer: createCard,
+      personalId: personalId
+    }
+    section = new Section(initalSectionData, cardContainerSelector)
+    section.renderItems()
   })
