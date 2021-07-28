@@ -34,5 +34,3 @@ yarn install
 ```
 yarn start dev
 ```
-
-[Lates release](https://totmir.github.io/mesto/)
