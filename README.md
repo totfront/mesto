@@ -1,6 +1,6 @@
-# Проект 3: Путешествие по России
+# Mesto
 
-### Технологии
+The app to post visited places from personal profile
 
 <table>
     <tbody>
@@ -18,10 +18,21 @@
     </tbody>
 </table>
 
-**Описание**
+## Features
+1. Add the place, where you've been [or not] (you need to put the link to form)
+2. Edit user data
+3. Delete btns added only to user's cards
+4. Delete cards
+5. Show popups with zommed pictures by clicking on cards
 
-Посадочная страница путешественников.
+## Install
+```
+yarn install
+```
 
-Здесь можно добавить данные о себе и месте, где вы побывали
+## Launch
+```
+yarn start dev
+```
 
-[Последняя версия](https://totmir.github.io/mesto/)
+[Lates release](https://totmir.github.io/mesto/)
