@@ -1,4 +1,4 @@
-# mesto-react
+# mesto
 
 **The app to post cards from personal profile and the api for storing data**
 
