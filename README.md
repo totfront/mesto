@@ -37,15 +37,14 @@
 
 1. check MongoDB path in backend/app.js:23
 
-2. 1. Frontend
+2. Frontend
 
 ```
 cd frontend/
 yarn install
 yarn start
 ```
-
-2. 2. Backend
+Backend
 
 ```
 cd backend/
